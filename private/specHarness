@@ -5,8 +5,12 @@
 # - kicks off the test runner
 ##
 dirpath="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-spec_package_dir="${dirpath/}"
-source "${spec_package_dir}/specHarness.sh"
-spec.loadSpecHelpers
-source "$1"
-spec.runTests
+source "$dirpath/specHarness.sh"
+working_dir="$1"
+spec_file="$2"
+name_matcher="$3"
+spec.loadSpecHelpers "$1"
+set -e
+source "$spec_file"
+set +e
+spec.runTests "$name_matcher"

@@ -1,8 +1,10 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 spec_harness="${BASH_SOURCE[0]/bin\/spec}private/specHarness"
 test_failed=
 fail_fast=
+name_matcher=
+matcher_is_next=
 
 declare -a testFiles=()
 
@@ -14,8 +16,16 @@ do
   elif [ "$arg" = "-f" ] || [ "$arg" = "--fast-fail" ] || [ "$arg" = "--fail-fast" ]
   then
     fail_fast=true
-  else
-    echo "What is this argument? I don't understand it. [$filePath]" >&2
+  elif [ "$arg" = "-e" ]
+  then
+    matcher_is_next=true
+  elif [ "$matcher_is_next" = "true" ]
+  then
+    matcher_is_next=false
+    name_matcher="$arg"
+  elif [ -n "$arg" ]
+  then
+    echo "What is this argument? I don't understand it. [$arg]" >&2
     exit 1
   fi
 done
@@ -23,14 +33,14 @@ done
 if [ "${#testFiles[@]}" -eq 0 ]
 then
   while IFS= read -rd '' testFile; do testFiles+=("$testFile")
-  done < <(find . -type f \( -iname "*.spec.sh" -or -iname "*.test.sh" \) -print0)
+  done < <(find . -type d -name packages -prune -o -type f \( -iname "*.spec.sh" -or -iname "*.test.sh" \) -print0)
 fi
 
 for filePath in "${testFiles[@]}"
 do
-  "$spec_harness" "$filePath"
+  "$spec_harness" "$( dirname "$filePath" )" "$filePath" "$name_matcher"
   [ $? -ne 0 ] && test_failed=true
-  [ -n "$fail_fast" ] && [ -n "$test_failed" ] && exit 1
+  [ -n "$fail_fast" ] && [ -n "$test_failed" ] && { echo "Failed" >&2; exit 1; }
 done
 
 if [ -z "$test_failed" ]
