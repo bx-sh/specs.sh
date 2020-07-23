@@ -1,0 +1,12 @@
+##
+# Given the path to 1 file:
+# - sources the file
+# - sources the test runner
+# - kicks off the test runner
+##
+dirpath="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+spec_package_dir="${dirpath/}"
+source "${spec_package_dir}/specHarness.sh"
+spec.loadSpecHelpers
+source "$1"
+spec.runTests

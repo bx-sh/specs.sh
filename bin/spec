@@ -1,0 +1,43 @@
+#! /bin/bash
+
+spec_harness="${BASH_SOURCE[0]/bin\/spec}private/specHarness"
+test_failed=
+fail_fast=
+
+declare -a testFiles=()
+
+for arg in "$@"
+do
+  if [ -f "$arg" ]
+  then
+    testFiles+=("$arg")
+  elif [ "$arg" = "-f" ] || [ "$arg" = "--fast-fail" ] || [ "$arg" = "--fail-fast" ]
+  then
+    fail_fast=true
+  else
+    echo "What is this argument? I don't understand it. [$filePath]" >&2
+    exit 1
+  fi
+done
+
+if [ "${#testFiles[@]}" -eq 0 ]
+then
+  while IFS= read -rd '' testFile; do testFiles+=("$testFile")
+  done < <(find . -type f \( -iname "*.spec.sh" -or -iname "*.test.sh" \) -print0)
+fi
+
+for filePath in "${testFiles[@]}"
+do
+  "$spec_harness" "$filePath"
+  [ $? -ne 0 ] && test_failed=true
+  [ -n "$fail_fast" ] && [ -n "$test_failed" ] && exit 1
+done
+
+if [ -z "$test_failed" ]
+then
+  echo "Tests passed"
+  exit 0
+else
+  echo "Tests failed"
+  exit 1
+fi
