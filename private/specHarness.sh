@@ -26,6 +26,7 @@ spec.runTests() {
   local testCount=0
   local passedCount=0
   local failedCount=0
+  declare -a failedTestNames=()
   for testName in $( declare -F | grep "declare -f @spec\." | sed 's/declare -f //'  )
   do
     [ -n "$nameMatcher" ] && [[ ! "$testName" =~ $nameMatcher ]] && continue
@@ -45,6 +46,7 @@ spec.runTests() {
       echo -e "[\e[32mOK\e[0m] $displayTestName"
     else
       failedCount=$(( failedCount + 1))
+      failedTestNames+=("$testName")
       echo -e "[\e[31mFAIL\e[0m] $displayTestName"
       local stdout="$( cat "$stdoutFile" | sed 's/\(.*\)/\t\1/' )"
       if [ -n "$stdout" ]
@@ -76,6 +78,12 @@ spec.runTests() {
   if [ $failedCount -gt 0 ]
   then
     echo -e "\e[1;31mTests failed\e[0m. Ran $testCount tests. $passedCount passed, $failedCount failed."
+    echo
+    local failedTestName
+    for failedTestName in "${failedTestNames[@]}"
+    do
+      echo "- $failedTestName"
+    done
     exit 1
   else
     if [ $testCount -gt 0 ]
