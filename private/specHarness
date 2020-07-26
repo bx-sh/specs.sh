@@ -10,6 +10,8 @@ working_dir="$1"
 spec_file="$2"
 name_matcher="$3"
 spec.loadSpecHelpers "$1"
+echo
+echo "[$spec_file]"
 set -e
 source "$spec_file"
 set +e
