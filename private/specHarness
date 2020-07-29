@@ -3,6 +3,8 @@
 # - sources the file
 # - sources the test runner
 # - kicks off the test runner
+#
+# FIXME TODO these variables are available to the test! ahh. make them part of the public API like WORKING_DIR and make then useful...
 ##
 dirpath="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 source "$dirpath/specHarness.sh"
