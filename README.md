@@ -123,6 +123,11 @@ spec.displayTestResult() {
   local status="$3"       # PASS or FAIL or PENDING
   local stdout="$4"       # STDOUT from the test (includes output from @setup and @teardown)
   local stderr="$5"       # STDERR from the test (includes output from @setup and @teardown)
+  
+  echo "[$status] $name"
+  
+  [ "$status" = "$failed" ] && [ -n "$stdout" ] && echo -e "[STDOUT]\n$stdout"
+  [ "$status" = "$failed" ] && [ -n "$stderr" ] && echo -e "[STDERR]\n$stderr"
 }
 
 spec.displayTestsSummary() {
@@ -131,6 +136,7 @@ spec.displayTestsSummary() {
   local passed="$3"
   local failed="$4"
   local pending="$5"
+  
   echo "$status. $total total tests. $passed passed, $failed failed, $pending unimplemented."
 }
 ```
