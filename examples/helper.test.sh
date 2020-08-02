@@ -1,0 +1,1 @@
+echo "Hi from helper.test.sh"

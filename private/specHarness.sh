@@ -42,6 +42,10 @@ spec.loadHelpers() {
   ___spec___.loadHelpers "$@"
 }
 
+spec.helperFilenames() {
+  ___spec___.helperFilenames "$@"
+}
+
 spec.displayTestsBanner() {
   ___spec___.displayTestsBanner "$@"
 }
@@ -102,15 +106,28 @@ ___spec___.teardownFixtureFunctionNames() {
   echo @afterAll @teardownFixture
 }
 
+___spec___.helperFilenames() {
+  echo specHelper.sh testHelper.sh helper.spec.sh helper.test.sh
+}
+
 ___spec___.loadHelpers() {
   local dirpath="$1"
   declare -a specHelperPathsToSource=()
-  specHelperPathsToSource+=("$dirpath/specHelper.sh")
+
+  local helperFilename
+  for helperFilename in $( spec.helperFilenames )
+  do
+    specHelperPathsToSource+=("$dirpath/$helperFilename")
+  done
   while [ "$dirpath" != "/" ] && [ "$dirpath" != "." ]
   do
     dirpath="$( dirname "$dirpath" )"
-    specHelperPathsToSource+=("$dirpath/specHelper.sh")
+    for helperFilename in $( spec.helperFilenames )
+    do
+      specHelperPathsToSource+=("$dirpath/$helperFilename")
+    done
   done
+  
   local i="${#specHelperPathsToSource[@]}"
   (( i -= 1 ))
   while [ $i -gt -1 ]
