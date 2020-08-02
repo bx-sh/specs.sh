@@ -435,7 +435,6 @@ ___spec___.runTests() {
 }
 
 ___spec___.runTest() {
-  set -e
   local ___spec___setupOrTestOrTeardownFunction
   for ___spec___setupOrTestOrTeardownFunction in "$@"
   do
@@ -446,7 +445,6 @@ ___spec___.runTest() {
       return $___spec___returnCode
     fi
   done
-  set +e
 }
 
 [ -n "$SPEC_CONFIG" ] && [ -f "$SPEC_CONFIG" ] && source "$SPEC_CONFIG"
