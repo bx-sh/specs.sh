@@ -138,7 +138,7 @@ spec.displayTestsSummary() {
 
 ### Configuration
 
-```
+```sh
 # Given a $1 function name (without prefix)
 # return a formatted name, e.g. replace _ with ' '
 spec.getTestDisplayName() {
