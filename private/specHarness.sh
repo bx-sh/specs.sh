@@ -1,9 +1,4 @@
 spec.loadSpecHelpers() {
-  ##
-  # Load specHelper.sh if it exists (load all of them from left to right)
-  #
-  # TODO - update so that it only goes so high up as the nearest package.sh !!!
-  ##
   local dirpath="$1"
   declare -a specHelperPathsToSource=()
   specHelperPathsToSource+=("$dirpath/specHelper.sh")

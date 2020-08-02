@@ -1,0 +1,3 @@
+@spec.helloWorld() {
+  [ "Hello" = "World" ]
+}

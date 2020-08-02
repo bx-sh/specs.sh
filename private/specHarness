@@ -1,20 +1,12 @@
-##
-# Given the path to 1 file:
-# - sources the file
-# - sources the test runner
-# - kicks off the test runner
-#
-# FIXME TODO these variables are available to the test! ahh. make them part of the public API like WORKING_DIR and make then useful...
-##
-dirpath="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-source "$dirpath/specHarness.sh"
-working_dir="$1"
-spec_file="$2"
-name_matcher="$3"
+___spec___SpecPrivateDirectory="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+source "$___spec___SpecPrivateDirectory/specHarness.sh"
+WORKING_DIRECTORY="$1"
+SPEC_FILE="$2"
+SPEC_NAME_PATTERN="$3"
 spec.loadSpecHelpers "$1"
 echo
-echo "[$spec_file]"
+echo "[$SPEC_FILE]"
 set -e
-source "$spec_file"
+source "$SPEC_FILE"
 set +e
-spec.runTests "$name_matcher"
+spec.runTests "$SPEC_NAME_PATTERN"

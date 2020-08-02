@@ -23,9 +23,15 @@ do
   then
     matcher_is_next=false
     name_matcher="$arg"
+  elif [ -d "$arg" ]
+  then
+    while read -rd '' specFile
+    do
+      testFiles+=("$specFile")
+    done < <( find "$arg" -type f -name "*.spec.sh" -print0 )
   elif [ -n "$arg" ]
   then
-    echo "What is this argument? I don't understand it. [$arg]" >&2
+    echo "Unsupported 'spec' argument: [$arg]" >&2
     exit 1
   fi
 done
