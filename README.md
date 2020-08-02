@@ -45,7 +45,7 @@ Tests passed. 1 passed. 1 pending.
 > ```
 > bx install spec
 > ```
-> Add to project dependencies:
+> Or add to project dependencies:
 > ```
 > bx add spec --dev
 > ```
