@@ -1,3 +1,3 @@
-name @spec
+name spec
 
 description "Test specifications"
