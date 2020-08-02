@@ -50,11 +50,18 @@ Tests passed. 1 passed. 1 pending.
 > ```
 > bx install spec
 > ```
+> And run anywhere:
+> ```
+> spec dir/*.spec.sh
+> ```
 > Or add to project dependencies:
 > ```
 > bx add spec --dev
 > ```
->
+> And run with bx
+> ```
+> bx spec dir/*.spec.sh
+> ```
 > #### Manual installation
 >
 > - [Download .zip](https://github.com/bx-sh/spec.sh/archive/v0.2.0.zip)
