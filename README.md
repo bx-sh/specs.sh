@@ -217,3 +217,13 @@ spec.beforeFile
   spec.displayTestsSummary
 spec.afterFile
 ```
+
+### Nitty Gritty
+
+- `spec -e [regex test case name matcher]` will only run matching test cases (_matcher runs on function name without prefix_)
+- `spec -f` or `spec --fast-fail` or `spec --fail-fast` won't run additional test files after one reports a failure
+- `spec -c [config file .sh]` sources the provided file before each test file is sourced (_runs before helper files are sourced_)
+- Each individual test file provided to `spec` is sourced in a separate process
+- Each individual test case within the file is run in a subshell and its STDOUT/STDERR recorded and exit code checked
+- `setupFixture` and `teardownFixture` _do not_ run in a subshell, they run in the main process of the individual test file
+- All individual test cases are _run in random order_ within a given test file
