@@ -138,7 +138,8 @@ ___spec___.loadHelpers() {
 }
 
 ___spec___.beforeFile() {
-  echo "[$1]"
+  echo
+  echo -e "[\e[34m$1\e[0m]"
 }
 
 ___spec___.afterFile() {
@@ -154,23 +155,47 @@ ___spec___.displayRunningTest() {
 }
 
 ___spec___.displayTestResult() {
-  echo "$2 [$1]"
-  if [ "$2" = "FAIL" ] || [ -n "$VERBOSE" ]
+  local functionName="$3"
+  local name="$2"
+  local status="$3"
+  local stdout="$4"
+  local stderr="$5"
+
+  if [ "$status" = "PASS" ]
   then
-    echo "[STDOUT]"
-    echo "$3"
-    echo "[STDERR]"
-    echo "$4"
+    echo -e "[\e[32mOK\e[0m] $name"
+  else
+    echo -e "[\e[31mFAIL\e[0m] $name"
   fi
 }
 
 ___spec___.displayPendingTestResult() {
-  echo "PENDING [$1]"
+  local functionName="$3"
+  local name="$2"
+
+  echo -e "[\e[33mPENDING\e[0m] $name"
 }
 
 ___spec___.displayTestsSummary() {
-  echo "$1"
-  echo "$2 Total. $3 Passed. $4 Failed. $5 Pending."
+  local status="$1"
+  local total="$2"
+  local passed="$3"
+  local failed="$4"
+  local pending="$5"
+
+  if [ $total -eq 0 ]
+  then
+    echo "No tests to run."
+  elif [ "$status" = "PASS" ]
+  then
+    printf "Tests passed."
+  else
+    printf "Tests failed."
+  fi
+  [ $passed  -gt 0 ] && printf " $passed passed."
+  [ $failed  -gt 0 ] && printf " $failed failed."
+  [ $pending -gt 0 ] && printf " $pending pending."
+  printf "\n"
 }
 
 ___spec___.runTests() {
@@ -200,8 +225,21 @@ ___spec___.runTests() {
       local withoutPrefix="${specFunctionName#"$specPrefix"}"
       [ -n "$specNamePattern" ] && [[ ! "$withoutPrefix" =~ $specNamePattern ]] && continue
       local specDisplayName="$( spec.getTestDisplayName "$withoutPrefix" )"
-      ___spec___AllSpecFunctionNames+=("$specFunctionName")
-      ___spec___AllSpecDisplayNames+=("$specDisplayName")
+      local alreadyAdded=""
+      local existingFunctionName
+      for existingFunctionName in "${___spec___AllSpecFunctionNames[@]}"
+      do
+        if [ "$existingFunctionName" = "$specFunctionName" ]
+        then
+          alreadyAdded=true
+          break
+        fi
+      done
+      if [ -z "$alreadyAdded" ]
+      then
+        ___spec___AllSpecFunctionNames+=("$specFunctionName")
+        ___spec___AllSpecDisplayNames+=("$specDisplayName")
+      fi
     done
   done
   unset specPrefix
@@ -209,6 +247,8 @@ ___spec___.runTests() {
   unset specFunctionNames
   unset specDisplayName
   unset withoutPrefix
+  unset alreadyAdded
+  unset existingFunctionName
 
   local pendingPrefix
   for pendingPrefix in $( spec.pendingFunctionPrefixes )
@@ -222,8 +262,21 @@ ___spec___.runTests() {
       local withoutPrefix="${pendingFunctionName#"$pendingPrefix"}"
       [ -n "$specNamePattern" ] && [[ ! "$withoutPrefix" =~ $specNamePattern ]] && continue
       local pendingDisplayName="$( spec.getTestDisplayName "$withoutPrefix" )"
-      ___spec___AllPendingFunctionNames+=("$pendingFunctionName")
-      ___spec___AllPendingDisplayNames+=("$pendingDisplayName")
+      local alreadyAdded=""
+      local existingFunctionName
+      for existingFunctionName in "${___spec___AllPendingFunctionNames[@]}"
+      do
+        if [ "$existingFunctionName" = "$pendingFunctionName" ]
+        then
+          alreadyAdded=true
+          break
+        fi
+      done
+      if [ -z "$alreadyAdded" ]
+      then
+        ___spec___AllPendingFunctionNames+=("$pendingFunctionName")
+        ___spec___AllPendingDisplayNames+=("$pendingDisplayName")
+      fi
     done
   done
   unset pendingPrefix
@@ -231,6 +284,8 @@ ___spec___.runTests() {
   unset pendingFunctionNames
   unset pendingDisplayName
   unset withoutPrefix
+  unset alreadyAdded
+  unset existingFunctionName
 
   local setupFunctionName
   for setupFunctionName in $( spec.setupFunctionNames )
@@ -301,11 +356,8 @@ ___spec___.runTests() {
   local ___spec___CurrentSpecIndex=0
   while [ $___spec___CurrentSpecIndex -lt "${#___spec___AllSpecFunctionNames[@]}" ]
   do
-    local SPEC_FUNCTION="${___spec___AllSpecFunctionNames[$i]}"
-    local SPEC_NAME="${___spec___AllSpecDisplayNames[$i]}"
-    local SPEC_COUNT="${#___spec___AllSpecFunctionNames[@]}"
-
-    echo "($SPEC_FUNCTION) ($SPEC_NAME)"
+    local SPEC_FUNCTION="${___spec___AllSpecFunctionNames[$___spec___CurrentSpecIndex]}"
+    local SPEC_NAME="${___spec___AllSpecDisplayNames[$___spec___CurrentSpecIndex]}"
 
     (( ___spec___CurrentSpecIndex++ ))
     
@@ -314,18 +366,20 @@ ___spec___.runTests() {
 
     spec.displayRunningTest "$SPEC_NAME"
 
-    : "$( spec.runTest "${___spec___AllSetupFunctionNames[@]}" "$SPEC_FUNCTION" "${___spec___AllTeardownFunctionNames[@]}" 1> "$___spec___STDOUT_file" 2> "$___spec___STDERR_file" )"
+    local ___spec___testRunStatus
+    ___spec___unusedOutput="$( spec.runTest "${___spec___AllSetupFunctionNames[@]}" "$SPEC_FUNCTION" "${___spec___AllTeardownFunctionNames[@]}" 1> "$___spec___STDOUT_file" 2> "$___spec___STDERR_file" )"
+    ___spec___testRunStatus=$?
 
     local ___spec___STDOUT="$( cat "$___spec___STDOUT_file" )"
     local ___spec___STDERR="$( cat "$___spec___STDERR_file" )"
 
-    if [ $? -eq 0 ]
+    if [ $___spec___testRunStatus -eq 0 ]
     then
       (( ___spec___PassedCount++ ))
-      spec.displayTestResult "$SPEC_NAME" "PASS" "$___spec___STDOUT" "$___spec___STDERR"
+      spec.displayTestResult "$SPEC_FUNCTION" "$SPEC_NAME" "PASS" "$___spec___STDOUT" "$___spec___STDERR"
     else
       (( ___spec___FailedCount++ ))
-      spec.displayTestResult "$SPEC_NAME" "FAIL" "$___spec___STDOUT" "$___spec___STDERR"
+      spec.displayTestResult "$SPEC_FUNCTION" "$SPEC_NAME" "FAIL" "$___spec___STDOUT" "$___spec___STDERR"
     fi
   done
 
@@ -347,10 +401,10 @@ ___spec___.runTests() {
   local ___spec___CurrentPendingIndex=0
   while [ $___spec___CurrentPendingIndex -lt "${#___spec___AllPendingFunctionNames[@]}" ]
   do
-    local SPEC_FUNCTION="${___spec___AllPendingFunctionNames[$i]}"
-    local SPEC_NAME="${___spec___AllPendingDisplayNames[$i]}"
+    local SPEC_FUNCTION="${___spec___AllPendingFunctionNames[$___spec___CurrentPendingIndex]}"
+    local SPEC_NAME="${___spec___AllPendingDisplayNames[$___spec___CurrentPendingIndex]}"
     (( ___spec___CurrentPendingIndex++ ))
-    spec.displayPendingTestResult "$SPEC_NAME"
+    spec.displayPendingTestResult "$SPEC_FUNCTION" "$SPEC_NAME"
   done
   local ___spec___PendingCount="${#___spec___AllPendingFunctionNames[@]}"
 
@@ -368,6 +422,11 @@ ___spec___.runTest() {
   for ___spec___setupOrTestOrTeardownFunction in "$@"
   do
     "$___spec___setupOrTestOrTeardownFunction"
+    local ___spec___returnCode=$?
+    if [ $___spec___returnCode -ne 0 ]
+    then
+      return $___spec___returnCode
+    fi
   done
   set +e
 }

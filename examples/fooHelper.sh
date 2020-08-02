@@ -1,1 +1,0 @@
-echo "Hi from foo helper too!"
