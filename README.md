@@ -19,11 +19,11 @@ Simple Shell Specifications.
   : # Do some cleanup
 }
 
-@spec.Should_give_a_daytime_greeting() {
+@spec.daytime_greeting() {
   [ "$( greeting --daytime )" = "Hello, world!" ]
 }
 
-@spec.Should_give_an_evening_greeting() {
+@spec.evening_greeting() {
   [ "$( greeting --evening )" = "Goodnight, moon!" ]
 }
 
@@ -35,8 +35,8 @@ Simple Shell Specifications.
 ```sh
 $ spec my-file.spec.sh
 
-[OK] Should give a daytime greeting
-[FAIL] Should give an evening greeting
+[OK] daytime greeting
+[FAIL] evening greeting
 [PENDING] I will write this later
 
 Tests passed. 1 passed. 1 pending.
