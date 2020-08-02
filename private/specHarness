@@ -1,14 +1,16 @@
 ___spec___SpecPrivateDirectory="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 source "$___spec___SpecPrivateDirectory/specHarness.sh"
-WORKING_DIRECTORY="$1"
+
+SPEC_DIR="$1"
 SPEC_FILE="$2"
 SPEC_NAME_PATTERN="$3"
-spec.loadSpecHelpers "$1"
-echo
-echo "[$SPEC_FILE]"
-@setup() { :; }
-@teardown() { :; }
+
+spec.loadHelpers "$SPEC_DIR"
+
+spec.beforeFile "$SPEC_FILE"
 set -e
 source "$SPEC_FILE"
 set +e
+spec.afterFile "$SPEC_FILE"
+
 spec.runTests "$SPEC_NAME_PATTERN"

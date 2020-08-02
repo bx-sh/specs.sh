@@ -49,6 +49,7 @@ do
   [ -n "$fail_fast" ] && [ -n "$test_failed" ] && { echo "Failed" >&2; exit 1; }
 done
 
+echo
 if [ -z "$test_failed" ]
 then
   echo "Tests passed"
