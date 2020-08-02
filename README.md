@@ -111,3 +111,27 @@ testThisIsMuchMoreToMyLiking() {
 ```
 
 ---
+
+> - Or implement your own output
+
+```sh
+# spec.config.sh
+
+spec.displayTestResult() {
+  local functionName="$3" # actual function name
+  local name="$2"         # function name without prefix
+                          # implement spec.getTestDisplayName() to generate yourself
+  local status="$3"       # PASS or FAIL or PENDING
+  local stdout="$4"       # STDOUT from the test (includes output from @setup and @teardown)
+  local stderr="$5"       # STDERR from the test (includes output from @setup and @teardown)
+}
+
+spec.displayTestsSummary() {
+  local status="$1" # PASS or FAIL
+  local total="$2"
+  local passed="$3"
+  local failed="$4"
+  local pending="$5"
+  echo "$status. $total total tests. $passed passed, $failed failed, $pending unimplemented."
+}
+```
