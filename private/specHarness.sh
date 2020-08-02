@@ -167,6 +167,24 @@ ___spec___.displayTestResult() {
   else
     echo -e "[\e[31mFAIL\e[0m] $name"
   fi
+
+  if [ "$status" = "FAIL" ] || [ -n "$VERBOSE" ]
+  then
+    if [ -n "$stderr" ]
+    then
+      echo
+      echo -e "\t[\e[31;1mStandard Error\e[0m]"
+      echo -e "$stderr" | sed 's/\(.*\)/\t\1/'
+      echo
+    fi
+    if [ -n "$stdout" ]
+    then
+      echo
+      echo -e "\t[\e[34;1mOutput\e[0m]"
+      echo -e "$stdout" | sed 's/\(.*\)/\t\1/'
+      echo
+    fi
+  fi
 }
 
 ___spec___.displayPendingTestResult() {

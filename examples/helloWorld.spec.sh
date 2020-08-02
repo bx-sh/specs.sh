@@ -7,6 +7,6 @@
   echo "DIR: $SPEC_DIR"
   echo "Function: $SPEC_FUNCTION"
   echo "Name: $SPEC_NAME"
-  echo ""
+  echo "Hello STDERR" >&2
   [ "Hello" = "World" ]
 }
