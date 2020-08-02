@@ -22,7 +22,7 @@ spec.runTests() {
   local passedCount=0
   local failedCount=0
   declare -a failedTestNames=()
-  for testName in $( declare -F | grep "declare -f @spec\." | sed 's/declare -f //'  )
+  for testName in $( declare -F | grep "declare -f @spec\." | sed 's/declare -f //' | sort -R  )
   do
     [ -n "$nameMatcher" ] && [[ ! "$testName" =~ $nameMatcher ]] && continue
 
@@ -39,7 +39,7 @@ spec.runTests() {
       @teardown
     }"
 
-    : "$(___spec___testFn 1> "$stdoutFile" 2> "$stderrFile" )"
+    : "$( ___spec___testFn 1> "$stdoutFile" 2> "$stderrFile" )"
 
     if [ $? -eq 0 ]
     then
