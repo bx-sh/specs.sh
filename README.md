@@ -39,6 +39,25 @@ Tests passed. 1 passed. 1 pending.
 
 ---
 
+> #### Installation with bx
+>
+> Install globally:
+> ```
+> bx install spec
+> ```
+> Add to project dependencies:
+> ```
+> bx add spec --dev
+> ```
+>
+> #### Manual installation
+>
+> - [Download .zip](https://github.com/bx-sh/spec.sh/archive/v0.2.0.zip)
+> - Add `bin` folder to your `PATH`
+> - Run `spec`!
+
+---
+
 ### Supports most commonly used test vocabulary
 
 ```sh
