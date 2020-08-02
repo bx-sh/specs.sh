@@ -85,7 +85,7 @@ spec.setupFunctionNames() {
 }
 
 spec.teardownFunctionNames() {
-  echo cleanup $(___spec___.teardownFunctionNames)
+  echo cleanup
 }
 ```
 
