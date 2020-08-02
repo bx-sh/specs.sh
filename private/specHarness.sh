@@ -87,7 +87,7 @@ ___spec___.specFunctionPrefixes() {
 }
 
 ___spec___.pendingFunctionPrefixes() {
-  echo @pending. @xtest. @xit. @xexample.
+  echo @pending. @xtest. @xit. @xexample. @xspec.
 }
 
 ___spec___.setupFunctionNames() {
@@ -107,7 +107,7 @@ ___spec___.teardownFixtureFunctionNames() {
 }
 
 ___spec___.helperFilenames() {
-  echo specHelper.sh testHelper.sh helper.spec.sh helper.test.sh
+  echo specHelper.sh testHelper.sh helper.spec.sh helper.test.sh spec.config.sh
 }
 
 ___spec___.loadHelpers() {
