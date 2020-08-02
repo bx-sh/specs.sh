@@ -265,7 +265,7 @@ ___spec___.runTests() {
   do
     [ -z "$pendingPrefix" ] && continue
     local pendingFunctionNames
-    read -rd '' -a pendingFunctionNames <<<"$( declare -F | grep "declare -f $pendingPrefix" | sed 's/declare -f //' | sort -R )"
+    read -rd '' -a pendingFunctionNames <<<"$( declare -F | grep "declare -f $pendingPrefix" | sed 's/declare -f //' )"
     local pendingFunctionName
     for pendingFunctionName in "${pendingFunctionNames[@]}"
     do

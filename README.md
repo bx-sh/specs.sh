@@ -47,21 +47,29 @@ Tests passed. 1 passed. 1 pending.
 > #### Installation with bx
 >
 > Install globally:
+>
 > ```
 > bx install spec
 > ```
+>
 > And run anywhere:
+>
 > ```
 > spec dir/*.spec.sh
 > ```
+>
 > Or add to project dependencies:
+>
 > ```
 > bx add spec --dev
 > ```
+>
 > And run with bx:
+>
 > ```
 > bx spec dir/*.spec.sh
 > ```
+>
 > #### Manual installation
 >
 > - [Download .zip](https://github.com/bx-sh/spec.sh/archive/v0.2.0.zip)
@@ -155,9 +163,9 @@ spec.displayTestResult() {
   local status="$3"       # PASS or FAIL or PENDING
   local stdout="$4"       # STDOUT from the test (includes output from @setup and @teardown)
   local stderr="$5"       # STDERR from the test (includes output from @setup and @teardown)
-  
+
   echo "[$status] $name"
-  
+
   [ "$status" = "$failed" ] && [ -n "$stdout" ] && echo -e "[STDOUT]\n$stdout"
   [ "$status" = "$failed" ] && [ -n "$stderr" ] && echo -e "[STDERR]\n$stderr"
 }
@@ -168,7 +176,7 @@ spec.displayTestsSummary() {
   local passed="$3"
   local failed="$4"
   local pending="$5"
-  
+
   echo "$status. $total total tests. $passed passed, $failed failed, $pending unimplemented."
 }
 ```
@@ -202,12 +210,12 @@ spec.specFunctionPrefixes() {
 # test which is not yet implemented (and is not run)
 spec.pendingFunctionPrefixes
 
-# List names of functions which will be run before 
+# List names of functions which will be run before
 # and after each test is run (setup/teardown)
 spec.setupFunctionNames
 spec.teardownFunctionNames
 
-# List names of functions which will be run before 
+# List names of functions which will be run before
 # and after each test file is run (setupFixure/teardownFixture)
 spec.setupFixtureFunctionNames()
 spec.teardownFixtureFunctionNames()
@@ -239,4 +247,3 @@ spec.afterFile
 - Each individual test file provided to `spec` is sourced in a separate process
 - Each test case within the file is run in a subshell and its STDOUT/STDERR recorded and exit code checked
 - `setupFixture` and `teardownFixture` _do not_ run in a subshell, they run in the main process of the given test file
-- All individual test cases are _run in random order_ within a given test file
