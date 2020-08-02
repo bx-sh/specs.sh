@@ -66,10 +66,6 @@ spec.displayTestResult() {
   ___spec___.displayTestResult "$@"
 }
 
-spec.displayPendingTestResult() {
-  ___spec___.displayPendingTestResult "$@"
-}
-
 spec.displayTestsSummary() {
   ___spec___.displayTestsSummary "$@"
 }
@@ -164,8 +160,11 @@ ___spec___.displayTestResult() {
   if [ "$status" = "PASS" ]
   then
     echo -e "[\e[32mOK\e[0m] $name"
-  else
+  elif [ "$status" = "FAIL" ]
+  then
     echo -e "[\e[31mFAIL\e[0m] $name"
+  else
+    echo -e "[\e[33mPENDING\e[0m] $name"
   fi
 
   if [ "$status" = "FAIL" ] || [ -n "$VERBOSE" ]
@@ -185,13 +184,6 @@ ___spec___.displayTestResult() {
       echo
     fi
   fi
-}
-
-___spec___.displayPendingTestResult() {
-  local functionName="$3"
-  local name="$2"
-
-  echo -e "[\e[33mPENDING\e[0m] $name"
 }
 
 ___spec___.displayTestsSummary() {
@@ -422,7 +414,7 @@ ___spec___.runTests() {
     local SPEC_FUNCTION="${___spec___AllPendingFunctionNames[$___spec___CurrentPendingIndex]}"
     local SPEC_NAME="${___spec___AllPendingDisplayNames[$___spec___CurrentPendingIndex]}"
     (( ___spec___CurrentPendingIndex++ ))
-    spec.displayPendingTestResult "$SPEC_FUNCTION" "$SPEC_NAME"
+    spec.displayTestResult "$SPEC_FUNCTION" "$SPEC_NAME" "PENDING"
   done
   local ___spec___PendingCount="${#___spec___AllPendingFunctionNames[@]}"
 
