@@ -66,7 +66,7 @@ Tests passed. 1 passed. 1 pending.
 >
 > - [Download .zip](https://github.com/bx-sh/spec.sh/archive/v0.2.0.zip)
 > - Add `bin` folder to your `PATH`
-> - Run `spec`!
+> - Run `spec`
 
 ---
 
