@@ -85,7 +85,7 @@ Tests passed. 1 passed. 1 pending.
 @xtest() { :; }
 @xspec() { :; }
 @xit() { :; }
-@xexample { :; }
+@xexample() { :; }
 @pending() { :; }
 ```
 
