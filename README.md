@@ -19,8 +19,12 @@ Simple Shell Specifications.
   : # Do some cleanup
 }
 
-@spec.Should_give_a_nice_greeting() {
-  [ "$( greeting )" = "Hello, world!" ]
+@spec.Should_give_a_daytime_greeting() {
+  [ "$( greeting --daytime )" = "Hello, world!" ]
+}
+
+@spec.Should_give_an_evening_greeting() {
+  [ "$( greeting --evening )" = "Goodnight, moon!" ]
 }
 
 @pending.I_will_write_this_later() {
@@ -31,7 +35,8 @@ Simple Shell Specifications.
 ```sh
 $ spec my-file.spec.sh
 
-[OK] Should give a nice greeting
+[OK] Should give a daytime greeting
+[FAIL] Should give an evening greeting
 [PENDING] I will write this later
 
 Tests passed. 1 passed. 1 pending.
@@ -77,16 +82,16 @@ Tests passed. 1 passed. 1 pending.
 @teardownFixture() { :; }
 @afterAll() { :; }
 
-@test() { :; }
-@spec() { :; }
-@it() { :; }
-@example() { :; }
+@test.<test_name_here>() { :; }
+@spec.<test_name_here>() { :; }
+@it.<test_name_here>t() { :; }
+@example.<test_name_here>() { :; }
 
-@xtest() { :; }
-@xspec() { :; }
-@xit() { :; }
-@xexample() { :; }
-@pending() { :; }
+@xtest.<test_name_here>() { :; }
+@xspec.<test_name_here>() { :; }
+@xit.<test_name_here>() { :; }
+@xexample.<test_name_here>() { :; }
+@pending.<test_name_here>() { :; }
 ```
 
 ---
