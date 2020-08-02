@@ -39,7 +39,7 @@ Tests passed. 1 passed. 1 pending.
 
 ---
 
-> - Supports most commonly used test vocabulary
+### Supports most commonly used test vocabulary
 
 ```sh
 ##
@@ -71,7 +71,7 @@ Tests passed. 1 passed. 1 pending.
 
 ---
 
-> - Or bring your own DSL
+### Or bring your own DSL
 
 ```sh
 # spec.config.sh
@@ -112,7 +112,7 @@ testThisIsMuchMoreToMyLiking() {
 
 ---
 
-> - Or implement your own output
+### Or implement your own output
 
 ```sh
 # spec.config.sh
