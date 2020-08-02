@@ -85,7 +85,6 @@ spec.setupFunctionNames() {
 }
 
 spec.teardownFunctionNames() {
-  # support the built-in @teardown plus our own
   echo cleanup $(___spec___.teardownFunctionNames)
 }
 ```
