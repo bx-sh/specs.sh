@@ -224,6 +224,6 @@ spec.afterFile
 - `spec -f` or `spec --fast-fail` or `spec --fail-fast` won't run additional test files after one reports a failure
 - `spec -c [config.sh]` sources provided file before test file is sourced (_runs before helper files are sourced_)
 - Each individual test file provided to `spec` is sourced in a separate process
-- Each individual test case within the file is run in a subshell and its STDOUT/STDERR recorded and exit code checked
+- Each test case within the file is run in a subshell and its STDOUT/STDERR recorded and exit code checked
 - `setupFixture` and `teardownFixture` _do not_ run in a subshell, they run in the main process of the given test file
 - All individual test cases are _run in random order_ within a given test file
