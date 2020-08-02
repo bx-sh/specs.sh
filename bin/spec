@@ -5,12 +5,18 @@ test_failed=
 fail_fast=
 name_matcher=
 matcher_is_next=
+spec_config=
+spec_config_is_next=
 
 declare -a testFiles=()
 
 for arg in "$@"
 do
-  if [ -f "$arg" ]
+  if [ "$spec_config_is_next" = "true" ]
+  then
+    spec_config_is_next=false
+    spec_config="$arg"
+  elif [ -f "$arg" ]
   then
     testFiles+=("$arg")
   elif [ "$arg" = "-f" ] || [ "$arg" = "--fast-fail" ] || [ "$arg" = "--fail-fast" ]
@@ -23,6 +29,9 @@ do
   then
     matcher_is_next=false
     name_matcher="$arg"
+  elif [ "$arg" = "-c" ]
+  then
+    spec_config_is_next=true
   elif [ -d "$arg" ]
   then
     while read -rd '' specFile
@@ -44,7 +53,7 @@ fi
 
 for filePath in "${testFiles[@]}"
 do
-  "$spec_harness" "$( dirname "$filePath" )" "$filePath" "$name_matcher"
+  "$spec_harness" "$( dirname "$filePath" )" "$filePath" "$name_matcher" "$spec_config"
   [ $? -ne 0 ] && test_failed=true
   [ -n "$fail_fast" ] && [ -n "$test_failed" ] && { echo "Failed" >&2; exit 1; }
 done
