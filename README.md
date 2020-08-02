@@ -135,3 +135,61 @@ spec.displayTestsSummary() {
   echo "$status. $total total tests. $passed passed, $failed failed, $pending unimplemented."
 }
 ```
+
+### Configuration
+
+```
+# Given a $1 function name (without prefix)
+# return a formatted name, e.g. replace _ with ' '
+spec.getTestDisplayName() {
+  echo "${1/_/ }"
+}
+
+# Return list of function prefixes which designate
+# a function as a test that should be executed
+spec.specFunctionPrefixes() {
+  echo @test. test @spec.
+}
+
+##
+# For all of these, if you want to call the default
+# implementation, just call `___spec___.[function name]`
+##
+
+# Example showing how to *extend* existing list
+spec.specFunctionPrefixes() {
+  echo myPrefix $(___spec___.specFunctionPrefixes)
+}
+
+# Prefixes which designate a function as a 'pending'
+# test which is not yet implemented (and is not run)
+spec.pendingFunctionPrefixes
+
+# List names of functions which will be run before 
+# and after each test is run (setup/teardown)
+spec.setupFunctionNames
+spec.teardownFunctionNames
+
+# List names of functions which will be run before 
+# and after each test file is run (setupFixure/teardownFixture)
+spec.setupFixtureFunctionNames()
+spec.teardownFixtureFunctionNames()
+
+# Return a list of filenames which will be automatically detected
+# sourced. Defaults include specHelper.sh and spec.config.sh.
+# The whole file tree is searched (parent directories).
+spec.helperFilenames()
+```
+
+### Display / Lifecycle Hooks
+
+```
+spec.loadHelpers
+spec.beforeFile
+  spec.displayTestsBanner
+    spec.displayRunningTest
+      spec.runTest
+    spec.displayTestResult
+  spec.displayTestsSummary
+spec.afterFile
+```
