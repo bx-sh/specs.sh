@@ -58,7 +58,7 @@ Tests passed. 1 passed. 1 pending.
 > ```
 > bx add spec --dev
 > ```
-> And run with bx
+> And run with bx:
 > ```
 > bx spec dir/*.spec.sh
 > ```
