@@ -72,7 +72,7 @@ Tests passed. 1 passed. 1 pending.
 >
 > #### Manual installation
 >
-> - [Download .zip](https://github.com/bx-sh/spec.sh/archive/v0.2.0.zip)
+> - [Download .zip](https://github.com/bx-sh/spec.sh/archive/v0.2.1.zip)
 > - Add `bin` folder to your `PATH`
 > - Run `spec`
 
