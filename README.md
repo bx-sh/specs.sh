@@ -69,7 +69,7 @@ Tests passed. 1 passed. 1 pending.
 @before() { :; }
 
 @teardown() { :; }
-@before() { :; }
+@after() { :; }
 
 @setupFixture() { :; }
 @beforeAll() { :; }
