@@ -33,12 +33,38 @@ spec.runTests() {
     local stdoutFile="$( mktemp )"
     local stderrFile="$( mktemp )"
 
-    x="$( $testName 1> "$stdoutFile" 2> "$stderrFile" )"
+    eval "___spec___testFn() {
+      @setup
+      $testName
+      @teardown
+    }"
+
+    : "$(___spec___testFn 1> "$stdoutFile" 2> "$stderrFile" )"
 
     if [ $? -eq 0 ]
     then
       passedCount=$(( passedCount + 1 ))
       echo -e "[\e[32mOK\e[0m] $displayTestName"
+      if [ -n "$VERBOSE" ]
+      then
+        local stdout="$( cat "$stdoutFile" | sed 's/\(.*\)/\t\1/' )"
+        if [ -n "$stdout" ]
+        then
+          echo
+          echo -e "\t[\e[1;34mSTDOUT\e[0m] -------------------------------------------"
+          echo -e "$stdout"
+          echo -e "\t----------------------------------------------------"
+        fi
+        local stderr="$( cat "$stderrFile" | sed 's/\(.*\)/\t\1/' )"
+        if [ -n "$stderr" ]
+        then
+          echo
+          echo -e "\t[\e[1;31mSTDERR\e[0m] -------------------------------------------"
+          echo -e "$stderr"
+          echo -e "\t----------------------------------------------------"
+        fi
+        echo
+      fi
     else
       failedCount=$(( failedCount + 1))
       failedTestNames+=("$testName")

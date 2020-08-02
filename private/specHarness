@@ -6,6 +6,8 @@ SPEC_NAME_PATTERN="$3"
 spec.loadSpecHelpers "$1"
 echo
 echo "[$SPEC_FILE]"
+@setup() { :; }
+@teardown() { :; }
 set -e
 source "$SPEC_FILE"
 set +e
