@@ -10,9 +10,7 @@ source "$___spec___SpecPrivateDirectory/specHarness.sh"
 spec.loadHelpers "$SPEC_DIR"
 
 spec.beforeFile "$SPEC_FILE"
-set -e
 source "$SPEC_FILE"
-set +e
 spec.afterFile "$SPEC_FILE"
 
 spec.runTests "$SPEC_NAME_PATTERN"

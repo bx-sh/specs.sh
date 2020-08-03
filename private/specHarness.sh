@@ -228,7 +228,7 @@ ___spec___.runTests() {
   do
     [ -z "$specPrefix" ] && continue
     local specFunctionNames
-    read -rd '' -a specFunctionNames <<<"$( declare -F | grep "declare -f $specPrefix" | sed 's/declare -f //' | sort -R )"
+    read -rd '' -a specFunctionNames <<<"$( declare -F | grep "declare -f $specPrefix" | sed 's/declare -f //' )"
     local specFunctionName
     for specFunctionName in "${specFunctionNames[@]}"
     do
