@@ -217,13 +217,13 @@ spec.teardownFunctionNames
 
 # List names of functions which will be run before
 # and after each test file is run (setupFixure/teardownFixture)
-spec.setupFixtureFunctionNames()
-spec.teardownFixtureFunctionNames()
+spec.setupFixtureFunctionNames
+spec.teardownFixtureFunctionNames
 
 # Return a list of filenames which will be automatically detected
 # sourced. Defaults include specHelper.sh and spec.config.sh.
 # The whole file tree is searched (parent directories).
-spec.helperFilenames()
+spec.helperFilenames
 ```
 
 ### Display / Lifecycle Hooks
@@ -247,3 +247,8 @@ spec.afterFile
 - Each individual test file provided to `spec` is sourced in a separate process
 - Each test case within the file is run in a subshell and its STDOUT/STDERR recorded and exit code checked
 - `setupFixture` and `teardownFixture` _do not_ run in a subshell, they run in the main process of the given test file
+- Each test (including the test function, setup, and teardown functions) has access to the following variables:
+  - `SPEC_FUNCTION` - name of the test function currently being run
+  - `SPEC_NAME` - display name of current test (from getTestDisplayName)
+  - `SPEC_FILE` - path of current file being run
+  - `SPEC_DIR` - path of current working directory
