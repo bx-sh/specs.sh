@@ -151,7 +151,21 @@ testThisIsMuchMoreToMyLiking() {
 
 ---
 
-### Or implement your own output
+### Prefer tests to fail if any command returns non-zero?
+
+```sh
+# spec.config.sh
+
+spec.runTest() {
+  set -e
+   ___spec___.runTest "$@"
+  set +e
+}
+```
+
+---
+
+### Implement your own test output
 
 ```sh
 # spec.config.sh
@@ -247,6 +261,7 @@ spec.afterFile
 - Each individual test file provided to `spec` is sourced in a separate process
 - Each test case within the file is run in a subshell and its STDOUT/STDERR recorded and exit code checked
 - `setupFixture` and `teardownFixture` _do not_ run in a subshell, they run in the main process of the given test file
+- To 'extend' any part of the interface, define `spec.[fn]` and use `___spec___.fn "$@"` to call default function
 - Each test (including the test function, setup, and teardown functions) has access to the following variables:
   - `SPEC_FUNCTION` - name of the test function currently being run
   - `SPEC_NAME` - display name of current test (from getTestDisplayName)
