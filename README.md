@@ -165,7 +165,7 @@ spec.runTest() {
 
 ---
 
-### Or implement your own output
+### Implement your own test output
 
 ```sh
 # spec.config.sh
