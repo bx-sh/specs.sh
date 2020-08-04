@@ -261,3 +261,4 @@ spec.afterFile
 - Each individual test file provided to `spec` is sourced in a separate process
 - Each test case within the file is run in a subshell and its STDOUT/STDERR recorded and exit code checked
 - `setupFixture` and `teardownFixture` _do not_ run in a subshell, they run in the main process of the given test file
+- To 'extend' any part of the interface, define `spec.[fn]` and use `___spec___.fn "$@"` to call default function
