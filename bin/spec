@@ -42,7 +42,8 @@ do
     done < <( find "$arg" -type f -name "*.spec.sh" -print0 )
   elif [ "$arg" = "-v" ] || [ "$arg" = "--version" ]
   then
-    echo "@spec version $SPEC_VERSION"
+    echo "spec version $SPEC_VERSION"
+    return 0
   elif [ -n "$arg" ]
   then
     echo "Unsupported 'spec' argument: [$arg]" >&2
