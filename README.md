@@ -10,6 +10,17 @@ Simple Shell Specifications.
 
 ---
 
+Download the [latest release](https://github.com/bx-sh/spec.sh/archive/v0.2.3.tar.gz)
+
+```sh
+$ PATH="$PATH:spec/bin
+
+$ spec --version
+spec version 0.2.3
+```
+
+---
+
 ```sh
 @setup() {
   PATH="./greeting/bin:$PATH"
@@ -41,21 +52,6 @@ $ spec my-file.spec.sh
 
 Tests passed. 1 passed. 1 pending.
 ```
-
----
-
-#### installation
-
-Download the [latest .zip](https://github.com/bx-sh/spec.sh/archive/v0.2.2.tar.gz)
-
-```sh
-$ PATH="$PATH:spec/bin
-
-$ spec --version
-spec version 0.2.3
-```
-
----
 
 ### Supports most commonly used test vocabulary
 
