@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-SPEC_VERSION="0.2.2"
+SPEC_VERSION="0.2.3"
 
 spec_harness="${BASH_SOURCE[0]/bin\/spec}private/specHarness"
 test_failed=
@@ -43,7 +43,7 @@ do
   elif [ "$arg" = "-v" ] || [ "$arg" = "--version" ]
   then
     echo "spec version $SPEC_VERSION"
-    return 0
+    exit 0
   elif [ -n "$arg" ]
   then
     echo "Unsupported 'spec' argument: [$arg]" >&2
