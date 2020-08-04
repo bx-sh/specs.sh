@@ -44,37 +44,16 @@ Tests passed. 1 passed. 1 pending.
 
 ---
 
-> #### Installation with bx
->
-> Install globally:
->
-> ```
-> bx install spec
-> ```
->
-> And run anywhere:
->
-> ```
-> spec dir/*.spec.sh
-> ```
->
-> Or add to project dependencies:
->
-> ```
-> bx add spec --dev
-> ```
->
-> And run with bx:
->
-> ```
-> bx spec dir/*.spec.sh
-> ```
->
-> #### Manual installation
->
-> - [Download .zip](https://github.com/bx-sh/spec.sh/archive/v0.2.2.zip)
-> - Add `bin` folder to your `PATH`
-> - Run `spec`
+#### installation
+
+Download the [latest .zip](https://github.com/bx-sh/spec.sh/archive/v0.2.2.tar.gz)
+
+```sh
+$ PATH="$PATH:spec/bin
+
+$ spec --version
+spec version 0.2.3
+```
 
 ---
 
