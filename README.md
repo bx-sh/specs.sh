@@ -13,7 +13,7 @@ Simple Shell Specifications.
 Download the [latest release](https://github.com/bx-sh/spec.sh/archive/v0.2.3.tar.gz)
 
 ```sh
-$ PATH="$PATH:spec/bin
+$ PATH="$PATH:spec/bin"
 
 $ spec --version
 spec version 0.2.3
