@@ -151,6 +151,20 @@ testThisIsMuchMoreToMyLiking() {
 
 ---
 
+### Prefer tests to fail if any command returns non-zero?
+
+```sh
+# spec.config.sh
+
+spec.runTest() {
+  set -e
+   ___spec___.runTest "$@"
+  set +e
+}
+```
+
+---
+
 ### Or implement your own output
 
 ```sh
