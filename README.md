@@ -525,6 +525,44 @@ This allows you to easily share dependencies between various `spec` source code 
 
 # Command-Line `spec`
 
+```sh
+$ spec --help
+
+spec version 0.2.4
+
+Usage: spec [directory/ or file.spec.sh] [-f -p -e -c -h -v]
+
+Options:
+
+  -e, --name, --pattern [pattern]
+
+  -c, --config [config file]
+
+  -f, --fail-fast, --fast-fail
+
+  -p, --print, --dry--run
+
+  -h, --help
+
+  -v, --version
+
+Examples:
+
+  spec file.spec.sh                   Runs file.spec.sh
+
+  spec file.spec.sh another.spec.sh   Runs two spec files
+
+  spec directory/                     Recursively searches directory/ for
+                                      *.spec.sh and *.test.sh files to run
+
+  spec                                Recursively searches current directory for
+                                      *.spec.sh and *.test.sh files to run
+
+  spec -e ^hello                      Runs tests with names that start with "hello"
+
+  spec -e world$                      Runs tests with names that end with "world"
+```
+
 ## Running specs
 
 To run a `spec` source file:
