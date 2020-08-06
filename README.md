@@ -229,6 +229,8 @@ If you want to perform some setup **once** before **all** of the tests are run, 
 > - `@setup` can also be named `@before`
 > - `@setupFixture` can also be named `@beforeAll`
 
+---
+
 > #### ℹ Spec + Subshells
 >
 > `spec` runs every individual spec function inside of its own subshell.
