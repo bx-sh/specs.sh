@@ -55,9 +55,8 @@ Tests passed. 1 passed. 1 pending.
 
 #### Basics
 
-- [Test syntax](#foo)
-- [Test setup](#foo)
-- [Test teardown](#foo)
+- [Spec syntax](#foo)
+- [Setup and teardown](#foo)
 - [Pending tests](#foo)
 - [Shared code](#foo)
 
@@ -81,7 +80,35 @@ Tests passed. 1 passed. 1 pending.
 
 ---
 
+# Basics
+
+## Spec syntax
+
+Specs (or tests) are defined as simple BASH functions:
+
+```sh
+@spec.file_should_exist() {
+
+  local expected_file_path="my-file"
+
+  [ -f "$expected_file_path" ]
+
+}
+```
+
+## Setup and teardown
+
+## Pending tests
+
+## Shared code
+
 ---
+
+---
+
+# Command-Line `spec`
+
+# Customization
 
 ---
 
