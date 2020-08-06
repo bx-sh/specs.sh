@@ -75,7 +75,7 @@ Tests passed. 1 passed. 1 pending.
 - [Custom spec definition syntax](#foo) - (`testHello()`)
 - [Custom setup and teardown syntax](#foo) - (`configure()`)
 - [Extending existing configuration](#foo) - (`___spec___.[fn]`)
-- [Lifecycle event hooks](#foo) - (`spec.runTest`)
+- [Lifecycle event hooks](#foo) - (`spec.runSpec`)
 - [Custom display output](#foo) - (`spec.displaySpecResult`)
 - [Customization API reference](#foo) - (`$SPEC_CURRENT_FUNCTION`)
 
@@ -847,7 +847,7 @@ For every file that is run by `spec`, the following is performed:
 1. if `-p` or `--print` or `--dry-run` (the tests are printed and not run)
    1. `spec.listTests`
 1. else
-   1. `spec.runTests`
+   1. `spec.runSpecs`
       1. `spec.displaySpecBanner`
       1. `spec.runSetupFixture` (called once for each setup fixture)
          - `spec.runFunction`
@@ -855,7 +855,7 @@ For every file that is run by `spec`, the following is performed:
          1. `spec.displayRunningSpec`
          1. `spec.runSetup` (called once for each setup function)
             - `spec.runFunction`
-         1. **`spec.runTest`**
+         1. **`spec.runSpec`**
             - `spec.runFunction`
          1. `spec.displaySpecResult`
          1. `spec.runTeardown` (called once for each teardown function)
@@ -1082,137 +1082,137 @@ All of these functions have access to the following variables:
 - `SPEC_CONFIG`
 - `SPEC_PRINT_ONLY`
 
-### `spec.afterFile`
+#### `spec.afterFile`
 
 - Called immediately after sourcing spec file
 
-### `spec.beforeFile`
+#### `spec.beforeFile`
 
 - Called immediately before sourcing spec file
 
-### `spec.configFilenames`
+#### `spec.configFilenames`
 
 > Default: `echo spec.config.sh test.config.sh`
 
 - Function should echo a list of string
 - Each item will be used as the basename of a file to search for
 
-### `spec.displayRunningSpec`
+#### `spec.displayRunningSpec`
 
 -
 
-### `spec.displaySpecBanner`
+#### `spec.displaySpecBanner`
 
 -
 
-### `spec.displaySpecResult`
+#### `spec.displaySpecResult`
 
 -
 
-### `spec.displaySpecSummary`
+#### `spec.displaySpecSummary`
 
 -
 
-### `spec.getSpecDisplayName`
+#### `spec.getSpecDisplayName`
 
 -
 
-### `spec.helperFilenames`
+#### `spec.helperFilenames`
 
 -
 
-### `spec.listTests`
+#### `spec.listTests`
 
 -
 
-### `spec.loadConfigs`
+#### `spec.loadConfigs`
 
 -
 
-### `spec.loadHelpers`
+#### `spec.loadHelpers`
 
 -
 
-### `spec.loadPendingFunctions`
+#### `spec.loadPendingFunctions`
 
 -
 
-### `spec.loadSetupFixtureFunctions`
+#### `spec.loadSetupFixtureFunctions`
 
 -
 
-### `spec.loadSetupFunctions`
+#### `spec.loadSetupFunctions`
 
 -
 
-### `spec.loadSpecFunctions`
+#### `spec.loadSpecFunctions`
 
 -
 
-### `spec.loadTeardownFixtureFunctions`
+#### `spec.loadTeardownFixtureFunctions`
 
 -
 
-### `spec.loadTeardownFunctions`
+#### `spec.loadTeardownFunctions`
 
 -
 
-### `spec.loadTests`
+#### `spec.loadTests`
 
 -
 
-### `spec.pendingFunctionPrefixes`
+#### `spec.pendingFunctionPrefixes`
 
 -
 
-### `spec.runFunction`
+#### `spec.runFunction`
 
 -
 
-### `spec.runSetup`
+#### `spec.runSetup`
 
 -
 
-### `spec.runSetupFixture`
+#### `spec.runSetupFixture`
 
 -
 
-### `spec.runTeardown`
+#### `spec.runTeardown`
 
 -
 
-### `spec.runTeardownFixture`
+#### `spec.runTeardownFixture`
 
 -
 
-### `spec.runTest`
+#### `spec.runSpec`
 
 -
 
-### `spec.runTests`
+#### `spec.runSpecs`
 
 -
 
-### `spec.setupFixtureFunctionNames`
+#### `spec.setupFixtureFunctionNames`
 
 -
 
-### `spec.setupFunctionNames`
+#### `spec.setupFunctionNames`
 
 -
 
-### `spec.specFunctionPrefixes`
+#### `spec.specFunctionPrefixes`
 
 -
 
-### `spec.specNameMatchesPattern`
+#### `spec.specNameMatchesPattern`
 
 -
 
-### `spec.teardownFixtureFunctionNames`
+#### `spec.teardownFixtureFunctionNames`
 
 -
 
-### `spec.teardownFunctionNames`
+#### `spec.teardownFunctionNames`
 
 -

@@ -133,8 +133,8 @@ spec.listTests() {
   ___spec___.listTests "$@"
 }
 
-spec.runTests() {
-  ___spec___.runTests "$@"
+spec.runSpecs() {
+  ___spec___.runSpecs "$@"
 }
 
 spec.runSetup() {
@@ -145,8 +145,8 @@ spec.runSetupFixture() {
   ___spec___.runSetupFixture "$@"
 }
 
-spec.runTest() {
-  ___spec___.runTest "$@"
+spec.runSpec() {
+  ___spec___.runSpec "$@"
 }
 
 spec.runTeardown() {
@@ -205,7 +205,7 @@ ___spec___.runTeardownFixture() {
   set +e
 }
 
-___spec___.runTest() {
+___spec___.runSpec() {
   spec.runFunction "$1"
 }
 
@@ -556,7 +556,7 @@ ___spec___.listTests() {
   done
 }
 
-___spec___.runTests() {
+___spec___.runSpecs() {
   spec.displaySpecBanner
 
   ##
@@ -616,7 +616,7 @@ ___spec___.runTests() {
     if [ -z "$___spec___setupFailed" ]
     then
       SPEC_CURRENT_FUNCTION="$SPEC_FUNCTION"
-      ___spec___unusedOutput="$( spec.runTest "$SPEC_FUNCTION" 1>>"$SPEC_STDOUT_file" 2>>"$SPEC_STDERR_file" )"
+      ___spec___unusedOutput="$( spec.runSpec "$SPEC_FUNCTION" 1>>"$SPEC_STDOUT_file" 2>>"$SPEC_STDERR_file" )"
       SPEC_RESULT_CODE=$?
     fi
 
