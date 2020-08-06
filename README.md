@@ -445,7 +445,7 @@ createFile() {
 
 ## Shared code
 
-If you find that your spec files have a lot of redundancy, e.g. they all start with:
+You may find that your spec files have a lot of redundancy between them, e.g. loading the same dependencies:
 
 ```sh
 source "dependency1.sh"
@@ -463,7 +463,7 @@ helperFunctionTwo() {
 
 ```
 
-You can create a `specHelper.sh` and it will be automatically sourced into your spec files.
+If you move code into a `specHelper.sh` file, it will be automatically sourced into your spec files before tests are run:
 
 ```sh
 # [ spec/specHelper.sh ]
@@ -490,19 +490,25 @@ helperFunctionTwo() {
   # ...
 ```
 
-`spec` will search the path for `specHelper.sh` files.
+This allows you to easily share dependencies between various `spec` source code files.
 
-If your spec file is `/foo/bar/baz.spec.sh` then `spec` will search for:
+---
 
-- `/specHelper.sh`
-- `/foo/specHelper.sh`
-- `/foo/bar/specHelper.sh`
-
-They will be loaded in this order, starting with parent directories.
-
-This allows you to define more generic `specHelper.sh` common code in your project in parent directories.
-
-More specific helpers should be added to `specHelper.sh` files in subdirectories.
+> #### ℹ Helper File Locations
+>
+> `spec` will search the path for `specHelper.sh` files.
+>
+> If your spec file is `/foo/bar/baz.spec.sh` then `spec` will search for:
+>
+> - `/specHelper.sh`
+> - `/foo/specHelper.sh`
+> - `/foo/bar/specHelper.sh`
+>
+> They will be loaded in this order, starting with parent directories.
+>
+> This allows you to define more generic `specHelper.sh` common code in your project in parent directories.
+>
+> More specific helpers should be added to `specHelper.sh` files in subdirectories.
 
 ---
 
