@@ -158,6 +158,8 @@ A spec will **`[FAIL]`** when the function is run and either of these conditions
 > - `@it.<test name>` can also be used
 > - `@example.<test name>` can also be used
 
+---
+
 ## Setup
 
 It is common to have multiple specs in the same file which perform the same setup.
@@ -247,6 +249,8 @@ If you want to perform some setup **once** before **all** of the tests are run, 
 >
 > It is safe to set global variables in `@setup`, they will not effect your other tests.
 
+---
+
 ## Teardown
 
 If you want to perform some cleanup after your tests, define a **`@teardown`** function:
@@ -316,6 +320,8 @@ If you want to perform some cleanup **once** after **all** of the tests are run,
 >
 > Note: if the `@teardown` function does not return a non-zero code, it will fail the test.
 
+---
+
 ## Pending
 
 Sometimes you may want to define a number of tests which you are not ready to implement yet.
@@ -381,6 +387,8 @@ This is useful when initially defining tests or if you want to temporarily disab
 > - `@xexample.<test name>` can also be used
 >
 > For every supported `@spec.<test name>` syntax, you can use an `x` prefix to mark the spec as pending.
+
+---
 
 ## Helper functions
 
