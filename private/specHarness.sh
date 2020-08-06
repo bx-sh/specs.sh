@@ -235,33 +235,151 @@ ___spec___.loadHelpers() {
 # declare -a SPEC_FUNCTION_NAMES=()
 # declare -a SPEC_DISPLAY_NAMES=()
 ___spec___.loadSpecFunctions() {
-  :
+  local specPrefix
+  for specPrefix in $( spec.specFunctionPrefixes )
+  do
+    [ -z "$specPrefix" ] && continue
+    local specFunctionNames
+    read -rd '' -a specFunctionNames <<<"$( declare -F | grep "declare -f $specPrefix" | sed 's/declare -f //' )"
+    local specFunctionName
+    for specFunctionName in "${specFunctionNames[@]}"
+    do
+      local withoutPrefix="${specFunctionName#"$specPrefix"}"
+      local specDisplayName="$( spec.getSpecDisplayName "$withoutPrefix" )"
+      if [ -n "$SPEC_NAME_PATTERN" ]
+      then
+        if ! spec.specNameMatchesPattern "$specFunctionName" "$withoutPrefix" "$specDisplayName" "$SPEC_NAME_PATTERN"
+        then
+          continue
+        fi
+      fi
+      local alreadyAdded=""
+      local existingFunctionName
+      for existingFunctionName in "${SPEC_FUNCTION_NAMES[@]}"
+      do
+        if [ "$existingFunctionName" = "$specFunctionName" ]
+        then
+          alreadyAdded=true
+          break
+        fi
+      done
+      if [ -z "$alreadyAdded" ]
+      then
+        SPEC_FUNCTION_NAMES+=("$specFunctionName")
+        SPEC_DISPLAY_NAMES+=("$specDisplayName")
+      fi
+    done
+  done
+  unset specPrefix
+  unset specFunctionName
+  unset specFunctionNames
+  unset specDisplayName
+  unset withoutPrefix
+  unset alreadyAdded
+  unset existingFunctionName
 }
 
 # declare -a SPEC_PENDING_FUNCTION_NAMES=()
 # declare -a SPEC_PENDING_DISPLAY_NAMES=()
 ___spec___.loadPendingFunctions() {
-  :
+  local pendingPrefix
+  for pendingPrefix in $( spec.pendingFunctionPrefixes )
+  do
+    [ -z "$pendingPrefix" ] && continue
+    local pendingFunctionNames
+    read -rd '' -a pendingFunctionNames <<<"$( declare -F | grep "declare -f $pendingPrefix" | sed 's/declare -f //' )"
+    local pendingFunctionName
+    for pendingFunctionName in "${pendingFunctionNames[@]}"
+    do
+      local withoutPrefix="${pendingFunctionName#"$pendingPrefix"}"
+      local pendingDisplayName="$( spec.getSpecDisplayName "$withoutPrefix" )"
+      if [ -n "$SPEC_NAME_PATTERN" ]
+      then
+        if ! spec.specNameMatchesPattern "$pendingFunctionName" "$withoutPrefix" "$pendingDisplayName" "$SPEC_NAME_PATTERN"
+        then
+          continue
+        fi
+      fi
+      local alreadyAdded=""
+      local existingFunctionName
+      for existingFunctionName in "${SPEC_PENDING_FUNCTION_NAMES[@]}"
+      do
+        if [ "$existingFunctionName" = "$pendingFunctionName" ]
+        then
+          alreadyAdded=true
+          break
+        fi
+      done
+      if [ -z "$alreadyAdded" ]
+      then
+        SPEC_PENDING_FUNCTION_NAMES+=("$pendingFunctionName")
+        SPEC_PENDING_DISPLAY_NAMES+=("$pendingDisplayName")
+      fi
+    done
+  done
+  unset pendingPrefix
+  unset pendingFunctionName
+  unset pendingFunctionNames
+  unset pendingDisplayName
+  unset withoutPrefix
+  unset alreadyAdded
+  unset existingFunctionName
 }
 
 # declare -a SPEC_SETUP_FUNCTION_NAMES=()
 ___spec___.loadSetupFunctions() {
-  :
+  local setupFunctionName
+  for setupFunctionName in $( spec.setupFunctionNames )
+  do
+    [ -z "$setupFunctionName" ] && continue
+    if declare -F | grep "declare -f $setupFunctionName" >/dev/null
+    then
+      SPEC_SETUP_FUNCTION_NAMES+=("$setupFunctionName")
+    fi
+  done
+  unset setupFunctionName
 }
 
 # declare -a SPEC_SETUP_FIXTURE_FUNCTION_NAMES=()
 ___spec___.loadSetupFixtureFunctions() {
-  :
+  local setupFixtureFunctionName
+  for setupFixtureFunctionName in $( spec.setupFixtureFunctionNames )
+  do
+    [ -z "$setupFixtureFunctionName" ] && continue
+    if declare -F | grep "declare -f $setupFixtureFunctionName" >/dev/null
+    then
+      SPEC_SETUP_FIXTURE_FUNCTION_NAMES+=("$setupFixtureFunctionName")
+    fi
+  done
+  unset setupFixtureFunctionName
 }
 
 # declare -a SPEC_TEARDOWN_FUNCTION_NAMES=()
 ___spec___.loadTeardownFunctions() {
-  :
+  local teardownFunctionName
+  for teardownFunctionName in $( spec.teardownFunctionNames )
+  do
+    [ -z "$teardownFunctionName" ] && continue
+    if declare -F | grep "declare -f $teardownFunctionName" >/dev/null
+    then
+      SPEC_TEARDOWN_FUNCTION_NAMES+=("$teardownFunctionName")
+    fi
+  done
+  unset teardownFunctionName
 }
 
 # declare -a SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES=()
 ___spec___.loadTeardownFixtureFunctions() {
-  :
+  local teardownFixtureFunctionName
+  for teardownFixtureFunctionName in $( spec.teardownFixtureFunctionNames )
+  do
+    [ -z "$teardownFixtureFunctionName" ] && continue
+    if declare -F | grep "declare -f $teardownFixtureFunctionName" >/dev/null
+    then
+      SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES+=("$teardownFixtureFunctionName")
+    fi
+  done
+  unset teardownFixtureFunctionName
 }
 
 ___spec___.beforeFile() {
@@ -344,135 +462,12 @@ ___spec___.displayTestsSummary() {
 }
 
 ___spec___.loadTests() {
-  local specPrefix
-  for specPrefix in $( spec.specFunctionPrefixes )
-  do
-    [ -z "$specPrefix" ] && continue
-    local specFunctionNames
-    read -rd '' -a specFunctionNames <<<"$( declare -F | grep "declare -f $specPrefix" | sed 's/declare -f //' )"
-    local specFunctionName
-    for specFunctionName in "${specFunctionNames[@]}"
-    do
-      local withoutPrefix="${specFunctionName#"$specPrefix"}"
-      local specDisplayName="$( spec.getSpecDisplayName "$withoutPrefix" )"
-      if [ -n "$SPEC_NAME_PATTERN" ]
-      then
-        if ! spec.specNameMatchesPattern "$specFunctionName" "$withoutPrefix" "$specDisplayName" "$SPEC_NAME_PATTERN"
-        then
-          continue
-        fi
-      fi
-      local alreadyAdded=""
-      local existingFunctionName
-      for existingFunctionName in "${SPEC_FUNCTION_NAMES[@]}"
-      do
-        if [ "$existingFunctionName" = "$specFunctionName" ]
-        then
-          alreadyAdded=true
-          break
-        fi
-      done
-      if [ -z "$alreadyAdded" ]
-      then
-        SPEC_FUNCTION_NAMES+=("$specFunctionName")
-        SPEC_DISPLAY_NAMES+=("$specDisplayName")
-      fi
-    done
-  done
-  unset specPrefix
-  unset specFunctionName
-  unset specFunctionNames
-  unset specDisplayName
-  unset withoutPrefix
-  unset alreadyAdded
-  unset existingFunctionName
-
-  local pendingPrefix
-  for pendingPrefix in $( spec.pendingFunctionPrefixes )
-  do
-    [ -z "$pendingPrefix" ] && continue
-    local pendingFunctionNames
-    read -rd '' -a pendingFunctionNames <<<"$( declare -F | grep "declare -f $pendingPrefix" | sed 's/declare -f //' )"
-    local pendingFunctionName
-    for pendingFunctionName in "${pendingFunctionNames[@]}"
-    do
-      local withoutPrefix="${pendingFunctionName#"$pendingPrefix"}"
-      local pendingDisplayName="$( spec.getSpecDisplayName "$withoutPrefix" )"
-      if [ -n "$SPEC_NAME_PATTERN" ]
-      then
-        if ! spec.specNameMatchesPattern "$pendingFunctionName" "$withoutPrefix" "$pendingDisplayName" "$SPEC_NAME_PATTERN"
-        then
-          continue
-        fi
-      fi
-      local alreadyAdded=""
-      local existingFunctionName
-      for existingFunctionName in "${SPEC_PENDING_FUNCTION_NAMES[@]}"
-      do
-        if [ "$existingFunctionName" = "$pendingFunctionName" ]
-        then
-          alreadyAdded=true
-          break
-        fi
-      done
-      if [ -z "$alreadyAdded" ]
-      then
-        SPEC_PENDING_FUNCTION_NAMES+=("$pendingFunctionName")
-        SPEC_PENDING_DISPLAY_NAMES+=("$pendingDisplayName")
-      fi
-    done
-  done
-  unset pendingPrefix
-  unset pendingFunctionName
-  unset pendingFunctionNames
-  unset pendingDisplayName
-  unset withoutPrefix
-  unset alreadyAdded
-  unset existingFunctionName
-
-  local setupFunctionName
-  for setupFunctionName in $( spec.setupFunctionNames )
-  do
-    [ -z "$setupFunctionName" ] && continue
-    if declare -F | grep "declare -f $setupFunctionName" >/dev/null
-    then
-      SPEC_SETUP_FUNCTION_NAMES+=("$setupFunctionName")
-    fi
-  done
-  unset setupFunctionName
-
-  local teardownFunctionName
-  for teardownFunctionName in $( spec.teardownFunctionNames )
-  do
-    [ -z "$teardownFunctionName" ] && continue
-    if declare -F | grep "declare -f $teardownFunctionName" >/dev/null
-    then
-      SPEC_TEARDOWN_FUNCTION_NAMES+=("$teardownFunctionName")
-    fi
-  done
-  unset teardownFunctionName
-
-  local setupFixtureFunctionName
-  for setupFixtureFunctionName in $( spec.setupFixtureFunctionNames )
-  do
-    [ -z "$setupFixtureFunctionName" ] && continue
-    if declare -F | grep "declare -f $setupFixtureFunctionName" >/dev/null
-    then
-      SPEC_SETUP_FIXTURE_FUNCTION_NAMES+=("$setupFixtureFunctionName")
-    fi
-  done
-  unset setupFixtureFunctionName
-
-  local teardownFixtureFunctionName
-  for teardownFixtureFunctionName in $( spec.teardownFixtureFunctionNames )
-  do
-    [ -z "$teardownFixtureFunctionName" ] && continue
-    if declare -F | grep "declare -f $teardownFixtureFunctionName" >/dev/null
-    then
-      SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES+=("$teardownFixtureFunctionName")
-    fi
-  done
-  unset teardownFixtureFunctionName
+  spec.loadSpecFunctions
+  spec.loadPendingFunctions
+  spec.loadSetupFunctions
+  spec.loadSetupFixtureFunctions
+  spec.loadTeardownFunctions
+  spec.loadTeardownFixtureFunctions
 }
 
 ___spec___.listTests() {
