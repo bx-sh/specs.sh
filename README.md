@@ -559,11 +559,37 @@ $ spec
 
 ## Running only certain specs
 
+You can run only tests which match a particular name/pattern by providing `-e pattern`
+
+```sh
+$ spec -e ^dog
+```
+
+> This will run only tests where the test name starts with "dog"
+
+The `-e pattern` is used as a BASH regular expression
+
 ## Printing spec names
+
+You can print the names of spec functions and display names without running them by providing `-p`
+
+```sh
+$ spec -p
+```
+
+> This will list the names of all functions detected as spec functions as well as their display names
 
 ## Configuration files
 
 ## Fail fast
+
+If `spec` is provided multiple files, you can _stop_ running files after one fails by providing `-f`
+
+```sh
+$ spec -f
+```
+
+> This will run all detected test files but will stop running if a test file fails
 
 ---
 

@@ -554,6 +554,8 @@ ___spec___.runTests() {
   else
     spec.displayTestsSummary "PASS" $___spec___TotalSpecCount $___spec___PassedCount $___spec___FailedCount $___spec___PendingCount
   fi
+
+  [ $___spec___TotalSpecCount -gt 0 ] && [ $___spec___FailedCount -eq 0 ]
 }
 
 [ -n "$SPEC_CONFIG" ] && [ -f "$SPEC_CONFIG" ] && source "$SPEC_CONFIG"
