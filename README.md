@@ -26,23 +26,30 @@ spec version 0.2.3
 ```sh
 # [ my-file.spec.sh ]
 
-@spec.daytime_greeting() {
-  [ "$( greeting --daytime )" = "Hello, world!" ]
+@spec.one_equals_one() {
+  [ 1 -eq 1 ]
 }
 
-@spec.evening_greeting() {
-  [ "$( greeting --evening )" = "Goodnight, moon!" ]
+@spec.one_equals_two() {
+  [ 1 -eq 2 ]
 }
 ```
 
 ```sh
 $ spec my-file.spec.sh
 
-[OK] daytime greeting
-[FAIL] evening greeting
+[OK] one equals one
+[FAIL] one equals two
 
 Tests passed. 1 passed. 1 pending.
 ```
+
+---
+
+> ### Related Projects
+>
+> - ☑️ [`assert.sh`](https://github.com/bx-sh/assert.sh) - provides `assert [ 1 -eq 1 ]` syntax
+> - 🧐 [`expect.sh`](https://github.com/bx-sh/expect.sh) - provides `expect 1 toEqual 1` syntax
 
 ---
 
