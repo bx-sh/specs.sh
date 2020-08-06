@@ -150,10 +150,13 @@ A spec will **`[FAIL]`** when the function is run and either of these conditions
 
 ## Setup
 
-It is common to have many specs in the same file which perform some common setup:
+It is common to have many specs in the same file which perform some common setup.
+
+In the following example, every individual test is creating a temporary directory:
 
 ```sh
 @spec.verify_can_write_files_in_directory() {
+  # Create temporary directory for this spec
   local directory="$( mktemp -d )"
 
   touch "$directory/foo"
@@ -161,6 +164,7 @@ It is common to have many specs in the same file which perform some common setup
 }
 
 @spec.verify_can_read_files_in_directory() {
+  # Create temporary directory for this spec
   local directory="$( mktemp -d )"
 
   echo "Hello" > "$directory/foo"
@@ -168,6 +172,7 @@ It is common to have many specs in the same file which perform some common setup
 }
 
 @spec.verify_can_list_files_in_directory() {
+  # Create temporary directory for this spec
   local directory="$( mktemp -d )"
 
   touch "$directory/foo"
@@ -178,13 +183,12 @@ It is common to have many specs in the same file which perform some common setup
 }
 ```
 
-> In this case, every individual test is creating a temporary directory.
-
 To perform common operations before each test runs, define a **`@setup()`** function:
 
 ```sh
 @setup() {
-  directory="$( mktemp -d )"
+  # Create temporary directory for this spec
+  directory="$( mktemp )"
 }
 
 @spec.verify_can_write_files_in_directory() {
@@ -233,16 +237,16 @@ If you want to perform some setup **once** before **all** of the tests are run, 
 
 ## Teardown
 
-To perform common operations before every test, define a **`@setup()`** function:
-
 If you want to perform some cleanup after your tests, define a **`@teardown`** function:
 
 ```sh
 @setup() {
+  # Create temporary directory for this spec
   directory="$( mktemp )"
 }
 
 @teardown() {
+  # After each spec, the temporary directory is deleted (presuming it was created OK)
   [ -n "$directory" ] && [ -d "$directory" ] && rm -rf "$directory"
 }
 
@@ -256,6 +260,28 @@ If you want to perform some cleanup after your tests, define a **`@teardown`** f
   [ "$( cat "$directory/foo" )" = "Hello" ]
 }
 ```
+
+> #### ℹ Test Cleanup
+>
+> The `@teardown` function runs after each test, even if the test fails.
+>
+> This is preferable to adding cleanup code to your tests:
+>
+> ```sh
+> @spec.verify_can_write_files_in_directory() {
+>   # Create temporary directory for this spec
+>   local directory="$( mktemp -d )"
+>
+>   touch "$directory/foo"
+>   [ -f "$directory/foo" ] || return 1
+>
+>   rm -rf "$directory" # <--- this code will never run if the test fails
+> }
+> ```
+>
+> Always remember to put your test cleanup code into `@teardown` and not the test, itself.
+>
+> Note: if the `@teardown` function does not return a non-zero code, it will fail the test.
 
 If you want to perform some cleanup **once** after **all** of the tests have been run, use **`@teardownFixture`**:
 
