@@ -16,6 +16,7 @@
 
 @spec.spec_one() {
   echo "Hi from spec. This function: $SPEC_FUNCTION This spec name: $SPEC_NAME"
+  echo "This is an error message" >&2
 }
 
 @spec.spec_two() {

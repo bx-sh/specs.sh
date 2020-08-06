@@ -84,12 +84,12 @@ spec.configFilenames() {
   ___spec___.configFilenames "$@"
 }
 
-spec.displayTestsBanner() {
-  ___spec___.displayTestsBanner "$@"
+spec.displaySpecBanner() {
+  ___spec___.displaySpecBanner "$@"
 }
 
-spec.displayRunningTest() {
-  ___spec___.displayRunningTest "$@"
+spec.displayRunningSpec() {
+  ___spec___.displayRunningSpec "$@"
 }
 
 spec.loadTests() {
@@ -157,12 +157,16 @@ spec.runTeardownFixture() {
   ___spec___.runTeardownFixture "$@"
 }
 
-spec.displayTestResult() {
-  ___spec___.displayTestResult "$@"
+spec.runFunction() {
+  ___spec___.runFunction "$@"
 }
 
-spec.displayTestsSummary() {
-  ___spec___.displayTestsSummary "$@"
+spec.displaySpecResult() {
+  ___spec___.displaySpecResult "$@"
+}
+
+spec.displaySpecSummary.g() {
+  ___spec___.displaySpecSummary.g "$@"
 }
 
 ##
@@ -177,28 +181,32 @@ ___spec___.specNameMatchesPattern() {
   [[ "$specFunctionNameWithoutPrefix" =~ $pattern ]]
 }
 
-___spec___.runSetup() {
+___spec___.runFunction() {
   "$1"
 }
 
+___spec___.runSetup() {
+  spec.runFunction "$1"
+}
+
 ___spec___.runTeardown() {
-  "$1"
+  spec.runFunction "$1"
 }
 
 ___spec___.runSetupFixture() {
   set -e
-  "$1"
+  spec.runFunction "$1"
   set +e
 }
 
 ___spec___.runTeardownFixture() {
   set -e
-  "$1"
+  spec.runFunction "$1"
   set +e
 }
 
 ___spec___.runTest() {
-  "$1"
+  spec.runFunction "$1"
 }
 
 ___spec___.getSpecDisplayName() {
@@ -449,16 +457,16 @@ ___spec___.afterFile() {
   :
 }
 
-___spec___.displayTestsBanner() {
+___spec___.displaySpecBanner() {
   echo
   echo -e "[\e[34m$SPEC_FILE\e[0m]"
 }
 
-___spec___.displayRunningTest() {
+___spec___.displayRunningSpec() {
   :
 }
 
-___spec___.displayTestResult() {
+___spec___.displaySpecResult() {
   local functionName="$3"
   local name="$2"
   local status="$3"
@@ -498,7 +506,7 @@ ___spec___.displayTestResult() {
   fi
 }
 
-___spec___.displayTestsSummary() {
+___spec___.displaySpecSummary.g() {
   local status="$1"
   local total="$2"
   local passed="$3"
@@ -549,7 +557,7 @@ ___spec___.listTests() {
 }
 
 ___spec___.runTests() {
-  spec.displayTestsBanner
+  spec.displaySpecBanner
 
   ##
   # Run Setup Fixtures, if any (note: unlike setup/teardown these are not in a subshell)
@@ -563,10 +571,10 @@ ___spec___.runTests() {
   ##
 
   ##
-  local SPEC_TOTAL_COUNT="${#SPEC_FUNCTION_NAMES[@]}"
-  local SPEC_PENDING_COUNT="${#SPEC_PENDING_FUNCTION_NAMES[@]}"
-  local SPEC_FAILED_COUNT=0
-  local SPEC_PASSED_COUNT=0
+  SPEC_TOTAL_COUNT="${#SPEC_FUNCTION_NAMES[@]}"
+  SPEC_PENDING_COUNT="${#SPEC_PENDING_FUNCTION_NAMES[@]}"
+  SPEC_FAILED_COUNT=0
+  SPEC_PASSED_COUNT=0
   ##
 
   local ___spec___CurrentSpecIndex=0
@@ -580,9 +588,9 @@ ___spec___.runTests() {
     local SPEC_STDOUT_file="$( mktemp )"
     local SPEC_STDERR_file="$( mktemp )"
 
-    spec.displayRunningTest "$SPEC_NAME"
+    spec.displayRunningSpec "$SPEC_NAME"
 
-    local SPEC_TEST_RESULT_CODE
+    SPEC_RESULT_CODE=""
     local ___spec___unusedOutput # needed to get correct $? while also running in subshell
     local ___spec___setupFailed=""
 
@@ -594,8 +602,8 @@ ___spec___.runTests() {
     do
       SPEC_CURRENT_FUNCTION="$___spec___SetupFunctionName"
       ___spec___unusedOutput="$( spec.runSetup "$___spec___SetupFunctionName" 1>>"$SPEC_STDOUT_file" 2>>"$SPEC_STDERR_file" )"
-      SPEC_TEST_RESULT_CODE=$?
-      if [ $SPEC_TEST_RESULT_CODE -ne 0 ]
+      SPEC_RESULT_CODE=$?
+      if [ $SPEC_RESULT_CODE -ne 0 ]
       then
         ___spec___setupFailed=true
         break
@@ -609,7 +617,7 @@ ___spec___.runTests() {
     then
       SPEC_CURRENT_FUNCTION="$SPEC_FUNCTION"
       ___spec___unusedOutput="$( spec.runTest "$SPEC_FUNCTION" 1>>"$SPEC_STDOUT_file" 2>>"$SPEC_STDERR_file" )"
-      SPEC_TEST_RESULT_CODE=$?
+      SPEC_RESULT_CODE=$?
     fi
 
     ##
@@ -622,21 +630,23 @@ ___spec___.runTests() {
       ___spec___unusedOutput="$( spec.runTeardown "$___spec___TeardownFunctionName" 1>>"$SPEC_STDOUT_file" 2>>"$SPEC_STDERR_file" )"
       if [ $? -ne 0 ]
       then
-        SPEC_TEST_RESULT_CODE=1
+        SPEC_RESULT_CODE=1
         break
       fi
     done
 
-    local SPEC_STDOUT="$( cat "$SPEC_STDOUT_file" )"
-    local SPEC_STDERR="$( cat "$SPEC_STDERR_file" )"
+    SPEC_STDOUT="$( cat "$SPEC_STDOUT_file" )"
+    SPEC_STDERR="$( cat "$SPEC_STDERR_file" )"
 
-    if [ $SPEC_TEST_RESULT_CODE -eq 0 ]
+    if [ $SPEC_RESULT_CODE -eq 0 ]
     then
       (( SPEC_PASSED_COUNT++ ))
-      spec.displayTestResult "$SPEC_FUNCTION" "$SPEC_NAME" "PASS" "$SPEC_STDOUT" "$SPEC_STDERR"
+      SPEC_STATUS="PASS"
+      spec.displaySpecResult "$SPEC_FUNCTION" "$SPEC_NAME" "$SPEC_STATUS" "$SPEC_STDOUT" "$SPEC_STDERR"
     else
+      SPEC_STATUS="FAIL"
       (( SPEC_FAILED_COUNT++ ))
-      spec.displayTestResult "$SPEC_FUNCTION" "$SPEC_NAME" "FAIL" "$SPEC_STDOUT" "$SPEC_STDERR"
+      spec.displaySpecResult "$SPEC_FUNCTION" "$SPEC_NAME" "$SPEC_STATUS" "$SPEC_STDOUT" "$SPEC_STDERR"
     fi
   done
 
@@ -661,16 +671,17 @@ ___spec___.runTests() {
     SPEC_NAME="${SPEC_PENDING_DISPLAY_NAMES[$___spec___CurrentPendingIndex]}"
     (( ___spec___CurrentPendingIndex++ ))
     SPEC_STATUS="PENDING"
-    spec.displayTestResult "$SPEC_FUNCTION" "$SPEC_NAME" "$SPEC_STATUS"
+    spec.displayRunningSpec "$SPEC_NAME"
+    spec.displaySpecResult "$SPEC_FUNCTION" "$SPEC_NAME" "$SPEC_STATUS"
   done
 
   if [ $SPEC_TOTAL_COUNT -gt 0 ] && [ $SPEC_FAILED_COUNT -gt 0 ]
   then
-    SPEC_STATUS="FAIL"
-    spec.displayTestsSummary "$SPEC_STATUS" $SPEC_TOTAL_COUNT $SPEC_PASSED_COUNT $SPEC_FAILED_COUNT $SPEC_PENDING_COUNT
+    SPEC_SUITE_STATUS="FAIL"
+    spec.displaySpecSummary "$SPEC_STATUS" $SPEC_TOTAL_COUNT $SPEC_PASSED_COUNT $SPEC_FAILED_COUNT $SPEC_PENDING_COUNT
   else
-    SPEC_STATUS="PASS"
-    spec.displayTestsSummary "$SPEC_STATUS" $SPEC_TOTAL_COUNT $SPEC_PASSED_COUNT $SPEC_FAILED_COUNT $SPEC_PENDING_COUNT
+    SPEC_SUITE_STATUS="PASS"
+    spec.displaySpecSummary "$SPEC_STATUS" $SPEC_TOTAL_COUNT $SPEC_PASSED_COUNT $SPEC_FAILED_COUNT $SPEC_PENDING_COUNT
   fi
 
   [ $SPEC_TOTAL_COUNT -gt 0 ] && [ $SPEC_FAILED_COUNT -eq 0 ]

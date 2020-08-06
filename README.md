@@ -848,17 +848,22 @@ For every file that is run by `spec`, the following is performed:
    1. `spec.listTests`
 1. else
    1. `spec.runTests`
-      1. `spec.displayTestsBanner`
+      1. `spec.displaySpecBanner`
       1. `spec.runSetupFixture` (called once for each setup fixture)
+         - `spec.runFunction`
       1. for each test in the file...
-         1. `spec.displayRunningTest`
+         1. `spec.displayRunningSpec`
          1. `spec.runSetup` (called once for each setup function)
+            - `spec.runFunction`
          1. **`spec.runTest`**
-         1. `spec.displayTestResult`
+            - `spec.runFunction`
+         1. `spec.displaySpecResult`
          1. `spec.runTeardown` (called once for each teardown function)
+            - `spec.runFunction`
       1. `spec.runTeardownFixture` (called once for each setup fixture)
-      1. `spec.displayTestResult` (called for each pending test after other tests have run)
-      1. `spec.displayTestsSummary`
+         - `spec.runFunction`
+      1. `spec.displaySpecResult` (called for each pending test after other tests have run)
+      1. `spec.displaySpecSummary.g`
 
 ## Custom display output
 
@@ -868,12 +873,12 @@ You will want to reference [Lifecycle event hooks](#lifecycle-event-hooks).
 
 The most useful functions for displaying test results are:
 
-1. `spec.displayTestsBanner`
+1. `spec.displaySpecBanner`
 1. for each test in the file...
-   1. `spec.displayRunningTest`
-   1. `spec.displayTestResult`
-1. `spec.displayTestResult` (called for each pending test after other tests have run)
-1. `spec.displayTestsSummary`
+   1. `spec.displayRunningSpec`
+   1. `spec.displaySpecResult`
+1. `spec.displaySpecResult` (called for each pending test after other tests have run)
+1. `spec.displaySpecSummary.g`
 
 You will want to reference [Customization API reference](#customization-api-reference) for available variables and function parameters.
 
@@ -890,6 +895,7 @@ The most useful global variables for displaying test results are:
 - `SPEC_PENDING_COUNT`
 - `SPEC_FAILED_COUNT`
 - `SPEC_PASSED_COUNT`
+- `SPEC_SUITE_STATUS`
 
 To help you get started, we will...
 
@@ -922,6 +928,7 @@ Create two files, `specOne.spec.sh` and `specTwo.spec.sh` and give the both this
 
 @spec.spec_one() {
   echo "Hi from spec. This function: $SPEC_FUNCTION This spec name: $SPEC_NAME"
+  echo "This is an error message" >&2
 }
 
 @spec.spec_two() {
@@ -940,6 +947,93 @@ Create two files, `specOne.spec.sh` and `specTwo.spec.sh` and give the both this
 
 ### Example Formatter Implementation
 
+Now create a `spec.config.sh` with the following content and place it in the same folder as your spec files.
+
+```sh
+# Display every function that is run
+spec.runFunction() {
+  echo -e "\t[RUN $SPEC_CURRENT_FUNCTION]"
+  ___spec___.runFunction "$@"
+}
+
+# Print the file name
+spec.displaySpecBanner() {
+  echo "[Spec File: $SPEC_FILE]"
+}
+
+# Print the spec that is about to be run
+spec.displayRunningSpec() {
+  printf "\t> Running $SPEC_NAME ... "
+}
+
+# Print the spec result
+spec.displaySpecResult() {
+  echo "[$SPEC_STATUS]"
+  echo
+  if [ -n "$SPEC_STDERR" ]
+  then
+    echo -e "\t\tSTDERR: (($SPEC_STDERR))"
+  fi
+}
+
+# Display summary of totals
+spec.displaySpecSummary() {
+  if [ $SPEC_TOTAL_COUNT -eq 0 ]
+  then
+    echo "No tests to run"
+  elif [ $SPEC_FAILED_COUNT -gt 0 ]
+  then
+    echo "[$SPEC_SUITE_STATUS] Tests failed. $SPEC_PASSED_COUNT passed, $SPEC_FAILED_COUNT failed, $SPEC_PENDING_COUNT pending."
+  else
+    echo "[$SPEC_SUITE_STATUS] Tests failed. $SPEC_PASSED_COUNT passed, $SPEC_FAILED_COUNT failed, $SPEC_PENDING_COUNT pending."
+  fi
+}
+
+```
+
 ### Example Formatter Output
+
+Now run the specs:
+
+```sh
+$ spec specOne.spec.sh specTwo.spec.sh
+
+[Spec File: examples/formatter/specOne.spec.sh]
+	[RUN @setupFixture]
+Hi from setupFixture. This function: @setupFixture This file examples/formatter/specOne.spec.sh
+	> Running i fail ... [FAIL]
+
+	> Running spec one ... [PASS]
+
+		STDERR: ((This is an error message))
+	> Running spec two ... [PASS]
+
+	[RUN @teardownFixture]
+Hi from teardownFixture. This function: @teardownFixture This file examples/formatter/specOne.spec.sh
+	> Running i am pending ... [PENDING]
+
+[FAIL] Tests failed. 2 passed, 1 failed, 1 pending.
+[Spec File: examples/formatter/specTwo.spec.sh]
+	[RUN @setupFixture]
+Hi from setupFixture. This function: @setupFixture This file examples/formatter/specTwo.spec.sh
+	> Running i fail ... [FAIL]
+
+	> Running spec one ... [PASS]
+
+		STDERR: ((This is an error message))
+	> Running spec two ... [PASS]
+
+	[RUN @teardownFixture]
+Hi from teardownFixture. This function: @teardownFixture This file examples/formatter/specTwo.spec.sh
+	> Running i am pending ... [PENDING]
+
+[FAIL] Tests failed. 2 passed, 1 failed, 1 pending.
+
+Tests failed
+```
+
+> Note: the STDOUT and STDERR of tests are captures and not shown unless you display them.
+>
+> However, the `@setupFixture` and `@teardownFixture` functions run at the top-level and their output is shown (not captured)
 
 ## Customization API reference
