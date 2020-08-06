@@ -13,4 +13,6 @@ spec.beforeFile "$SPEC_FILE"
 source "$SPEC_FILE"
 spec.afterFile "$SPEC_FILE"
 
-spec.runTests "$SPEC_NAME_PATTERN"
+spec.loadTests
+
+spec.runTests

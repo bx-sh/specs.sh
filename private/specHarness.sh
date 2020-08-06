@@ -1,4 +1,30 @@
 ##
+# These variables are already defined by the specHarness binary and available for use:
+##
+
+# SPEC_DIR
+# SPEC_FILE
+# SPEC_NAME_PATTERN=
+# SPEC_CONFIG
+
+##
+# Public variables for extensibility
+##
+
+SPEC_CURRENT_FUNCTION=""
+SPEC_FUNCTION=""
+SPEC_NAME=""
+
+declare -a SPEC_FUNCTION_NAMES=()
+declare -a SPEC_DISPLAY_NAMES=()
+declare -a SPEC_PENDING_FUNCTION_NAMES=()
+declare -a SPEC_PENDING_DISPLAY_NAMES=()
+declare -a SPEC_SETUP_FUNCTION_NAMES=()
+declare -a SPEC_TEARDOWN_FUNCTION_NAMES=()
+declare -a SPEC_SETUP_FIXTURE_FUNCTION_NAMES=()
+declare -a SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES=()
+
+##
 # Placeholders for user customization / point to default implementations
 ##
 
@@ -54,6 +80,10 @@ spec.displayRunningTest() {
   ___spec___.displayRunningTest "$@"
 }
 
+spec.loadTests() {
+  ___spec___.loadTests "$@"
+}
+
 spec.runTests() {
   ___spec___.runTests "$@"
 }
@@ -81,6 +111,18 @@ spec.displayTestsSummary() {
 ##
 # Private API
 ##
+
+___spec___.runSetup() {
+  "$1"
+}
+
+___spec___.runTeardown() {
+  "$1"
+}
+
+___spec___.runTest() {
+  "$1"
+}
 
 ___spec___.getTestDisplayName() {
   printf "${1//_/ }"
@@ -216,39 +258,7 @@ ___spec___.displayTestsSummary() {
   printf "\n"
 }
 
-___spec___.runSetup() {
-  "$1"
-}
-
-___spec___.runTeardown() {
-  "$1"
-}
-
-___spec___.runTest() {
-  "$1"
-}
-
-##
-# Split up into something so that spec.runTests might be useful to override - specifically: make the arrays part of a public interface
-#
-# spec.loadTests <--- load up all of the arrays
-# spec.runTests <--- runs and displays
-##
-___spec___.runTests() {
-  local specNamePattern="$1"
-
-  ##
-  # Collect defined functions
-  ##
-  declare -a SPEC_FUNCTION_NAMES=()
-  declare -a SPEC_DISPLAY_NAMES=()
-  declare -a SPEC_PENDING_FUNCTION_NAMES=()
-  declare -a SPEC_PENDING_DISPLAY_NAMES=()
-  declare -a SPEC_SETUP_FUNCTION_NAMES=()
-  declare -a SPEC_TEARDOWN_FUNCTION_NAMES=()
-  declare -a SPEC_SETUP_FIXTURE_FUNCTION_NAMES=()
-  declare -a SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES=()
-
+___spec___.loadTests() {
   local specPrefix
   for specPrefix in $( spec.specFunctionPrefixes )
   do
@@ -259,7 +269,7 @@ ___spec___.runTests() {
     for specFunctionName in "${specFunctionNames[@]}"
     do
       local withoutPrefix="${specFunctionName#"$specPrefix"}"
-      [ -n "$specNamePattern" ] && [[ ! "$withoutPrefix" =~ $specNamePattern ]] && continue
+      [ -n "$SPEC_NAME_PATTERN" ] && [[ ! "$withoutPrefix" =~ $SPEC_NAME_PATTERN ]] && continue
       local specDisplayName="$( spec.getTestDisplayName "$withoutPrefix" )"
       local alreadyAdded=""
       local existingFunctionName
@@ -296,7 +306,7 @@ ___spec___.runTests() {
     for pendingFunctionName in "${pendingFunctionNames[@]}"
     do
       local withoutPrefix="${pendingFunctionName#"$pendingPrefix"}"
-      [ -n "$specNamePattern" ] && [[ ! "$withoutPrefix" =~ $specNamePattern ]] && continue
+      [ -n "$SPEC_NAME_PATTERN" ] && [[ ! "$withoutPrefix" =~ $SPEC_NAME_PATTERN ]] && continue
       local pendingDisplayName="$( spec.getTestDisplayName "$withoutPrefix" )"
       local alreadyAdded=""
       local existingFunctionName
@@ -366,12 +376,10 @@ ___spec___.runTests() {
     fi
   done
   unset teardownFixtureFunctionName
+}
 
-  unset specNamePattern
-
+___spec___.runTests() {
   spec.displayTestsBanner
-
-  local CURRENT_FUNCTION
 
   ##
   # Run Setup Fixtures, if any (note: unlike setup/teardown these are not in a subshell)
@@ -380,7 +388,7 @@ ___spec___.runTests() {
   local ___spec___SetupFixtureFunction
   for ___spec___SetupFixtureFunction in "${SPEC_SETUP_FIXTURE_FUNCTION_NAMES[@]}"
   do
-    CURRENT_FUNCTION="$___spec___SetupFixtureFunction"
+    SPEC_CURRENT_FUNCTION="$___spec___SetupFixtureFunction"
     "$___spec___SetupFixtureFunction"
   done
   set +e
@@ -395,8 +403,8 @@ ___spec___.runTests() {
   local ___spec___CurrentSpecIndex=0
   while [ $___spec___CurrentSpecIndex -lt "${#SPEC_FUNCTION_NAMES[@]}" ]
   do
-    local SPEC_FUNCTION="${SPEC_FUNCTION_NAMES[$___spec___CurrentSpecIndex]}"
-    local SPEC_NAME="${SPEC_DISPLAY_NAMES[$___spec___CurrentSpecIndex]}"
+    SPEC_FUNCTION="${SPEC_FUNCTION_NAMES[$___spec___CurrentSpecIndex]}"
+    SPEC_NAME="${SPEC_DISPLAY_NAMES[$___spec___CurrentSpecIndex]}"
 
     (( ___spec___CurrentSpecIndex++ ))
     
@@ -415,7 +423,7 @@ ___spec___.runTests() {
     local ___spec___SetupFunctionName
     for ___spec___SetupFunctionName in "${SPEC_SETUP_FUNCTION_NAMES[@]}"
     do
-      CURRENT_FUNCTION="$___spec___SetupFunctionName"
+      SPEC_CURRENT_FUNCTION="$___spec___SetupFunctionName"
       ___spec___unusedOutput="$( spec.runSetup "$___spec___SetupFunctionName" 1>>"$___spec___STDOUT_file" 2>>"$___spec___STDERR_file" )"
       ___spec___testRunStatus=$?
       if [ $___spec___testRunStatus -ne 0 ]
@@ -430,7 +438,7 @@ ___spec___.runTests() {
     ##
     if [ -z "$___spec___setupFailed" ]
     then
-      CURRENT_FUNCTION="$SPEC_FUNCTION"
+      SPEC_CURRENT_FUNCTION="$SPEC_FUNCTION"
       ___spec___unusedOutput="$( spec.runTest "$SPEC_FUNCTION" 1>>"$___spec___STDOUT_file" 2>>"$___spec___STDERR_file" )"
       ___spec___testRunStatus=$?
     fi
@@ -441,7 +449,7 @@ ___spec___.runTests() {
     local ___spec___TeardownFunctionName
     for ___spec___TeardownFunctionName in "${SPEC_TEARDOWN_FUNCTION_NAMES[@]}"
     do
-      CURRENT_FUNCTION="$___spec___TeardownFunctionName"
+      SPEC_CURRENT_FUNCTION="$___spec___TeardownFunctionName"
       ___spec___unusedOutput="$( spec.runTeardown "$___spec___TeardownFunctionName" 1>>"$___spec___STDOUT_file" 2>>"$___spec___STDERR_file" )"
       if [ $? -ne 0 ]
       then
@@ -470,7 +478,7 @@ ___spec___.runTests() {
   local ___spec___TeardownFixtureFunction
   for ___spec___TeardownFixtureFunction in "${SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES[@]}"
   do
-    CURRENT_FUNCTION="$___spec___TeardownFixtureFunction"
+    SPEC_CURRENT_FUNCTION="$___spec___TeardownFixtureFunction"
     "$___spec___TeardownFixtureFunction"
   done
   set +e
@@ -482,8 +490,8 @@ ___spec___.runTests() {
   local ___spec___CurrentPendingIndex=0
   while [ $___spec___CurrentPendingIndex -lt "${#SPEC_PENDING_FUNCTION_NAMES[@]}" ]
   do
-    local SPEC_FUNCTION="${SPEC_PENDING_FUNCTION_NAMES[$___spec___CurrentPendingIndex]}"
-    local SPEC_NAME="${SPEC_PENDING_DISPLAY_NAMES[$___spec___CurrentPendingIndex]}"
+    SPEC_FUNCTION="${SPEC_PENDING_FUNCTION_NAMES[$___spec___CurrentPendingIndex]}"
+    SPEC_NAME="${SPEC_PENDING_DISPLAY_NAMES[$___spec___CurrentPendingIndex]}"
     (( ___spec___CurrentPendingIndex++ ))
     spec.displayTestResult "$SPEC_FUNCTION" "$SPEC_NAME" "PENDING"
   done
