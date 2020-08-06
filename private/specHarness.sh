@@ -442,8 +442,7 @@ ___spec___.loadTeardownFixtureFunctions() {
 }
 
 ___spec___.beforeFile() {
-  echo
-  echo -e "[\e[34m$1\e[0m]"
+  :
 }
 
 ___spec___.afterFile() {
@@ -451,7 +450,8 @@ ___spec___.afterFile() {
 }
 
 ___spec___.displayTestsBanner() {
-  :
+  echo
+  echo -e "[\e[34m$SPEC_FILE\e[0m]"
 }
 
 ___spec___.displayRunningTest() {
