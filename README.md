@@ -264,7 +264,7 @@ If you want to perform some cleanup after your tests, define a **`@teardown`** f
 
 @teardown() {
   # After each spec, the temporary directory is deleted (presuming it was created OK)
-  [ -n "$directory" ] && [ -d "$directory" ] && rm -rf "$directory"
+  [ -n "$directory" ] && [ -d "$directory" ] && rm -r "$directory"
 }
 
 @spec.verify_can_write_files_in_directory() {
@@ -315,7 +315,7 @@ If you want to perform some cleanup **once** after **all** of the tests are run,
 >   touch "$directory/foo"
 >   [ -f "$directory/foo" ] || return 1
 >
->   rm -rf "$directory" # <--- this code will never run if the test fails
+>   rm -r "$directory" # <--- this code will never run if the test fails
 > }
 > ```
 >
@@ -407,7 +407,7 @@ getTemporaryDirectory() {
 }
 
 deleteDirectory() {
-  [ -n "$1" ] && [ -d "$1" ] && rm -rf "$1"
+  [ -n "$1" ] && [ -d "$1" ] && rm -r "$1"
 }
 
 createFile() {
