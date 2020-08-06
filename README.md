@@ -899,4 +899,10 @@ To help you get started, we will...
 
 That should get you started 🔬
 
+### Example Specs
+
+### Example Formatter Implementation
+
+### Example Formatter Output
+
 ## Customization API reference
