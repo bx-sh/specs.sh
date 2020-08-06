@@ -848,8 +848,55 @@ For every file that is run by `spec`, the following is performed:
    1. `spec.listTests`
 1. else
    1. `spec.runTests`
-      1. x
+      1. `spec.displayTestsBanner`
+      1. `spec.runSetupFixture` (called once for each setup fixture)
+      1. for each test in the file...
+         1. `spec.displayRunningTest`
+         1. `spec.runSetup` (called once for each setup function)
+         1. **`spec.runTest`**
+         1. `spec.displayTestResult`
+         1. `spec.runTeardown` (called once for each teardown function)
+      1. `spec.runTeardownFixture` (called once for each setup fixture)
+      1. `spec.displayTestResult` (called for each pending test after other tests have run)
+      1. `spec.displayTestsSummary`
 
 ## Custom display output
+
+This section focuses on writing your own test display formatter.
+
+You will want to reference [Lifecycle event hooks](#lifecycle-event-hooks).
+
+The most useful functions for displaying test results are:
+
+1. `spec.displayTestsBanner`
+1. for each test in the file...
+   1. `spec.displayRunningTest`
+   1. `spec.displayTestResult`
+1. `spec.displayTestResult` (called for each pending test after other tests have run)
+1. `spec.displayTestsSummary`
+
+You will want to reference [Customization API reference](#customization-api-reference) for available variables and function parameters.
+
+The most useful global variables for displaying test results are:
+
+- `SPEC_FILE`
+- `SPEC_CURRENT_FUNCTION`
+- `SPEC_FUNCTION`
+- `SPEC_NAME`
+- `SPEC_STATUS`
+- `SPEC_STDOUT`
+- `SPEC_STDERR`
+- `SPEC_TOTAL_COUNT`
+- `SPEC_PENDING_COUNT`
+- `SPEC_FAILED_COUNT`
+- `SPEC_PASSED_COUNT`
+
+To help you get started, we will...
+
+- Create two example spec files
+- Write a simple display formatter which outputs useful information for you to use
+- Run the specs to see the output
+
+That should get you started 🔬
 
 ## Customization API reference

@@ -563,9 +563,10 @@ ___spec___.runTests() {
   ##
 
   ##
-  local ___spec___TotalSpecCount="${#SPEC_FUNCTION_NAMES[@]}"
-  local ___spec___FailedCount=0
-  local ___spec___PassedCount=0
+  local SPEC_TOTAL_COUNT="${#SPEC_FUNCTION_NAMES[@]}"
+  local SPEC_PENDING_COUNT="${#SPEC_PENDING_FUNCTION_NAMES[@]}"
+  local SPEC_FAILED_COUNT=0
+  local SPEC_PASSED_COUNT=0
   ##
 
   local ___spec___CurrentSpecIndex=0
@@ -576,12 +577,12 @@ ___spec___.runTests() {
 
     (( ___spec___CurrentSpecIndex++ ))
     
-    local ___spec___STDOUT_file="$( mktemp )"
-    local ___spec___STDERR_file="$( mktemp )"
+    local SPEC_STDOUT_file="$( mktemp )"
+    local SPEC_STDERR_file="$( mktemp )"
 
     spec.displayRunningTest "$SPEC_NAME"
 
-    local ___spec___testRunStatus
+    local SPEC_TEST_RESULT_CODE
     local ___spec___unusedOutput # needed to get correct $? while also running in subshell
     local ___spec___setupFailed=""
 
@@ -592,9 +593,9 @@ ___spec___.runTests() {
     for ___spec___SetupFunctionName in "${SPEC_SETUP_FUNCTION_NAMES[@]}"
     do
       SPEC_CURRENT_FUNCTION="$___spec___SetupFunctionName"
-      ___spec___unusedOutput="$( spec.runSetup "$___spec___SetupFunctionName" 1>>"$___spec___STDOUT_file" 2>>"$___spec___STDERR_file" )"
-      ___spec___testRunStatus=$?
-      if [ $___spec___testRunStatus -ne 0 ]
+      ___spec___unusedOutput="$( spec.runSetup "$___spec___SetupFunctionName" 1>>"$SPEC_STDOUT_file" 2>>"$SPEC_STDERR_file" )"
+      SPEC_TEST_RESULT_CODE=$?
+      if [ $SPEC_TEST_RESULT_CODE -ne 0 ]
       then
         ___spec___setupFailed=true
         break
@@ -607,8 +608,8 @@ ___spec___.runTests() {
     if [ -z "$___spec___setupFailed" ]
     then
       SPEC_CURRENT_FUNCTION="$SPEC_FUNCTION"
-      ___spec___unusedOutput="$( spec.runTest "$SPEC_FUNCTION" 1>>"$___spec___STDOUT_file" 2>>"$___spec___STDERR_file" )"
-      ___spec___testRunStatus=$?
+      ___spec___unusedOutput="$( spec.runTest "$SPEC_FUNCTION" 1>>"$SPEC_STDOUT_file" 2>>"$SPEC_STDERR_file" )"
+      SPEC_TEST_RESULT_CODE=$?
     fi
 
     ##
@@ -618,24 +619,24 @@ ___spec___.runTests() {
     for ___spec___TeardownFunctionName in "${SPEC_TEARDOWN_FUNCTION_NAMES[@]}"
     do
       SPEC_CURRENT_FUNCTION="$___spec___TeardownFunctionName"
-      ___spec___unusedOutput="$( spec.runTeardown "$___spec___TeardownFunctionName" 1>>"$___spec___STDOUT_file" 2>>"$___spec___STDERR_file" )"
+      ___spec___unusedOutput="$( spec.runTeardown "$___spec___TeardownFunctionName" 1>>"$SPEC_STDOUT_file" 2>>"$SPEC_STDERR_file" )"
       if [ $? -ne 0 ]
       then
-        ___spec___testRunStatus=1
+        SPEC_TEST_RESULT_CODE=1
         break
       fi
     done
 
-    local ___spec___STDOUT="$( cat "$___spec___STDOUT_file" )"
-    local ___spec___STDERR="$( cat "$___spec___STDERR_file" )"
+    local SPEC_STDOUT="$( cat "$SPEC_STDOUT_file" )"
+    local SPEC_STDERR="$( cat "$SPEC_STDERR_file" )"
 
-    if [ $___spec___testRunStatus -eq 0 ]
+    if [ $SPEC_TEST_RESULT_CODE -eq 0 ]
     then
-      (( ___spec___PassedCount++ ))
-      spec.displayTestResult "$SPEC_FUNCTION" "$SPEC_NAME" "PASS" "$___spec___STDOUT" "$___spec___STDERR"
+      (( SPEC_PASSED_COUNT++ ))
+      spec.displayTestResult "$SPEC_FUNCTION" "$SPEC_NAME" "PASS" "$SPEC_STDOUT" "$SPEC_STDERR"
     else
-      (( ___spec___FailedCount++ ))
-      spec.displayTestResult "$SPEC_FUNCTION" "$SPEC_NAME" "FAIL" "$___spec___STDOUT" "$___spec___STDERR"
+      (( SPEC_FAILED_COUNT++ ))
+      spec.displayTestResult "$SPEC_FUNCTION" "$SPEC_NAME" "FAIL" "$SPEC_STDOUT" "$SPEC_STDERR"
     fi
   done
 
@@ -659,18 +660,20 @@ ___spec___.runTests() {
     SPEC_FUNCTION="${SPEC_PENDING_FUNCTION_NAMES[$___spec___CurrentPendingIndex]}"
     SPEC_NAME="${SPEC_PENDING_DISPLAY_NAMES[$___spec___CurrentPendingIndex]}"
     (( ___spec___CurrentPendingIndex++ ))
-    spec.displayTestResult "$SPEC_FUNCTION" "$SPEC_NAME" "PENDING"
+    SPEC_STATUS="PENDING"
+    spec.displayTestResult "$SPEC_FUNCTION" "$SPEC_NAME" "$SPEC_STATUS"
   done
-  local ___spec___PendingCount="${#SPEC_PENDING_FUNCTION_NAMES[@]}"
 
-  if [ $___spec___TotalSpecCount -gt 0 ] && [ $___spec___FailedCount -gt 0 ]
+  if [ $SPEC_TOTAL_COUNT -gt 0 ] && [ $SPEC_FAILED_COUNT -gt 0 ]
   then
-    spec.displayTestsSummary "FAIL" $___spec___TotalSpecCount $___spec___PassedCount $___spec___FailedCount $___spec___PendingCount
+    SPEC_STATUS="FAIL"
+    spec.displayTestsSummary "$SPEC_STATUS" $SPEC_TOTAL_COUNT $SPEC_PASSED_COUNT $SPEC_FAILED_COUNT $SPEC_PENDING_COUNT
   else
-    spec.displayTestsSummary "PASS" $___spec___TotalSpecCount $___spec___PassedCount $___spec___FailedCount $___spec___PendingCount
+    SPEC_STATUS="PASS"
+    spec.displayTestsSummary "$SPEC_STATUS" $SPEC_TOTAL_COUNT $SPEC_PASSED_COUNT $SPEC_FAILED_COUNT $SPEC_PENDING_COUNT
   fi
 
-  [ $___spec___TotalSpecCount -gt 0 ] && [ $___spec___FailedCount -eq 0 ]
+  [ $SPEC_TOTAL_COUNT -gt 0 ] && [ $SPEC_FAILED_COUNT -eq 0 ]
 }
 
 [ -n "$SPEC_CONFIG" ] && [ -f "$SPEC_CONFIG" ] && source "$SPEC_CONFIG"
