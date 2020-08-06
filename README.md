@@ -93,6 +93,8 @@ Specs (or tests) are defined as simple BASH functions:
 }
 ```
 
+#### Passing Specs
+
 A spec will **`[PASS]`** when the function is run successfully and returns a non-zero return code:
 
 - ```sh
@@ -101,6 +103,8 @@ A spec will **`[PASS]`** when the function is run successfully and returns a non
     return 0
   }
   ```
+
+#### Failing Specs
 
 A spec will **`[FAIL]`** when the function is run and either of these conditions occur:
 
