@@ -30,3 +30,7 @@
 @spec.passing_spec() {
   [ 1 -eq 1 ]
 }
+
+@pending.hello_i_am_pending() {
+  :
+}

@@ -84,6 +84,10 @@ spec.loadTests() {
   ___spec___.loadTests "$@"
 }
 
+spec.listTests() {
+  ___spec___.listTests "$@"
+}
+
 spec.runTests() {
   ___spec___.runTests "$@"
 }
@@ -213,8 +217,12 @@ ___spec___.displayTestResult() {
   elif [ "$status" = "FAIL" ]
   then
     echo -e "[\e[31mFAIL\e[0m] $name"
-  else
+  elif [ "$status" = "PENDING" ]
+  then
     echo -e "[\e[33mPENDING\e[0m] $name"
+  elif [ "$status" = "NOT RUN" ]
+  then
+    echo "$name"
   fi
 
   if [ "$status" = "FAIL" ] || [ -n "$VERBOSE" ]
@@ -376,6 +384,25 @@ ___spec___.loadTests() {
     fi
   done
   unset teardownFixtureFunctionName
+}
+
+___spec___.listTests() {
+  local specIndex=0
+  while [ $specIndex -lt "${#SPEC_FUNCTION_NAMES[@]}" ]
+  do
+    specFunction="${SPEC_FUNCTION_NAMES[$specIndex]}"
+    specName="${SPEC_DISPLAY_NAMES[$specIndex]}"
+    echo -e "$specName\t$specFunction"
+    (( specIndex++ ))
+  done
+  specIndex=0
+  while [ $specIndex -lt "${#SPEC_PENDING_FUNCTION_NAMES[@]}" ]
+  do
+    specFunction="${SPEC_PENDING_FUNCTION_NAMES[$specIndex]}"
+    specName="${SPEC_PENDING_DISPLAY_NAMES[$specIndex]}"
+    echo -e "$specName\t$specFunction"
+    (( specIndex++ ))
+  done
 }
 
 ___spec___.runTests() {

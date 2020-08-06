@@ -9,6 +9,7 @@ name_matcher=
 matcher_is_next=
 spec_config=
 spec_config_is_next=
+print_only=
 
 declare -a testFiles=()
 
@@ -24,6 +25,9 @@ do
   elif [ "$arg" = "-f" ] || [ "$arg" = "--fast-fail" ] || [ "$arg" = "--fail-fast" ]
   then
     fail_fast=true
+  elif [ "$arg" = "-p" ] || [ "$arg" = "--print" ] || [ "$arg" = "--dry-run" ]
+  then
+    print_only=true
   elif [ "$arg" = "-e" ]
   then
     matcher_is_next=true
@@ -59,7 +63,7 @@ fi
 
 for filePath in "${testFiles[@]}"
 do
-  "$spec_harness" "$( dirname "$filePath" )" "$filePath" "$name_matcher" "$spec_config"
+  "$spec_harness" "$( dirname "$filePath" )" "$filePath" "$name_matcher" "$spec_config" "$print_only"
   [ $? -ne 0 ] && test_failed=true
   [ -n "$fail_fast" ] && [ -n "$test_failed" ] && { echo "Failed" >&2; exit 1; }
 done
