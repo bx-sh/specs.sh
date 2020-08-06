@@ -141,12 +141,20 @@ spec.runSetup() {
   ___spec___.runSetup "$@"
 }
 
+spec.runSetupFixture() {
+  ___spec___.runSetupFixture "$@"
+}
+
 spec.runTest() {
   ___spec___.runTest "$@"
 }
 
 spec.runTeardown() {
   ___spec___.runTeardown "$@"
+}
+
+spec.runTeardownFixture() {
+  ___spec___.runTeardownFixture "$@"
 }
 
 spec.displayTestResult() {
@@ -175,6 +183,18 @@ ___spec___.runSetup() {
 
 ___spec___.runTeardown() {
   "$1"
+}
+
+___spec___.runSetupFixture() {
+  set -e
+  "$1"
+  set +e
+}
+
+___spec___.runTeardownFixture() {
+  set -e
+  "$1"
+  set +e
 }
 
 ___spec___.runTest() {
@@ -534,14 +554,12 @@ ___spec___.runTests() {
   ##
   # Run Setup Fixtures, if any (note: unlike setup/teardown these are not in a subshell)
   ##
-  set -e
   local ___spec___SetupFixtureFunction
   for ___spec___SetupFixtureFunction in "${SPEC_SETUP_FIXTURE_FUNCTION_NAMES[@]}"
   do
     SPEC_CURRENT_FUNCTION="$___spec___SetupFixtureFunction"
-    "$___spec___SetupFixtureFunction"
+    spec.runSetupFixture "$___spec___SetupFixtureFunction"
   done
-  set +e
   ##
 
   ##
@@ -624,14 +642,12 @@ ___spec___.runTests() {
   ##
   # Run Teardown Fixtures, if any (note: unlike setup/teardown these are not in a subshell)
   ##
-  set -e
   local ___spec___TeardownFixtureFunction
   for ___spec___TeardownFixtureFunction in "${SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES[@]}"
   do
     SPEC_CURRENT_FUNCTION="$___spec___TeardownFixtureFunction"
-    "$___spec___TeardownFixtureFunction"
+    spec.runTeardownFixture "$___spec___TeardownFixtureFunction"
   done
-  set +e
   ##
 
   ##

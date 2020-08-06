@@ -826,6 +826,30 @@ spec.teardownFunctionNames() {
 
 ## Lifecycle event hooks
 
+This is the `spec` "order of operations" for extensibility purposes
+
+For every file that is run by `spec`, the following is performed:
+
+1. source `spec` source code including default implementations of all functions
+1. source `SPEC_CONFIG` if provided via `spec -c config.sh` or `SPEC_CONFIG`` environment variable
+1. `spec.loadConfigs` searches for and sources configs using names defined in `spec.configFilenames`
+1. `spec.loadHelpers` searches for and sources helper files using names defined in `spec.helperFilenames`
+1. `spec.beforeFile`
+1. provided spec file is sourced
+1. `spec.afterFile`
+1. `spec.loadTests`
+   1. `spec.loadSpecFunctions`
+   1. `spec.loadPendingFunctions`
+   1. `spec.loadSetupFunctions`
+   1. `spec.loadSetupFixtureFunctions`
+   1. `spec.loadTeardownFunctions`
+   1. `spec.loadTeardownFixtureFunctions`
+1. if `-p` or `--print` or `--dry-run` (the tests are printed and not run)
+   1. `spec.listTests`
+1. else
+   1. `spec.runTests`
+      1. x
+
 ## Custom display output
 
 ## Customization API reference
