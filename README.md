@@ -55,10 +55,11 @@ Tests passed. 1 passed. 1 pending.
 
 #### Basics
 
-- [Spec syntax](#foo)
-- [Setup and teardown](#foo)
-- [Pending tests](#foo)
-- [Shared code](#foo)
+- [Spec syntax](#foo) - (`@spec`)
+- [Setup](#foo) - (`@setup`)
+- [Teardown](#foo) - (`@teardown`)
+- [Pending](#foo) - (`@pending`)
+- [Shared code](#foo) - (`specHelper.sh`)
 
 #### Command-Line `spec`
 
@@ -146,7 +147,7 @@ A spec will **`[FAIL]`** when the function is run and either of these conditions
 >   }
 >   ```
 
-## Setup and teardown
+## Test setup
 
 It is common to have many specs in the same file which perform the same setup:
 
@@ -175,6 +176,34 @@ It is common to have many specs in the same file which perform the same setup:
   [[ "$( ls "$directory" )" = *"foo"* ]] && [[ " ]]
 }
 ```
+
+To perform common operations before every test, define a **`@setup()`** function:
+
+```sh
+@setup() {
+  directory="$( mktemp )"
+}
+
+@spec.verify_can_write_files_in_directory() {
+  touch "$directory/foo"
+  [ -f "$directory/foo" ]
+}
+
+@spec.verify_can_read_files_in_directory() {
+  echo "Hello" > "$directory/foo"
+  [ "$( cat "$directory/foo" )" = "Hello" ]
+}
+
+@spec.verify_can_list_files_in_directory() {
+  touch "$directory/foo"
+  touch "$directory/bar"
+
+  local list="$( ls "$directory" )"
+  [[ "$( ls "$directory" )" = *"foo"* ]] && [[ " ]]
+}
+```
+
+`@setup` runs before every
 
 ## Pending tests
 
