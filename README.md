@@ -236,6 +236,8 @@ If you want to perform some setup **once** before **all** of the tests are run, 
 }
 ```
 
+---
+
 > Aliases:
 >
 > - `@setup` can also be named `@before`
@@ -290,6 +292,8 @@ If you want to perform some cleanup **once** after **all** of the tests are run,
   echo "This runs after every test"
 }
 ```
+
+---
 
 > Aliases:
 >
@@ -376,6 +380,8 @@ This is useful when initially defining tests or if you want to temporarily disab
   [ "$( cat "$directory/foo" )" = "Not Hello" ]
 }
 ```
+
+---
 
 > Aliases:
 >
