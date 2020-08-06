@@ -249,6 +249,8 @@ If you want to perform some setup **once** before **all** of the tests are run, 
 > `spec` runs every individual spec function inside of its own subshell.
 >
 > It is safe to set global variables in `@setup`, they will not effect your other tests.
+>
+> Note: if any `@setup` function exits, neither the spec nor the teardowns will run.
 
 ---
 
@@ -322,6 +324,13 @@ If you want to perform some cleanup **once** after **all** of the tests are run,
 > Always remember to put your test cleanup code into `@teardown` and not the test, itself.
 >
 > Note: if the `@teardown` function does not return a non-zero code, it will fail the test.
+>
+> Also note: `@teardown` has access to all variables set by `@setup` but does not have access
+> to any variables created or changed by the spec or other teardown functions. The spec and all
+> teardown functions are run inside subshells so that, if one exits, the rest will still run.
+>
+> Example: if you need to delete a file/directory after a spec runs, set the path in `@setup`.  
+> This way both `@teardown` and your specs will have access to the path.
 
 ---
 
@@ -1274,6 +1283,7 @@ All of these functions have access to the following variables:
 
 > Caller: `spec.runSpecWithSetupAndTeardown`
 
+- NOT run inside a subshell because it needs to be able to set global environment variables for spec/teardowns
 - Invoked anytime a setup function is called (possible for there to be multiple for a single spec)
 - Default implementation simply passes the value to `spec.runFunction` to be run
 
@@ -1288,6 +1298,8 @@ All of these functions have access to the following variables:
 
 > Caller: `spec.runSpecWithSetupAndTeardown`
 
+- Run inside a subshell so that other teardowns will run if one fails
+- Note: does not have access to any variables set by the spec, only by the setup
 - Invoked anytime a teardown function is called (possible for there to be multiple for a single spec)
 - Default implementation simply passes the value to `spec.runFunction` to be run
 
@@ -1302,6 +1314,7 @@ All of these functions have access to the following variables:
 
 > Caller: `spec.runSpecWithSetupAndTeardown`
 
+- Run inside a subshell so that teardowns may be run if the spec fails
 - Invoked anytime a spec function is called
 - Default implementation simply passes the value to `spec.runFunction` to be run
 
