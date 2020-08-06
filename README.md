@@ -1258,33 +1258,74 @@ All of these functions have access to the following variables:
 
 #### `spec.runFunction`
 
--
+> Callers: `spec.runSpec`, `spec.runSetup`, `spec.runSetupFixture`, `spec.runTeardown`, `spec.runTeardownFixture`
+
+- Invoked anytime a function such as a spec or setup function is called
+- Should simply invoke the function
 
 #### `spec.runSetup`
 
--
+> Caller: `spec.runSpecs`
+
+- Invoked anytime a setup function is called (possible for there to be multiple for a single spec)
+- Default implementation simply passes the value to `spec.runFunction` to be run
 
 #### `spec.runSetupFixture`
 
--
+> Caller: `spec.runSpecs`
+
+- Invoked anytime a setup fixture function is called (possible for there to be multiple for a single file)
+- Default implementation simply passes the value to `spec.runFunction` to be run
 
 #### `spec.runTeardown`
 
--
+> Caller: `spec.runSpecs`
+
+- Invoked anytime a teardown function is called (possible for there to be multiple for a single spec)
+- Default implementation simply passes the value to `spec.runFunction` to be run
 
 #### `spec.runTeardownFixture`
 
--
+> Caller: `spec.runSpecs`
+
+- Invoked anytime a teardown fixture function is called (possible for there to be multiple for a single file)
+- Default implementation simply passes the value to `spec.runFunction` to be run
 
 #### `spec.runSpec`
 
--
+> Caller: `spec.runSpecs`
+
+- Invoked anytime a spec function is called
+- Default implementation simply passes the value to `spec.runFunction` to be run
 
 #### `spec.runSpecs`
 
 > Caller: `spec` binary
 
--
+- Default implementation uses these arrays to get all specs and setup/teardown functions:
+  - `SPEC_FUNCTION_NAMES`
+  - `SPEC_DISPLAY_NAMES`
+  - `SPEC_PENDING_FUNCTION_NAMES`
+  - `SPEC_PENDING_DISPLAY_NAMES`
+  - `SPEC_SETUP_FUNCTION_NAMES`
+  - `SPEC_TEARDOWN_FUNCTION_NAMES`
+  - `SPEC_SETUP_FIXTURE_FUNCTION_NAMES`
+  - `SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES`
+- Loops through all setup fixture, setup, spec, teardown, and teardown fixture functions as expected
+- Invokes functions using their respective `spec.run<function type>` functions, e.g. `spec.runSetup`
+- Invokes display functions, see [Lifecycle event hooks](#lifecycle-event-hooks) for a full list
+- Sets function values as appropriate while running, e.g. sets these values at certain times:
+  - `SPEC_CURRENT_FUNCTION`
+  - `SPEC_RESULT_CODE`
+  - `SPEC_STDOUT`
+  - `SPEC_STDERR`
+  - `SPEC_STATUS`
+  - `SPEC_NAME`
+  - `SPEC_FUNCTION`
+  - `SPEC_TOTAL_COUNT`
+  - `SPEC_PASSED_COUNT`
+  - `SPEC_FAILED_COUNT`
+  - `SPEC_PENDING_COUNT`
 
 #### `spec.setupFixtureFunctionNames`
 
