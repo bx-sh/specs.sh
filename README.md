@@ -95,7 +95,7 @@ Specs (or tests) are defined as simple BASH functions:
 
 #### ✅ Passing Specs
 
-A spec will **`[PASS]`** when the function is run successfully and returns a non-zero return code:
+A spec will **`[PASS]`** when the function is run and returns a non-zero return code:
 
 - ```sh
   @spec.this_spec_will_pass() {
@@ -121,6 +121,24 @@ A spec will **`[FAIL]`** when the function is run and either of these conditions
   @spec.this_spec_will_also_fail() {
     # ... something something ...
     return 1
+  }
+  ```
+
+ℹ️ BASH functions implicitly return the return code of the last command run in the function:
+
+- It is common to write specs so the final command is used to determine if the spec will pass
+  ```sh
+  @spec.verify_that_a_file_exists() {
+    local expected_file="my-file.txt"
+    [ -f "$expected_file" ]
+  }
+  ```
+- This is functionally the same as the following example:
+  ```sh
+  @spec.verify_that_a_file_exists() {
+    local expected_file="my-file.txt"
+    [ -f "$expected_file" ]
+    return $?
   }
   ```
 
