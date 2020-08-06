@@ -1064,10 +1064,10 @@ Tests failed
 | `SPEC_RESULT_CODE`                     | Exit/return code of last spec run                                                                   |
 | `SPEC_SETUP_FIXTURE_FUNCTION_NAMES`    | Array of function names for setup fixtures (loaded by `loadSetupFixtureFunctions`)                  |
 | `SPEC_SETUP_FUNCTION_NAMES`            | Array of function names for setup (loaded by `loadSetupFunctions`)                                  |
-| `SPEC_STATUS`                          | 'PASS' or 'FAIL' or 'PENDING' status of the most recently run spec                                  |
+| `SPEC_STATUS`                          | `PASS` or `FAIL` or `PENDING` status of the most recently run spec                                  |
 | `SPEC_STDERR`                          | STDERR content from the most recently run spec (including setup and teardown)                       |
 | `SPEC_STDOUT`                          | STDOUT content from the most recently run spec (including setup and teardown)                       |
-| `SPEC_SUITE_STATUS`                    | Final 'PASS' or 'FAIL' status for the current file                                                  |
+| `SPEC_SUITE_STATUS`                    | Final `PASS` or `FAIL` status for the current file                                                  |
 | `SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES` | Array of function names for teardown fixtures (loaded by `loadTeardownFixtureFunctions`)            |
 | `SPEC_TEARDOWN_FUNCTION_NAMES`         | Array of function names for teardown (loaded by `loadTeardownFunctions`)                            |
 | `SPEC_TOTAL_COUNT`                     | Total number of specs for the current file                                                          |
