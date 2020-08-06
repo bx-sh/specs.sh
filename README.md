@@ -1034,7 +1034,7 @@ Hi from teardownFixture. This function: @teardownFixture This file examples/form
 Tests failed
 ```
 
-> Note: the STDOUT and STDERR of tests are captures and not shown unless you display them.
+> Note: the STDOUT and STDERR of tests are captured and not shown unless you display them.
 >
 > However, the `@setupFixture` and `@teardownFixture` functions run at the top-level and their output is shown (not captured)
 
