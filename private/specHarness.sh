@@ -560,14 +560,20 @@ ___spec___.listTests() {
 }
 
 ___spec___.runSpecWithSetupAndTeardown() {
+  local ___spec___unusedOutput
   local ___spec___specFailed=false
 
   # Run setup function(s)
+  #
+  # These are NOT un in a subshell, they need to load the environment.
+  #
+  # If one of these exits, the entire spec will exit.
+  #
   local ___spec___SetupFunctionName
   for ___spec___SetupFunctionName in "${SPEC_SETUP_FUNCTION_NAMES[@]}"
   do
     SPEC_CURRENT_FUNCTION="$___spec___SetupFunctionName"
-    spec.runSetup "$___spec___SetupFunctionName"
+    spec.runSetup "$___spec___SetupFunctionName" 1>>"$SPEC_TEMP_STDOUT_FILE" 2>>"$SPEC_TEMP_STDERR_FILE"
     if [ $? -ne 0 ]
     then
       ___spec___specFailed=true
@@ -576,10 +582,13 @@ ___spec___.runSpecWithSetupAndTeardown() {
   done
 
   # Run spec (unless setup failed)
+  #
+  # Run in subshell so that teardowns can be run afterwards even if the test fails
+  #
   if [ "$___spec___specFailed" = "false" ]
   then
     SPEC_CURRENT_FUNCTION="$SPEC_FUNCTION"
-    spec.runSpec "$SPEC_FUNCTION"
+    ___spec___unusedOutput="$( spec.runSpec "$SPEC_FUNCTION" 1>>"$SPEC_TEMP_STDOUT_FILE" 2>>"$SPEC_TEMP_STDERR_FILE" )"
     [ $? -ne 0 ] && ___spec___specFailed=true
   fi
 
@@ -588,7 +597,7 @@ ___spec___.runSpecWithSetupAndTeardown() {
   for ___spec___TeardownFunctionName in "${SPEC_TEARDOWN_FUNCTION_NAMES[@]}"
   do
     SPEC_CURRENT_FUNCTION="$___spec___TeardownFunctionName"
-    spec.runTeardown "$___spec___TeardownFunctionName"
+    ___spec___unusedOutput="$( spec.runTeardown "$___spec___TeardownFunctionName" 1>>"$SPEC_TEMP_STDOUT_FILE" 2>>"$SPEC_TEMP_STDERR_FILE" )"
     [ $? -ne 0 ] && ___spec___specFailed=true
   done
 
@@ -626,17 +635,17 @@ ___spec___.runSpecs() {
     spec.displayRunningSpec "$SPEC_NAME"
 
     local ___spec___unusedOutput # needed to get correct $? while also running in subshell
-    local ___spec___tempStdoutFile="$( mktemp )"
-    local ___spec___tempStderrFile="$( mktemp )"
+    local SPEC_TEMP_STDOUT_FILE="$( mktemp )"
+    local SPEC_TEMP_STDERR_FILE="$( mktemp )"
 
     #######################################################################################
     # Run spec
-    ___spec___unusedOutput="$( spec.runSpecWithSetupAndTeardown 1>"$___spec___tempStdoutFile" 2>"$___spec___tempStderrFile" )"
+    ___spec___unusedOutput="$( spec.runSpecWithSetupAndTeardown )"
     SPEC_RESULT_CODE=$?
     #######################################################################################
 
-    SPEC_STDOUT="$( cat "$___spec___tempStdoutFile" )"
-    SPEC_STDERR="$( cat "$___spec___tempStderrFile" )"
+    SPEC_STDOUT="$( cat "$SPEC_TEMP_STDOUT_FILE" )"
+    SPEC_STDERR="$( cat "$SPEC_TEMP_STDERR_FILE" )"
 
     if [ $SPEC_RESULT_CODE -eq 0 ]
     then
