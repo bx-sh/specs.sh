@@ -24,6 +24,8 @@ spec version 0.2.3
 ## Shell Specifications
 
 ```sh
+# [ my-file.spec.sh ]
+
 @spec.daytime_greeting() {
   [ "$( greeting --daytime )" = "Hello, world!" ]
 }
