@@ -263,6 +263,27 @@ If you want to perform some cleanup after your tests, define a **`@teardown`** f
 }
 ```
 
+`@teardown` runs after **every** individual test is run.
+
+If you want to perform some cleanup **once** after **all** of the tests are run, define a **`@teardownFixture`** function:
+
+```sh
+@teardownFixture() {
+  echo "This runs once after running all of the tests in the file"
+}
+
+@teardown() {
+  echo "This runs after every test"
+}
+```
+
+> Aliases:
+>
+> - `@teardown` can also be named `@after`
+> - `@teardownFixture` can also be named `@afterAll`
+
+---
+
 > #### ℹ Test Cleanup
 >
 > The `@teardown` function runs after each test, even if the test fails.
@@ -284,22 +305,6 @@ If you want to perform some cleanup after your tests, define a **`@teardown`** f
 > Always remember to put your test cleanup code into `@teardown` and not the test, itself.
 >
 > Note: if the `@teardown` function does not return a non-zero code, it will fail the test.
-
-If you want to perform some cleanup **once** after **all** of the tests have been run, use **`@teardownFixture`**:
-
-```sh
-@teardownFixture() {
-  echo "This runs once after running all of the tests in the file"
-}
-teardown() {
-  echo "This runs after every test"
-}
-```
-
-> Aliases:
->
-> - `@teardown` can also be named `@after`
-> - `@teardownFixture` can also be named `@afterAll`
 
 ## Pending tests
 
