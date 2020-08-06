@@ -150,9 +150,9 @@ A spec will **`[FAIL]`** when the function is run and either of these conditions
 
 ## Setup
 
-It is common to have many specs in the same file which perform some common setup.
+It is common to have multiple specs in the same file which perform the same setup.
 
-In the following example, every individual test is creating a temporary directory:
+> In the following example, every individual test is creating a temporary directory:
 
 ```sh
 @spec.verify_can_write_files_in_directory() {
