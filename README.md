@@ -150,25 +150,25 @@ A spec will **`[FAIL]`** when the function is run and either of these conditions
 
 ## Setup
 
-It is common to have many specs in the same file which perform the same setup:
+It is common to have many specs in the same file which perform some common setup:
 
 ```sh
 @spec.verify_can_write_files_in_directory() {
-  local directory="$( mktemp )"
+  local directory="$( mktemp -d )"
 
   touch "$directory/foo"
   [ -f "$directory/foo" ]
 }
 
 @spec.verify_can_read_files_in_directory() {
-  local directory="$( mktemp )"
+  local directory="$( mktemp -d )"
 
   echo "Hello" > "$directory/foo"
   [ "$( cat "$directory/foo" )" = "Hello" ]
 }
 
 @spec.verify_can_list_files_in_directory() {
-  local directory="$( mktemp )"
+  local directory="$( mktemp -d )"
 
   touch "$directory/foo"
   touch "$directory/bar"
@@ -178,11 +178,13 @@ It is common to have many specs in the same file which perform the same setup:
 }
 ```
 
-To perform common operations before every test, define a **`@setup()`** function:
+> In this case, every individual test is creating a temporary directory.
+
+To perform common operations before each test runs, define a **`@setup()`** function:
 
 ```sh
 @setup() {
-  directory="$( mktemp )"
+  directory="$( mktemp -d )"
 }
 
 @spec.verify_can_write_files_in_directory() {
@@ -204,7 +206,7 @@ To perform common operations before every test, define a **`@setup()`** function
 }
 ```
 
-`@setup` runs before **every** individual test.
+`@setup` runs before **every** individual test is run.
 
 > #### ℹ Spec + Subshells
 >
