@@ -1084,9 +1084,13 @@ All of these functions have access to the following variables:
 
 #### `spec.afterFile`
 
+> Caller: `spec` binary
+
 - Called immediately after sourcing spec file
 
 #### `spec.beforeFile`
+
+> Caller: `spec` binary
 
 - Called immediately before sourcing spec file
 
@@ -1100,17 +1104,36 @@ All of these functions have access to the following variables:
 
 #### `spec.displayRunningSpec`
 
--
+> Display-only  
+> Variables: has access to all variables loaded by `spec.loadTests`
+
+- Called immediately before running a spec function (or the spec's first setup function)
+- `SPEC_NAME` will be set to the spec's display name
+- `SPEC_FUNCTION` will be set to the spec's function name
 
 #### `spec.displaySpecBanner`
+
+> Display-only  
+> Variables: has access to all variables loaded by `spec.loadTests`
 
 -
 
 #### `spec.displaySpecResult`
 
--
+> Display-only  
+> Variables: has access to all variables loaded by `spec.loadTests`
+
+- Called after a test has been run (or skipped if pending)
+- `SPEC_STATUS` will be set to `PASS` `FAIL` or `PENDING`
+- `SPEC_RESULT_CODE` will be set to the numeric exit/return code from the test
+  - If set to `1` this could be from the test or because a teardown function failed
+- `SPEC_NAME` will be set to the spec's display name
+- `SPEC_FUNCTION` will be set to the spec's function name
 
 #### `spec.displaySpecSummary`
+
+> Display-only  
+> Variables: has access to all variables loaded by `spec.loadTests`
 
 -
 
@@ -1129,15 +1152,28 @@ All of these functions have access to the following variables:
 
 #### `spec.listTests`
 
--
+> Caller: `spec` binary  
+> Variables: has access to all variables loaded by `spec.loadTests`
+
+- Called when `spec` is called with the `-p` `--print` `--dry-run` option
 
 #### `spec.loadConfigs`
 
--
+> Caller: `spec` binary
+
+- `SPEC_CONFIG` is loaded right before `spec.loadConfigs` is called
+- `spec.loadConfigs` is the first of all of these functions to be called
+- Called immediately after loading `spec` framework in preparation of running a test file
+- Searches for config files using names provided by `spec.configFilenames`
+- Files are sourced as they are found
 
 #### `spec.loadHelpers`
 
--
+> Caller: `spec` binary
+
+- Called immediately after `spec.loadConfigs`
+- Searches for helper files using names provided by `spec.configFilenames`
+- Files are sourced as they are found
 
 #### `spec.loadPendingFunctions`
 
@@ -1164,6 +1200,8 @@ All of these functions have access to the following variables:
 -
 
 #### `spec.loadTests`
+
+> Caller: `spec` binary
 
 -
 
@@ -1196,6 +1234,8 @@ All of these functions have access to the following variables:
 -
 
 #### `spec.runSpecs`
+
+> Caller: `spec` binary
 
 -
 
