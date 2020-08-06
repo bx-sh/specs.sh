@@ -126,6 +126,14 @@ A spec will **`[FAIL]`** when the function is run and either of these conditions
   }
   ```
 
+> Aliases:
+>
+> There are a number of aliases provided for defining spec functions in addition to `@spec.<test name>`
+>
+> - `@test.<test name>` can also be used
+> - `@it.<test name>` can also be used
+> - `@example.<test name>` can also be used
+
 ---
 
 > #### ℹ Implicit Returns
@@ -307,6 +315,70 @@ If you want to perform some cleanup **once** after **all** of the tests are run,
 > Note: if the `@teardown` function does not return a non-zero code, it will fail the test.
 
 ## Pending tests
+
+Sometimes you may want to define a number of tests which you are not ready to implement yet.
+
+You can define a test _which will not be run_ by using `@pending` in place of `@spec`
+
+```sh
+@setup() {
+  # Create temporary directory for this spec
+  directory="$( mktemp )"
+}
+
+@spec.verify_can_write_files_in_directory() {
+  touch "$directory/foo"
+  [ -f "$directory/foo" ]
+}
+
+@spec.verify_can_read_files_in_directory() {
+  echo "Hello" > "$directory/foo"
+  [ "$( cat "$directory/foo" )" = "Hello" ]
+}
+
+@pending.verify_can_list_files_in_directory() {
+  :
+}
+
+@pending.verify_can_check_permissions_of_directory() {
+  :
+}
+
+@pending.verify_only_readable_directories_are_used() {
+  :
+}
+```
+
+This is useful when initially defining tests or if you want to temporarily disable a test:
+
+```sh
+@setup() {
+  # Create temporary directory for this spec
+  directory="$( mktemp )"
+}
+
+@spec.verify_can_write_files_in_directory() {
+  touch "$directory/foo"
+  [ -f "$directory/foo" ]
+}
+
+# Hmm this test isn't working, let's mark it @pending for now
+@pending.verify_can_read_files_in_directory() {
+  echo "Hello" > "$directory/foo"
+  [ "$( cat "$directory/foo" )" = "Not Hello" ]
+}
+```
+
+> Aliases:
+>
+> There are a number of aliases provided for marking spec functions to not be run in addition to `@pending.`
+>
+> - `@xspec.<test name>` can also be used
+> - `@xtest.<test name>` can also be used
+> - `@xit.<test name>` can also be used
+> - `@xexample.<test name>` can also be used
+>
+> For every supported `@spec.<test name>` syntax, you can use an `x` prefix to mark the spec as pending.
 
 ## Shared code
 
