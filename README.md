@@ -1099,7 +1099,7 @@ All of these functions have access to the following variables:
 > Caller: `spec.loadConfigs`  
 > Default: `echo spec.config.sh test.config.sh`
 
-- Function should echo a list of string
+- Function should echo a list of strings
 - Each item will be used as the basename of a file to search for and load
 
 #### `spec.displayRunningSpec`
@@ -1156,7 +1156,7 @@ All of these functions have access to the following variables:
 > Caller: `spec.loadHelpers`  
 > Default: `echo specHelper.sh testHelper.sh helper.spec.sh helper.test.sh`
 
-- Function should echo a list of string
+- Function should echo a list of strings
 - Each item will be used as the basename of a file to search for and load
 
 #### `spec.listTests`
@@ -1238,11 +1238,23 @@ All of these functions have access to the following variables:
 
 > Caller: `spec` binary
 
--
+- Responsible for loading all of these arrays:
+  - `SPEC_FUNCTION_NAMES`
+  - `SPEC_DISPLAY_NAMES`
+  - `SPEC_PENDING_FUNCTION_NAMES`
+  - `SPEC_PENDING_DISPLAY_NAMES`
+  - `SPEC_SETUP_FUNCTION_NAMES`
+  - `SPEC_TEARDOWN_FUNCTION_NAMES`
+  - `SPEC_SETUP_FIXTURE_FUNCTION_NAMES`
+  - `SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES`
+- Does so by calling other `spec.load*` functions
 
 #### `spec.pendingFunctionPrefixes`
 
--
+> Caller: `spec.loadPendingFunctions`
+
+- Function should echo a list of strings
+- Each item will be used as a valid prefix for functions to be considered as pending specs
 
 #### `spec.runFunction`
 
@@ -1276,24 +1288,45 @@ All of these functions have access to the following variables:
 
 #### `spec.setupFixtureFunctionNames`
 
--
+> Caller: `spec.loadSetupFixtureFunctions`
+
+- Function should echo a list of strings
+- Each item will be used as a valid function name which, if present, will be considered a setup fixture function
 
 #### `spec.setupFunctionNames`
 
--
+> Caller: `spec.loadSetupFunctions`
+
+- Function should echo a list of strings
+- Each item will be used as a valid function name which, if present, will be considered a setup function
 
 #### `spec.specFunctionPrefixes`
 
--
+> Caller: `spec.loadSpecFunctions`
+
+- Function should echo a list of strings
+- Each item will be used as a valid prefix for functions to be considered as specs
 
 #### `spec.specNameMatchesPattern`
 
--
+> Callers: `spec.loadSpecFunctions`, `spec.loadPendingFunctions`
+
+- Predicate function returns 0 or 1 depending on if the provided spec matches the `SPEC_NAME_PATTERN`
+- `$1`: full spec function name
+- `$2`: spec function name without prefix, e.g. `foo_bar` rather than `@spec.foo_bar`
+- `$3`: spec display name, e.g. `foo bar` rather than `foo_bar` (see: `spec.getSpecDisplayName`)
+- `$4`: pattern (same value as `SPEC_PATTERN_NAME`)
 
 #### `spec.teardownFixtureFunctionNames`
 
--
+> Caller: `spec.loadTeardownFixtureFunctions`
+
+- Function should echo a list of strings
+- Each item will be used as a valid function name which, if present, will be considered a teardown fixture function
 
 #### `spec.teardownFunctionNames`
 
--
+> Caller: `spec.loadTeardownFunctions`
+
+- Function should echo a list of strings
+- Each item will be used as a valid function name which, if present, will be considered a teardown function
