@@ -124,7 +124,9 @@ A spec will **`[FAIL]`** when the function is run and either of these conditions
   }
   ```
 
-ℹ️ BASH functions implicitly return the return code of the last command run in the function:
+#### ℹ Implicit Returns
+
+BASH functions implicitly return the return code of the last command run in the function:
 
 - It is common to write specs so the final command is used to determine if the spec will pass
   ```sh
