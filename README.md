@@ -148,6 +148,34 @@ A spec will **`[FAIL]`** when the function is run and either of these conditions
 
 ## Setup and teardown
 
+It is common to have a file where many of the specs perform the same setup:
+
+```sh
+@spec.verify_can_write_files_in_directory() {
+  local directory="$( mktemp )"
+
+  touch "$directory/foo"
+  [ -f "$directory/foo" ]
+}
+
+@spec.verify_can_read_files_in_directory() {
+  local directory="$( mktemp )"
+
+  echo "Hello" > "$directory/foo"
+  [ "$( cat "$directory/foo" )" = "Hello" ]
+}
+
+@spec.verify_can_list_files_in_directory() {
+  local directory="$( mktemp )"
+
+  touch "$directory/foo"
+  touch "$directory/bar"
+
+  local list="$( ls "$directory" )"
+  [[ "$( ls "$directory" )" = *"foo"* ]] && [[ " ]]
+}
+```
+
 ## Pending tests
 
 ## Shared code
