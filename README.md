@@ -88,13 +88,37 @@ Specs (or tests) are defined as simple BASH functions:
 
 ```sh
 @spec.file_should_exist() {
-
-  local expected_file_path="my-file"
-
+  local expected_file_path="my-file.txt"
   [ -f "$expected_file_path" ]
-
 }
 ```
+
+A spec will `[PASS]` when the function is run successfully and returns a non-zero return code:
+
+- ```sh
+  @spec.this_spec_will_pass() {
+    # ... something something ...
+    return 0
+  }
+  ```
+
+A spec will `[FAIL]` when the function is run and either of these conditions occur:
+
+- (a) The function exits before finishing with a non-zero exit code, e.g. `exit 1`
+  ```sh
+  @spec.this_spec_will_fail() {
+    # ... something something ...
+    exit 1
+    # ... something something ...
+  }
+  ```
+- (b) The final command run in the function returns a non-zero exit code, e.g. `return 1`
+  ```sh
+  @spec.this_spec_will_also_fail() {
+    # ... something something ...
+    return 1
+  }
+  ```
 
 ## Setup and teardown
 
