@@ -10,13 +10,13 @@ Simple Shell Specifications.
 
 ---
 
-Download the [latest version](https://github.com/bx-sh/spec.sh/archive/v0.2.4.tar.gz)
+Download the [latest version](https://github.com/bx-sh/spec.sh/archive/v0.2.5.tar.gz)
 
 ```sh
 $ PATH="$PATH:spec/bin"
 
 $ spec --version
-spec version 0.2.4
+spec version 0.2.5
 ```
 
 ---
@@ -526,7 +526,7 @@ This allows you to easily share dependencies between various `spec` source code 
 ```sh
 $ spec --help
 
-spec version 0.2.4
+spec version 0.2.5
 
 Usage: spec [directory/ or file.spec.sh] [-f -p -e -c -h -v]
 
@@ -559,6 +559,8 @@ Examples:
   spec -e ^hello                      Runs tests with names that start with "hello"
 
   spec -e world$                      Runs tests with names that end with "world"
+
+  spec -e "*world*"                   Runs tests containing "world"
 ```
 
 ## Running specs
@@ -603,7 +605,11 @@ $ spec -e ^dog
 
 > This will run only tests where the test name starts with "dog"
 
-The `-e pattern` is used as a BASH regular expression
+The `-e pattern` supports `^` (start with) `$` (end with) and `*` (wildcard search)
+
+> The default `spec -e` behavior converts your text into a BASH regular expression.
+>
+> You can take advantage of this for more advanced matching. Note that `*` is translated into `.*`
 
 ## Printing spec names
 
