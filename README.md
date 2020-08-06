@@ -147,7 +147,7 @@ A spec will **`[FAIL]`** when the function is run and either of these conditions
 >   }
 >   ```
 
-## Test setup
+## Setup
 
 It is common to have many specs in the same file which perform the same setup:
 
@@ -203,7 +203,34 @@ To perform common operations before every test, define a **`@setup()`** function
 }
 ```
 
-`@setup` runs before every
+`@setup` runs before **every** individual test.
+
+> #### ℹ Spec + Subshells
+>
+> `spec` runs every individual spec function inside of its own subshell.
+>
+> It is safe to set global variables in `@setup`, they will not effect your other tests.
+
+If you want to perform some setup **once** before all of the tests are run, use `@setupFixture`:
+
+```sh
+@setupFixture() {
+  echo "This runs once before running all of the tests in the file"
+}
+
+@setup() {
+  echo "This runs before every test"
+}
+```
+
+> Aliases:
+>
+> - `@setup` can also be named `@before`
+> - `@teardown` can also be named `@after`
+> - `@setupFixture` can also be named `@beforeAll`
+> - `@teardownFixture` can also be named `@afterAll`
+
+## Teardown
 
 ## Pending tests
 
