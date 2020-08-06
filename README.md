@@ -21,25 +21,15 @@ spec version 0.2.3
 
 ---
 
+## Shell Specifications
+
 ```sh
-@setup() {
-  PATH="./greeting/bin:$PATH"
-}
-
-@teardown() {
-  : # Do some cleanup
-}
-
 @spec.daytime_greeting() {
   [ "$( greeting --daytime )" = "Hello, world!" ]
 }
 
 @spec.evening_greeting() {
   [ "$( greeting --evening )" = "Goodnight, moon!" ]
-}
-
-@pending.I_will_write_this_later() {
-  : # Unimplemented test
 }
 ```
 
@@ -48,10 +38,43 @@ $ spec my-file.spec.sh
 
 [OK] daytime greeting
 [FAIL] evening greeting
-[PENDING] I will write this later
 
 Tests passed. 1 passed. 1 pending.
 ```
+
+---
+
+#### Basics
+
+- [Test syntax](#foo)
+- [Test setup](#foo)
+- [Test teardown](#foo)
+- [Pending tests](#foo)
+- [Shared code](#foo)
+
+#### Command-Line `spec`
+
+- [Running Tests](#foo)
+- [Running certain tests](#foo)
+- [Printing test names](#foo)
+- [Configuration files](#foo)
+- [Fail fast](#foo)
+
+#### Customization
+
+- [Pre-defined variables](#foo)
+- [Custom test definitions](#foo)
+- [Custom setup and teardown](#foo)
+- [Extending configuration](#foo)
+- [Wrapping tests](#foo)
+- [Custom test output](#foo)
+- [Extending the CLI](#foo)
+
+---
+
+---
+
+---
 
 ### Supports most commonly used test vocabulary
 
