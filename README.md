@@ -212,12 +212,6 @@ To perform common operations before each test runs, define a **`@setup()`** func
 
 `@setup` runs before **every** individual test is run.
 
-> #### ℹ Spec + Subshells
->
-> `spec` runs every individual spec function inside of its own subshell.
->
-> It is safe to set global variables in `@setup`, they will not effect your other tests.
-
 If you want to perform some setup **once** before **all** of the tests are run, use **`@setupFixture`**:
 
 ```sh
@@ -234,6 +228,12 @@ If you want to perform some setup **once** before **all** of the tests are run, 
 >
 > - `@setup` can also be named `@before`
 > - `@setupFixture` can also be named `@beforeAll`
+
+> #### ℹ Spec + Subshells
+>
+> `spec` runs every individual spec function inside of its own subshell.
+>
+> It is safe to set global variables in `@setup`, they will not effect your other tests.
 
 ## Teardown
 
