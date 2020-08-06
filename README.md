@@ -200,7 +200,7 @@ To perform common operations before each test runs, define a **`@setup()`** func
 ```sh
 @setup() {
   # Create temporary directory for this spec
-  directory="$( mktemp )"
+  directory="$( mktemp -d )"
 }
 
 @spec.verify_can_write_files_in_directory() {
@@ -260,7 +260,7 @@ If you want to perform some cleanup after your tests, define a **`@teardown`** f
 ```sh
 @setup() {
   # Create temporary directory for this spec
-  directory="$( mktemp )"
+  directory="$( mktemp -d )"
 }
 
 @teardown() {
@@ -335,7 +335,7 @@ You can define a test _which will not be run_ by using `@pending` in place of `@
 ```sh
 @setup() {
   # Create temporary directory for this spec
-  directory="$( mktemp )"
+  directory="$( mktemp -d )"
 }
 
 @spec.verify_can_write_files_in_directory() {
@@ -366,7 +366,7 @@ This is useful when initially defining tests or if you want to temporarily disab
 ```sh
 @setup() {
   # Create temporary directory for this spec
-  directory="$( mktemp )"
+  directory="$( mktemp -d )"
 }
 
 @spec.verify_can_write_files_in_directory() {
@@ -398,7 +398,50 @@ This is useful when initially defining tests or if you want to temporarily disab
 
 ## Helper functions
 
-...
+Spec files are just BASH files. Don't be afraid to implement helper functions!
+
+> These are silly examples, just a friendly reminder to use functions in your files when useful 🔬
+
+```sh
+getTemporaryDirectory() {
+  mktemp -d
+}
+
+deleteDirectory() {
+  [ -n "$1" ] && [ -d "$1" ] && rm -rf "$1"
+}
+
+createFile() {
+  local filename="$1"
+  local content="$2"
+  if [ -z "$content" ]
+  then
+    touch "$filename"
+  else
+    echo "$content" > "$filename"
+  fi
+}
+
+@setup() {
+  directory="$( getTemporaryDirectory )"
+}
+
+@teardown() {
+  deleteDirectory "$directory"
+}
+
+@spec.verify_can_write_files_in_directory() {
+  createFile "$directory/foo"
+
+  [ -f "$directory/foo" ]
+}
+
+@spec.verify_can_read_files_in_directory() {
+  createFile "$directory/foo" "Hello"
+
+  [ "$( cat "$directory/foo" )" = "Hello" ]
+}
+```
 
 ## Shared code
 
