@@ -59,6 +59,7 @@ Tests passed. 1 passed. 1 pending.
 - [Setup](#foo) - (`@setup`)
 - [Teardown](#foo) - (`@teardown`)
 - [Pending](#foo) - (`@pending`)
+- [Helper functions](#foo) - (`myFunction()`)
 - [Shared code](#foo) - (`specHelper.sh`)
 
 #### Command-Line `spec`
@@ -211,7 +212,7 @@ To perform common operations before every test, define a **`@setup()`** function
 >
 > It is safe to set global variables in `@setup`, they will not effect your other tests.
 
-If you want to perform some setup **once** before all of the tests are run, use `@setupFixture`:
+If you want to perform some setup **once** before **all** of the tests are run, use **`@setupFixture`**:
 
 ```sh
 @setupFixture() {
@@ -229,6 +230,46 @@ If you want to perform some setup **once** before all of the tests are run, use 
 > - `@setupFixture` can also be named `@beforeAll`
 
 ## Teardown
+
+To perform common operations before every test, define a **`@setup()`** function:
+
+If you want to perform some cleanup after your tests, define a **`@teardown`** function:
+
+```sh
+@setup() {
+  directory="$( mktemp )"
+}
+
+@teardown() {
+  [ -n "$directory" ] && [ -d "$directory" ] && rm -rf "$directory"
+}
+
+@spec.verify_can_write_files_in_directory() {
+  touch "$directory/foo"
+  [ -f "$directory/foo" ]
+}
+
+@spec.verify_can_read_files_in_directory() {
+  echo "Hello" > "$directory/foo"
+  [ "$( cat "$directory/foo" )" = "Hello" ]
+}
+```
+
+If you want to perform some cleanup **once** after **all** of the tests have been run, use **`@teardownFixture`**:
+
+```sh
+@teardownFixture() {
+  echo "This runs once after running all of the tests in the file"
+}
+teardown() {
+  echo "This runs after every test"
+}
+```
+
+> Aliases:
+>
+> - `@teardown` can also be named `@after`
+> - `@teardownFixture` can also be named `@afterAll`
 
 ## Pending tests
 
