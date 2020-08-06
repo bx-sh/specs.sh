@@ -126,14 +126,6 @@ A spec will **`[FAIL]`** when the function is run and either of these conditions
   }
   ```
 
-> Aliases:
->
-> There are a number of aliases provided for defining spec functions in addition to `@spec.<test name>`
->
-> - `@test.<test name>` can also be used
-> - `@it.<test name>` can also be used
-> - `@example.<test name>` can also be used
-
 ---
 
 > #### ℹ Implicit Returns
@@ -155,6 +147,16 @@ A spec will **`[FAIL]`** when the function is run and either of these conditions
 >     return $?
 >   }
 >   ```
+
+---
+
+> Aliases:
+>
+> There are a number of aliases provided for defining spec functions in addition to `@spec.<test name>`
+>
+> - `@test.<test name>` can also be used
+> - `@it.<test name>` can also be used
+> - `@example.<test name>` can also be used
 
 ## Setup
 
