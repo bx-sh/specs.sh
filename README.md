@@ -63,11 +63,11 @@ Tests passed. 1 passed. 1 pending.
 
 #### Command-Line `spec`
 
-- [Running Tests](#foo)
-- [Running certain tests](#foo)
-- [Printing test names](#foo)
-- [Configuration files](#foo)
-- [Fail fast](#foo)
+- [Running Tests](#foo) - (`spec`)
+- [Running certain tests](#foo) - (`spec -e my_test`)
+- [Printing test names](#foo) - (`spec -p`)
+- [Configuration files](#foo) - (`spec -c`)
+- [Fail fast](#foo) - (`spec -f`)
 
 #### Customization
 
