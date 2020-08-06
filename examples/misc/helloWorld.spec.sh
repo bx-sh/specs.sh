@@ -1,17 +1,17 @@
 @setupFixture() {
-  echo "Hi, I run before the whole file. I am $CURRENT_FUNCTION."
+  echo "Hi, I run before the whole file. I am $SPEC_CURRENT_FUNCTION."
 }
 
 @teardownFixture() {
-  echo "Hi, I run after the whole file. I am $CURRENT_FUNCTION."
+  echo "Hi, I run after the whole file. I am $SPEC_CURRENT_FUNCTION."
 }
 
 @setup() {
-  echo "HI FROM SETUP - this test name/function is: ($SPEC_NAME) ($SPEC_FUNCTION) - I am $CURRENT_FUNCTION"
+  echo "HI FROM SETUP - this test name/function is: ($SPEC_NAME) ($SPEC_FUNCTION) - I am $SPEC_CURRENT_FUNCTION"
 }
 
 @teardown() {
-  echo "HI FROM TEARDOWN - this test name/function is: ($SPEC_NAME) ($SPEC_FUNCTION) - I am $CURRENT_FUNCTION"
+  echo "HI FROM TEARDOWN - this test name/function is: ($SPEC_NAME) ($SPEC_FUNCTION) - I am $SPEC_CURRENT_FUNCTION"
 }
 
 @spec.hello_world() {
@@ -28,6 +28,9 @@
 }
 
 @spec.passing_spec() {
+  echo "Current Spec: $SPEC_NAME"
+  echo "Current Spec Function: $SPEC_FUNCTION"
+  echo "Current Function: $SPEC_CURRENT_FUNCTION"
   [ 1 -eq 1 ]
 }
 

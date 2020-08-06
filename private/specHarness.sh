@@ -128,6 +128,10 @@ spec.runSpecs() {
   ___spec___.runSpecs "$@"
 }
 
+spec.runSpecWithSetupAndTeardown() {
+  ___spec___.runSpecWithSetupAndTeardown "$@"
+}
+
 spec.runSetup() {
   ___spec___.runSetup "$@"
 }
@@ -555,10 +559,51 @@ ___spec___.listTests() {
   done
 }
 
+___spec___.runSpecWithSetupAndTeardown() {
+  local ___spec___specFailed=false
+
+  # Run setup function(s)
+  local ___spec___SetupFunctionName
+  for ___spec___SetupFunctionName in "${SPEC_SETUP_FUNCTION_NAMES[@]}"
+  do
+    SPEC_CURRENT_FUNCTION="$___spec___SetupFunctionName"
+    spec.runSetup "$___spec___SetupFunctionName"
+    if [ $? -ne 0 ]
+    then
+      ___spec___specFailed=true
+      break
+    fi
+  done
+
+  # Run spec (unless setup failed)
+  if [ "$___spec___specFailed" = "false" ]
+  then
+    SPEC_CURRENT_FUNCTION="$SPEC_FUNCTION"
+    spec.runSpec "$SPEC_FUNCTION"
+    [ $? -ne 0 ] && ___spec___specFailed=true
+  fi
+
+  # Run teardown function(s) (even if setup or test failed)
+  local ___spec___TeardownFunctionName
+  for ___spec___TeardownFunctionName in "${SPEC_TEARDOWN_FUNCTION_NAMES[@]}"
+  do
+    SPEC_CURRENT_FUNCTION="$___spec___TeardownFunctionName"
+    spec.runTeardown "$___spec___TeardownFunctionName"
+    [ $? -ne 0 ] && ___spec___specFailed=true
+  done
+
+  [ "$___spec___specFailed" = "false" ]
+}
+
 ___spec___.runSpecs() {
+  SPEC_TOTAL_COUNT="${#SPEC_FUNCTION_NAMES[@]}"
+  SPEC_PENDING_COUNT="${#SPEC_PENDING_FUNCTION_NAMES[@]}"
+  SPEC_FAILED_COUNT=0
+  SPEC_PASSED_COUNT=0
+
   spec.displaySpecBanner
 
-  ##
+  #######################################################################################
   # Run Setup Fixtures, if any (note: unlike setup/teardown these are not in a subshell)
   ##
   local ___spec___SetupFixtureFunction
@@ -567,75 +612,31 @@ ___spec___.runSpecs() {
     SPEC_CURRENT_FUNCTION="$___spec___SetupFixtureFunction"
     spec.runSetupFixture "$___spec___SetupFixtureFunction"
   done
-  ##
-
-  ##
-  SPEC_TOTAL_COUNT="${#SPEC_FUNCTION_NAMES[@]}"
-  SPEC_PENDING_COUNT="${#SPEC_PENDING_FUNCTION_NAMES[@]}"
-  SPEC_FAILED_COUNT=0
-  SPEC_PASSED_COUNT=0
-  ##
+  #######################################################################################
 
   local ___spec___CurrentSpecIndex=0
   while [ $___spec___CurrentSpecIndex -lt "${#SPEC_FUNCTION_NAMES[@]}" ]
   do
     SPEC_FUNCTION="${SPEC_FUNCTION_NAMES[$___spec___CurrentSpecIndex]}"
     SPEC_NAME="${SPEC_DISPLAY_NAMES[$___spec___CurrentSpecIndex]}"
+    SPEC_RESULT_CODE=""
 
     (( ___spec___CurrentSpecIndex++ ))
-    
-    local SPEC_STDOUT_file="$( mktemp )"
-    local SPEC_STDERR_file="$( mktemp )"
 
     spec.displayRunningSpec "$SPEC_NAME"
 
-    SPEC_RESULT_CODE=""
     local ___spec___unusedOutput # needed to get correct $? while also running in subshell
-    local ___spec___setupFailed=""
+    local ___spec___tempStdoutFile="$( mktemp )"
+    local ___spec___tempStderrFile="$( mktemp )"
 
-    ##
-    # Run setup function(s)
-    ##
-    local ___spec___SetupFunctionName
-    for ___spec___SetupFunctionName in "${SPEC_SETUP_FUNCTION_NAMES[@]}"
-    do
-      SPEC_CURRENT_FUNCTION="$___spec___SetupFunctionName"
-      ___spec___unusedOutput="$( spec.runSetup "$___spec___SetupFunctionName" 1>>"$SPEC_STDOUT_file" 2>>"$SPEC_STDERR_file" )"
-      SPEC_RESULT_CODE=$?
-      if [ $SPEC_RESULT_CODE -ne 0 ]
-      then
-        ___spec___setupFailed=true
-        break
-      fi
-    done
+    #######################################################################################
+    # Run spec
+    ___spec___unusedOutput="$( spec.runSpecWithSetupAndTeardown 1>"$___spec___tempStdoutFile" 2>"$___spec___tempStderrFile" )"
+    SPEC_RESULT_CODE=$?
+    #######################################################################################
 
-    ##
-    # Run test (if setup passed)
-    ##
-    if [ -z "$___spec___setupFailed" ]
-    then
-      SPEC_CURRENT_FUNCTION="$SPEC_FUNCTION"
-      ___spec___unusedOutput="$( spec.runSpec "$SPEC_FUNCTION" 1>>"$SPEC_STDOUT_file" 2>>"$SPEC_STDERR_file" )"
-      SPEC_RESULT_CODE=$?
-    fi
-
-    ##
-    # Run teardown function(s) (even if setup or test failed)
-    ##
-    local ___spec___TeardownFunctionName
-    for ___spec___TeardownFunctionName in "${SPEC_TEARDOWN_FUNCTION_NAMES[@]}"
-    do
-      SPEC_CURRENT_FUNCTION="$___spec___TeardownFunctionName"
-      ___spec___unusedOutput="$( spec.runTeardown "$___spec___TeardownFunctionName" 1>>"$SPEC_STDOUT_file" 2>>"$SPEC_STDERR_file" )"
-      if [ $? -ne 0 ]
-      then
-        SPEC_RESULT_CODE=1
-        break
-      fi
-    done
-
-    SPEC_STDOUT="$( cat "$SPEC_STDOUT_file" )"
-    SPEC_STDERR="$( cat "$SPEC_STDERR_file" )"
+    SPEC_STDOUT="$( cat "$___spec___tempStdoutFile" )"
+    SPEC_STDERR="$( cat "$___spec___tempStderrFile" )"
 
     if [ $SPEC_RESULT_CODE -eq 0 ]
     then
@@ -649,7 +650,7 @@ ___spec___.runSpecs() {
     fi
   done
 
-  ##
+  #######################################################################################
   # Run Teardown Fixtures, if any (note: unlike setup/teardown these are not in a subshell)
   ##
   local ___spec___TeardownFixtureFunction
@@ -658,7 +659,7 @@ ___spec___.runSpecs() {
     SPEC_CURRENT_FUNCTION="$___spec___TeardownFixtureFunction"
     spec.runTeardownFixture "$___spec___TeardownFixtureFunction"
   done
-  ##
+  #######################################################################################
 
   ##
   # Print Pending Tests

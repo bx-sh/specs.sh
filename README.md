@@ -10,13 +10,13 @@ Simple Shell Specifications.
 
 ---
 
-Download the [latest version](https://github.com/bx-sh/spec.sh/archive/v0.2.5.tar.gz)
+Download the [latest version](https://github.com/bx-sh/spec.sh/archive/v0.2.6.tar.gz)
 
 ```sh
 $ PATH="$PATH:spec/bin"
 
 $ spec --version
-spec version 0.2.5
+spec version 0.2.6
 ```
 
 ---
@@ -526,7 +526,7 @@ This allows you to easily share dependencies between various `spec` source code 
 ```sh
 $ spec --help
 
-spec version 0.2.5
+spec version 0.2.6
 
 Usage: spec [directory/ or file.spec.sh] [-f -p -e -c -h -v]
 
