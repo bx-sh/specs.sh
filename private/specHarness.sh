@@ -120,15 +120,6 @@ spec.loadTeardownFixtureFunctions() {
   ___spec___.loadTeardownFixtureFunctions "$@"
 }
 
-declare -a SPEC_FUNCTION_NAMES=()
-declare -a SPEC_DISPLAY_NAMES=()
-declare -a SPEC_PENDING_FUNCTION_NAMES=()
-declare -a SPEC_PENDING_DISPLAY_NAMES=()
-declare -a SPEC_SETUP_FUNCTION_NAMES=()
-declare -a SPEC_TEARDOWN_FUNCTION_NAMES=()
-declare -a SPEC_SETUP_FIXTURE_FUNCTION_NAMES=()
-declare -a SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES=()
-
 spec.listTests() {
   ___spec___.listTests "$@"
 }
@@ -299,6 +290,7 @@ ___spec___.loadHelpers() {
   done
 }
 
+# Resposible for populating array(s):
 # declare -a SPEC_FUNCTION_NAMES=()
 # declare -a SPEC_DISPLAY_NAMES=()
 ___spec___.loadSpecFunctions() {
@@ -312,7 +304,7 @@ ___spec___.loadSpecFunctions() {
     for specFunctionName in "${specFunctionNames[@]}"
     do
       local withoutPrefix="${specFunctionName#"$specPrefix"}"
-      local specDisplayName="$( spec.getSpecDisplayName "$withoutPrefix" )"
+      local specDisplayName="$( spec.getSpecDisplayName "$withoutPrefix" "$specFunctionName" )"
       if [ -n "$SPEC_NAME_PATTERN" ]
       then
         if ! spec.specNameMatchesPattern "$specFunctionName" "$withoutPrefix" "$specDisplayName" "$SPEC_NAME_PATTERN"
@@ -346,6 +338,7 @@ ___spec___.loadSpecFunctions() {
   unset existingFunctionName
 }
 
+# Resposible for populating array(s):
 # declare -a SPEC_PENDING_FUNCTION_NAMES=()
 # declare -a SPEC_PENDING_DISPLAY_NAMES=()
 ___spec___.loadPendingFunctions() {
@@ -393,6 +386,7 @@ ___spec___.loadPendingFunctions() {
   unset existingFunctionName
 }
 
+# Resposible for populating array(s):
 # declare -a SPEC_SETUP_FUNCTION_NAMES=()
 ___spec___.loadSetupFunctions() {
   local setupFunctionName
@@ -407,6 +401,7 @@ ___spec___.loadSetupFunctions() {
   unset setupFunctionName
 }
 
+# Resposible for populating array(s):
 # declare -a SPEC_SETUP_FIXTURE_FUNCTION_NAMES=()
 ___spec___.loadSetupFixtureFunctions() {
   local setupFixtureFunctionName
@@ -421,6 +416,7 @@ ___spec___.loadSetupFixtureFunctions() {
   unset setupFixtureFunctionName
 }
 
+# Resposible for populating array(s):
 # declare -a SPEC_TEARDOWN_FUNCTION_NAMES=()
 ___spec___.loadTeardownFunctions() {
   local teardownFunctionName
@@ -435,6 +431,7 @@ ___spec___.loadTeardownFunctions() {
   unset teardownFunctionName
 }
 
+# Resposible for populating array(s):
 # declare -a SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES=()
 ___spec___.loadTeardownFixtureFunctions() {
   local teardownFixtureFunctionName

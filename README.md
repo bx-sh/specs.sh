@@ -1116,7 +1116,8 @@ All of these functions have access to the following variables:
 > Display-only  
 > Variables: has access to all variables loaded by `spec.loadTests`
 
--
+- Called before any tests in a provided file have been run
+- Called immediately before the tests begin to run for the given file
 
 #### `spec.displaySpecResult`
 
@@ -1135,11 +1136,20 @@ All of these functions have access to the following variables:
 > Display-only  
 > Variables: has access to all variables loaded by `spec.loadTests`
 
--
+- Called after all of the specs in a file have been run
+- `SPEC_SUITE_STATUS` will be set to `PASS` or `FAIL`
+- `SPEC_TOTAL_COUNT` will be set to the total count of specs in this file
+- `SPEC_PASSED_COUNT` will be set to the total number of specs which passed
+- `SPEC_FAILED_COUNT` will be set to the total number of specs which failed
+- `SPEC_PENDING_COUNT` will be set to the total number of pending specs
 
 #### `spec.getSpecDisplayName`
 
--
+> Callers: `spec.loadSpecFunctions`, `spec.loadPendingFunctions`
+
+- Used to set `SPEC_NAME` provided the spec's function name
+- `$1` - the spec function name _without_ the prefix, e.g. `foo` instead of `@spec.foo`
+- `$2` - the full spec function name
 
 #### `spec.helperFilenames`
 
@@ -1148,7 +1158,6 @@ All of these functions have access to the following variables:
 
 - Function should echo a list of string
 - Each item will be used as the basename of a file to search for and load
--
 
 #### `spec.listTests`
 
@@ -1177,27 +1186,53 @@ All of these functions have access to the following variables:
 
 #### `spec.loadPendingFunctions`
 
--
+> Caller: `spec.loadTests`
+
+- Run after the spec file has been sourced (so `declare -F` can be used to get all function names)
+- Responsible for populating the `SPEC_PENDING_FUNCTION_NAMES` array (used to display these functions later and get the total count of pending functions)
+- Responsible for populating the `SPEC_PENDING_DISPLAY_NAMES` array using `spec.getSpecDisplayName`
+- Uses `spec.pendingFunctionPrefixes` to get prefixes of functions to load into the array
 
 #### `spec.loadSetupFixtureFunctions`
 
--
+> Caller: `spec.loadTests`
+
+- Run after the spec file has been sourced (so `declare -F` can be used to get all function names)
+- Responsible for populating the `SPEC_SETUP_FIXTURE_FUNCTION_NAMES` array (used to run these functions later)
+- Uses `spec.setupFixtureFunctionNames` to get the names of the functions to put into the array
 
 #### `spec.loadSetupFunctions`
 
--
+> Caller: `spec.loadTests`
+
+- Run after the spec file has been sourced (so `declare -F` can be used to get all function names)
+- Responsible for populating the `SPEC_SETUP_FUNCTION_NAMES` array (used to run these functions later)
+- Uses `spec.setupFunctionNames` to get the names of the functions to put into the array
 
 #### `spec.loadSpecFunctions`
 
--
+> Caller: `spec.loadTests`
+
+- Run after the spec file has been sourced (so `declare -F` can be used to get all function names)
+- Responsible for populating the `SPEC_FUNCTION_NAMES` array (used to run these functions later and to get the total count of spec functions)
+- Responsible for populating the `SPEC_DISPLAY_NAMES` array using `spec.getSpecDisplayName`
+- Uses `spec.specFunctionPrefixes` to get prefixes of functions to load into the array
 
 #### `spec.loadTeardownFixtureFunctions`
 
--
+> Caller: `spec.loadTests`
+
+- Run after the spec file has been sourced (so `declare -F` can be used to get all function names)
+- Responsible for populating the `SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES` array (used to run these functions later)
+- Uses `spec.teardownFixtureFunctionNames` to get the names of the functions to put into the array
 
 #### `spec.loadTeardownFunctions`
 
--
+> Caller: `spec.loadTests`
+
+- Run after the spec file has been sourced (so `declare -F` can be used to get all function names)
+- Responsible for populating the `SPEC_TEARDOWN_FUNCTION_NAMES` array (used to run these functions later)
+- Uses `spec.teardownFunctionNames` to get the names of the functions to put into the array
 
 #### `spec.loadTests`
 
