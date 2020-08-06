@@ -10,13 +10,13 @@ Simple Shell Specifications.
 
 ---
 
-Download the [latest version](https://github.com/bx-sh/spec.sh/archive/v0.2.3.tar.gz)
+Download the [latest version](https://github.com/bx-sh/spec.sh/archive/v0.2.4.tar.gz)
 
 ```sh
 $ PATH="$PATH:spec/bin"
 
 $ spec --version
-spec version 0.2.3
+spec version 0.2.4
 ```
 
 ---
