@@ -55,29 +55,29 @@ Tests passed. 1 passed. 1 pending.
 
 #### Basics
 
-- [Spec syntax](#foo) - (`@spec`)
-- [Setup](#foo) - (`@setup`)
-- [Teardown](#foo) - (`@teardown`)
-- [Pending](#foo) - (`@pending`)
-- [Helper functions](#foo) - (`myFunction()`)
-- [Shared code](#foo) - (`specHelper.sh`)
+- [Spec syntax](#spec-syntax) - (`@spec`)
+- [Setup](#setup) - (`@setup`)
+- [Teardown](#teardown) - (`@teardown`)
+- [Pending](#pending) - (`@pending`)
+- [Helper functions](#helper-functions) - (`myFunction()`)
+- [Shared code](#shared-code) - (`specHelper.sh`)
 
 #### Command-Line `spec`
 
-- [Running specs](#foo) - (`spec`)
-- [Running only certain specs](#foo) - (`spec -e my_test`)
-- [Printing spec names](#foo) - (`spec -p`)
-- [Configuration files](#foo) - (`spec -c`)
-- [Fail fast](#foo) - (`spec -f`)
+- [Running specs](#running-spec) - (`spec`)
+- [Running only certain specs](#running-only-certain-specs) - (`spec -e my_test`)
+- [Printing spec names](#printing-spec-names) - (`spec -p`)
+- [Configuration files](#configuration-files) - (`spec -c`)
+- [Fail fast](#fail-fast) - (`spec -f`)
 
 #### Customization
 
-- [Custom spec definition syntax](#foo) - (`testHello()`)
-- [Custom setup and teardown syntax](#foo) - (`configure()`)
-- [Extending existing configuration](#foo) - (`___spec___.[fn]`)
-- [Lifecycle event hooks](#foo) - (`spec.runSpec`)
-- [Custom display output](#foo) - (`spec.displaySpecResult`)
-- [Customization API reference](#foo) - (`$SPEC_CURRENT_FUNCTION`)
+- [Custom spec definition syntax](#custom-spec-definition-syntax) - (`testHello()`)
+- [Custom setup and teardown syntax](#custom-setup-and-teardown-syntax) - (`configure()`)
+- [Extending existing configuration](#extending-existing-configuration) - (`___spec___.[fn]`)
+- [Lifecycle event hooks](#livecycle-event-hooks) - (`spec.runSpecs`)
+- [Custom display output](#custom-display-output) - (`spec.displaySpecResult`)
+- [Customization API reference](#customization-api-reference) - (`$SPEC_CURRENT_FUNCTION`)
 
 ---
 
