@@ -859,16 +859,17 @@ For every file that is run by `spec`, the following is performed:
          - `spec.runFunction`
       1. for each test in the file...
          1. `spec.displayRunningSpec`
-         1. `spec.runSetup` (called once for each setup function)
-            - `spec.runFunction`
-         1. **`spec.runSpec`**
-            - `spec.runFunction`
-         1. `spec.displaySpecResult`
-         1. `spec.runTeardown` (called once for each teardown function)
-            - `spec.runFunction`
+         1. `spec.runSpecWithSetupAndTeardown`
+            1. `spec.runSetup` (called once for each setup function)
+               - `spec.runFunction`
+            1. **`spec.runSpec`**
+               - `spec.runFunction`
+            1. `spec.displaySpecResult`
+            1. `spec.runTeardown` (called once for each teardown function)
+               - `spec.runFunction`
+         1. `spec.displaySpecResult` (called for each pending test after other tests have run)
       1. `spec.runTeardownFixture` (called once for each setup fixture)
          - `spec.runFunction`
-      1. `spec.displaySpecResult` (called for each pending test after other tests have run)
       1. `spec.displaySpecSummary`
 
 ## Custom display output
@@ -1271,7 +1272,7 @@ All of these functions have access to the following variables:
 
 #### `spec.runSetup`
 
-> Caller: `spec.runSpecs`
+> Caller: `spec.runSpecWithSetupAndTeardown`
 
 - Invoked anytime a setup function is called (possible for there to be multiple for a single spec)
 - Default implementation simply passes the value to `spec.runFunction` to be run
@@ -1285,7 +1286,7 @@ All of these functions have access to the following variables:
 
 #### `spec.runTeardown`
 
-> Caller: `spec.runSpecs`
+> Caller: `spec.runSpecWithSetupAndTeardown`
 
 - Invoked anytime a teardown function is called (possible for there to be multiple for a single spec)
 - Default implementation simply passes the value to `spec.runFunction` to be run
@@ -1299,7 +1300,7 @@ All of these functions have access to the following variables:
 
 #### `spec.runSpec`
 
-> Caller: `spec.runSpecs`
+> Caller: `spec.runSpecWithSetupAndTeardown`
 
 - Invoked anytime a spec function is called
 - Default implementation simply passes the value to `spec.runFunction` to be run
@@ -1332,6 +1333,17 @@ All of these functions have access to the following variables:
   - `SPEC_PASSED_COUNT`
   - `SPEC_FAILED_COUNT`
   - `SPEC_PENDING_COUNT`
+
+#### `spec.runSpecWithSetupAndTeardown`
+
+> Caller: `spec.runSpecs`
+
+- Invoked in a subshell by `spec.runSpecs` and the `STDOUT` / `STDERR` captured
+- Expects `SPEC_FUNCTION` to be set
+- Sets `SPEC_CURRENT_FUNCTION` for each function that is called internally
+- Runs all setups from `SPEC_SETUP_FUNCTION_NAMES` (stops if one fails)
+- Runs all teardowns from `SPEC_SETUP_FUNCTION_NAMES` (runs all eveb if test fails)
+- Returns status code representing whether or not the test failed
 
 #### `spec.setupFixtureFunctionNames`
 

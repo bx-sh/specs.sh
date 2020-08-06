@@ -13,6 +13,10 @@
   echo "Hello - some var is now... $SOME_VAR"
 }
 
+@spec.failing_spec() {
+  exit 1
+}
+
 @spec.world() {
   echo "World - some var was... $SOME_VAR"
   SOME_VAR="World changed this"
