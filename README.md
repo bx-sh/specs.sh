@@ -226,9 +226,7 @@ If you want to perform some setup **once** before all of the tests are run, use 
 > Aliases:
 >
 > - `@setup` can also be named `@before`
-> - `@teardown` can also be named `@after`
 > - `@setupFixture` can also be named `@beforeAll`
-> - `@teardownFixture` can also be named `@afterAll`
 
 ## Teardown
 
