@@ -212,7 +212,7 @@ To perform common operations before each test runs, define a **`@setup()`** func
 
 `@setup` runs before **every** individual test is run.
 
-If you want to perform some setup **once** before **all** of the tests are run, use **`@setupFixture`**:
+If you want to perform some setup **once** before **all** of the tests are run, define a **`@setupFixture`** function:
 
 ```sh
 @setupFixture() {
