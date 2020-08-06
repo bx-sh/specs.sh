@@ -804,7 +804,7 @@ cleanup() {
 
 In the examples above, functions were added to `spec.config.sh` to override existing `spec` behavior.
 
-Let's say that you want to continue to support `@setup` and `@before` but also support `@configure`.
+Let's say that you want to continue to support `@setup` and `@before` but also support `configure`.
 
 To extend any of the built-in `spec` functionality, call `___spec___.[config function name]`.
 
