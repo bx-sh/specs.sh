@@ -445,7 +445,75 @@ createFile() {
 
 ## Shared code
 
+If you find that your spec files have a lot of redundancy, e.g. they all start with:
+
+```sh
+source "dependency1.sh"
+source "dependency2.sh"
+source "dependency3.sh"
+source "dependency4.sh"
+
+helperFunctionOne() {
+  # ...
+}
+
+helperFunctionTwo() {
+  # ...
+}
+
+```
+
+You can create a `specHelper.sh` and it will be automatically sourced into your spec files.
+
+```sh
+# [ spec/specHelper.sh ]
+
+source "dependency1.sh"
+source "dependency2.sh"
+source "dependency3.sh"
+source "dependency4.sh"
+
+helperFunctionOne() {
+  # ...
+}
+
+helperFunctionTwo() {
+  # ...
+}
+```
+
+```sh
+# [ spec/myFile.spec.sh ]
+
+@spec.this_individual_spec() {
+  helperFunctionOne
+  # ...
+```
+
+`spec` will search the path for `specHelper.sh` files.
+
+If your spec file is `/foo/bar/baz.spec.sh` then `spec` will search for:
+
+- `/specHelper.sh`
+- `/foo/specHelper.sh`
+- `/foo/bar/specHelper.sh`
+
+They will be loaded in this order, starting with parent directories.
+
+This allows you to define more generic `specHelper.sh` common code in your project in parent directories.
+
+More specific helpers should be added to `specHelper.sh` files in subdirectories.
+
 ---
+
+> Aliases:
+>
+> In addition to `specHelper.sh`, `spec` searched for the following filenames to autoload:
+>
+> - `testHelper.sh`
+> - `helper.spec.sh`
+> - `helper.test.sh`
+> - `spec.config.sh`
 
 ---
 
