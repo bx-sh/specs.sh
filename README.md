@@ -93,7 +93,7 @@ Specs (or tests) are defined as simple BASH functions:
 }
 ```
 
-A spec will `[PASS]` when the function is run successfully and returns a non-zero return code:
+A spec will **`[PASS]`** when the function is run successfully and returns a non-zero return code:
 
 - ```sh
   @spec.this_spec_will_pass() {
@@ -102,9 +102,9 @@ A spec will `[PASS]` when the function is run successfully and returns a non-zer
   }
   ```
 
-A spec will `[FAIL]` when the function is run and either of these conditions occur:
+A spec will **`[FAIL]`** when the function is run and either of these conditions occur:
 
-- (a) The function exits before finishing with a non-zero exit code, e.g. `exit 1`
+- (a) The function exits before finishing with a non-zero exit code, e.g. **`exit 1`**
   ```sh
   @spec.this_spec_will_fail() {
     # ... something something ...
@@ -112,7 +112,7 @@ A spec will `[FAIL]` when the function is run and either of these conditions occ
     # ... something something ...
   }
   ```
-- (b) The final command run in the function returns a non-zero exit code, e.g. `return 1`
+- (b) The final command run in the function returns a non-zero exit code, e.g. **`return 1`**
   ```sh
   @spec.this_spec_will_also_fail() {
     # ... something something ...
