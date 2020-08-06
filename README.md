@@ -632,6 +632,9 @@ A `spec` configuration file is a simple BASH script which includes functions use
 
 You can also set the `SPEC_CONFIG` environment variable to the path of a file and it will be loaded.
 
+> Configuration files are also auto-detected and loaded if named `spec.config.sh` or `test.config.sh`.  
+> Explicitly provided configuration files via `-c` or `SPEC_CONFIG` are loaded before auto-loaded configs.
+
 ## Fail fast
 
 If `spec` is provided multiple files, you can _stop_ running files after one fails by providing `-f`
@@ -663,6 +666,11 @@ By default, `spec` supports a number of commonly used keywords for defining spec
 - `@it.<test name>`
 - `@example.<test name>`
 
+You can easily override or extend this functionality using configuration files in one of two ways:
+
+1.  If you simply want a different prefix, override or extend `spec.specFunctionPrefixes`
+2.  If you want to detect test functions in an entirely different way, override `spec.loadSpecFunctions`
+
 Additionally, `spec` supports a number of commonly used keywords for defining pending specs:
 
 - `@pending.<test name>`
@@ -671,11 +679,131 @@ Additionally, `spec` supports a number of commonly used keywords for defining pe
 - `@xit.<test name>`
 - `@xexample.<test name>`
 
-You can easily override or extend this functionality using configuration files.
+To extend or override the detection of pending specs:
+
+1.  If you simply want a different prefix, override or extend `spec.pendingFunctionPrefixes`
+2.  If you want to detect test functions in an entirely different way, override `spec.loadPendingFunctions`
+
+### Example
+
+> This example changes `spec` to use `testFoo`-style tests and `xtestFoo` pending tests
+
+```sh
+# [ spec.config.sh ]
+
+# Update the config so all functions that start with 'test' will be considered test functions
+spec.specFunctionPrefixes() {
+  echo test
+}
+
+# Update the config so all functions that start with 'xtest' will be considered pending functions
+spec.pendingFunctionPrefixes() {
+  echo xtest
+}
+```
+
+```sh
+# [ my-test.test.sh ]
+
+testHelloWorld() {
+  # hey this works!
+  :
+}
+
+xtestUnimplemented() {
+  # this is now considered pending
+  :
+}
+```
 
 ## Custom setup and teardown syntax
 
+By default, `spec` supports a number of commonly used keywords for defining setup/teardown functions:
+
+- `@setup` or `@before`
+- `@teardown` or `@after`
+- `@setupFixture` or `@beforeAll`
+- `@teardownFixture` or `@afterAll`
+
+Using configuration, you can provide a list of names for each of these types, e.g.
+
+```sh
+spec.setupFunctionNames() {
+  echo @setup @before
+}
+
+spec.teardownFunctionNames() {
+  echo @teardown @after
+}
+
+spec.setupFixtureFunctionNames() {
+  echo @beforeAll @setupFixture
+}
+
+spec.teardownFixtureFunctionNames() {
+  echo @afterAll @teardownFixture
+}
+```
+
+If you wanted to change these, you can easily update these lists in your `spec.config.sh`
+
+```sh
+# [ spec.config.sh ]
+
+spec.setupFunctionNames() {
+  echo @configure
+}
+
+spec.teardownFunctionNames() {
+  echo @cleanup
+}
+
+spec.setupFixtureFunctionNames() {
+  echo @prepareTests
+}
+
+spec.teardownFixtureFunctionNames() {
+  echo @cleanupEnvironment
+}
+```
+
+And now the following will work!
+
+```sh
+@prepareTests() {
+  # This will run before all of the tests in this file are run
+  :
+}
+
+@cleanupEnvironment() {
+  # This will run after all of the tests in this file have been run
+  :
+}
+
+@configure() {
+  # This will run before each spec
+  :
+}
+
+@cleanup() {
+  # This will run after each spec
+  :
+}
+
+@spec.one() {
+  # ...
+  :
+}
+
+@spec.two() {
+  # ...
+  :
+}
+```
+
 ## Extending existing configuration
+
+In the examples above, functions were added to `spec.config.sh`
 
 ## Custom display output
 

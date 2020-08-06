@@ -72,8 +72,16 @@ spec.loadHelpers() {
   ___spec___.loadHelpers "$@"
 }
 
+spec.loadConfigs() {
+  ___spec___.loadConfigs "$@"
+}
+
 spec.helperFilenames() {
   ___spec___.helperFilenames "$@"
+}
+
+spec.configFilenames() {
+  ___spec___.configFilenames "$@"
 }
 
 spec.displayTestsBanner() {
@@ -203,6 +211,37 @@ ___spec___.teardownFixtureFunctionNames() {
 
 ___spec___.helperFilenames() {
   echo specHelper.sh testHelper.sh helper.spec.sh helper.test.sh
+}
+
+___spec___.configFilenames() {
+  echo spec.config.sh test.config.sh
+}
+
+___spec___.loadConfigs() {
+  local dirpath="$1"
+  declare -a specConfigPathsToSource=()
+
+  local configFilename
+  for configFilename in $( spec.configFilenames )
+  do
+    specConfigPathsToSource+=("$dirpath/$configFilename")
+  done
+  while [ "$dirpath" != "/" ] && [ "$dirpath" != "." ]
+  do
+    dirpath="$( dirname "$dirpath" )"
+    for configFilename in $( spec.configFilenames )
+    do
+      specConfigPathsToSource+=("$dirpath/$configFilename")
+    done
+  done
+  
+  local i="${#specConfigPathsToSource[@]}"
+  (( i -= 1 ))
+  while [ $i -gt -1 ]
+  do
+    [ -f "${specConfigPathsToSource[$i]}" ] && source "${specConfigPathsToSource[$i]}"
+    (( i -= 1 ))
+  done
 }
 
 ___spec___.loadHelpers() {
