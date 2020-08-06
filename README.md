@@ -867,6 +867,8 @@ For every file that is run by `spec`, the following is performed:
 
 ## Custom display output
 
+> The code for this section can be found in the [`examples/formatter`](https://github.com/bx-sh/spec.sh/tree/master/examples/formatter) folder.
+
 This section focuses on writing your own test display formatter.
 
 You will want to reference [Lifecycle event hooks](#lifecycle-event-hooks).
