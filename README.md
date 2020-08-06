@@ -514,7 +514,7 @@ This allows you to easily share dependencies between various `spec` source code 
 
 > Aliases:
 >
-> In addition to `specHelper.sh`, `spec` searched for the following filenames to autoload:
+> In addition to `specHelper.sh`, `spec` also searches for the following filenames to autoload:
 >
 > - `testHelper.sh`
 > - `helper.spec.sh`
