@@ -1092,10 +1092,11 @@ All of these functions have access to the following variables:
 
 #### `spec.configFilenames`
 
+> Caller: `spec.loadConfigs`  
 > Default: `echo spec.config.sh test.config.sh`
 
 - Function should echo a list of string
-- Each item will be used as the basename of a file to search for
+- Each item will be used as the basename of a file to search for and load
 
 #### `spec.displayRunningSpec`
 
@@ -1119,6 +1120,11 @@ All of these functions have access to the following variables:
 
 #### `spec.helperFilenames`
 
+> Caller: `spec.loadHelpers`  
+> Default: `echo specHelper.sh testHelper.sh helper.spec.sh helper.test.sh`
+
+- Function should echo a list of string
+- Each item will be used as the basename of a file to search for and load
 -
 
 #### `spec.listTests`
