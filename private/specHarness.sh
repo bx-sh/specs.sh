@@ -165,8 +165,8 @@ spec.displaySpecResult() {
   ___spec___.displaySpecResult "$@"
 }
 
-spec.displaySpecSummary.g() {
-  ___spec___.displaySpecSummary.g "$@"
+spec.displaySpecSummary() {
+  ___spec___.displaySpecSummary "$@"
 }
 
 ##
@@ -506,7 +506,7 @@ ___spec___.displaySpecResult() {
   fi
 }
 
-___spec___.displaySpecSummary.g() {
+___spec___.displaySpecSummary() {
   local status="$1"
   local total="$2"
   local passed="$3"

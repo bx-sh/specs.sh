@@ -72,12 +72,12 @@ Tests passed. 1 passed. 1 pending.
 
 #### Customization
 
-- [Custom spec definition syntax](#foo)
-- [Custom setup and teardown syntax](#foo)
-- [Extending existing configuration](#foo)
-- [Lifecycle event hooks](#foo)
-- [Custom display output](#foo)
-- [Customization API reference](#foo)
+- [Custom spec definition syntax](#foo) - (`testHello()`)
+- [Custom setup and teardown syntax](#foo) - (`configure()`)
+- [Extending existing configuration](#foo) - (`___spec___.[fn]`)
+- [Lifecycle event hooks](#foo) - (`spec.runTest`)
+- [Custom display output](#foo) - (`spec.displaySpecResult`)
+- [Customization API reference](#foo) - (`$SPEC_CURRENT_FUNCTION`)
 
 ---
 
@@ -750,41 +750,41 @@ If you wanted to change these, you can easily update these lists in your `spec.c
 # [ spec.config.sh ]
 
 spec.setupFunctionNames() {
-  echo @configure
+  echo configure
 }
 
 spec.teardownFunctionNames() {
-  echo @cleanup
+  echo cleanup
 }
 
 spec.setupFixtureFunctionNames() {
-  echo @prepareTests
+  echo prepareTests
 }
 
 spec.teardownFixtureFunctionNames() {
-  echo @cleanupEnvironment
+  echo cleanupEnvironment
 }
 ```
 
 And now the following will work!
 
 ```sh
-@prepareTests() {
+prepareTests() {
   # This will run before all of the tests in this file are run
   :
 }
 
-@cleanupEnvironment() {
+cleanupEnvironment() {
   # This will run after all of the tests in this file have been run
   :
 }
 
-@configure() {
+configure() {
   # This will run before each spec
   :
 }
 
-@cleanup() {
+cleanup() {
   # This will run after each spec
   :
 }
@@ -815,12 +815,12 @@ spec.setupFunctionNames() {
   ___spec___.setupFunctionNames
 
   # Now add your own options:
-  echo @configure
+  echo configure
 }
 
-# Same as above, this adds `@cleanup` as an additional option for `@teardown`
+# Same as above, this adds `cleanup` as an additional option for `@teardown`
 spec.teardownFunctionNames() {
-  echo @cleanup $(___spec___.teardownFunctionNames)
+  echo cleanup $(___spec___.teardownFunctionNames)
 }
 ```
 
@@ -863,7 +863,7 @@ For every file that is run by `spec`, the following is performed:
       1. `spec.runTeardownFixture` (called once for each setup fixture)
          - `spec.runFunction`
       1. `spec.displaySpecResult` (called for each pending test after other tests have run)
-      1. `spec.displaySpecSummary.g`
+      1. `spec.displaySpecSummary`
 
 ## Custom display output
 
@@ -1038,4 +1038,181 @@ Tests failed
 >
 > However, the `@setupFixture` and `@teardownFixture` functions run at the top-level and their output is shown (not captured)
 
-## Customization API reference
+---
+
+# Customization API reference
+
+## VARIABLES
+
+| Name                                   | Description |
+| -------------------------------------- | ----------- |
+| `SPEC_CONFIG`                          | .           |
+| `SPEC_CURRENT_FUNCTION`                | .           |
+| `SPEC_DIR`                             | .           |
+| `SPEC_DISPLAY_NAMES`                   | .           |
+| `SPEC_FAILED_COUNT`                    | .           |
+| `SPEC_FILE`                            | .           |
+| `SPEC_FUNCTION`                        | .           |
+| `SPEC_FUNCTION_NAMES`                  | .           |
+| `SPEC_NAME`                            | .           |
+| `SPEC_NAME_PATTERN`                    | .           |
+| `SPEC_PASSED_COUNT`                    | .           |
+| `SPEC_PENDING_COUNT`                   | .           |
+| `SPEC_PENDING_DISPLAY_NAMES`           | .           |
+| `SPEC_PENDING_FUNCTION_NAMES`          | .           |
+| `SPEC_PRINT_ONLY`                      | .           |
+| `SPEC_RESULT_CODE`                     | .           |
+| `SPEC_SETUP_FIXTURE_FUNCTION_NAMES`    | .           |
+| `SPEC_SETUP_FUNCTION_NAMES`            | .           |
+| `SPEC_STATUS`                          | .           |
+| `SPEC_STDERR`                          | .           |
+| `SPEC_STDOUT`                          | .           |
+| `SPEC_SUITE_STATUS`                    | .           |
+| `SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES` | .           |
+| `SPEC_TEARDOWN_FUNCTION_NAMES`         | .           |
+| `SPEC_TOTAL_COUNT`                     | .           |
+
+## FUNCTIONS
+
+All of these functions have access to the following variables:
+
+- `SPEC_DIR`
+- `SPEC_FILE`
+- `SPEC_NAME_PATTERN`
+- `SPEC_CONFIG`
+- `SPEC_PRINT_ONLY`
+
+### `spec.afterFile`
+
+- Called immediately after sourcing spec file
+
+### `spec.beforeFile`
+
+- Called immediately before sourcing spec file
+
+### `spec.configFilenames`
+
+> Default: `echo spec.config.sh test.config.sh`
+
+- Function should echo a list of string
+- Each item will be used as the basename of a file to search for
+
+### `spec.displayRunningSpec`
+
+-
+
+### `spec.displaySpecBanner`
+
+-
+
+### `spec.displaySpecResult`
+
+-
+
+### `spec.displaySpecSummary`
+
+-
+
+### `spec.getSpecDisplayName`
+
+-
+
+### `spec.helperFilenames`
+
+-
+
+### `spec.listTests`
+
+-
+
+### `spec.loadConfigs`
+
+-
+
+### `spec.loadHelpers`
+
+-
+
+### `spec.loadPendingFunctions`
+
+-
+
+### `spec.loadSetupFixtureFunctions`
+
+-
+
+### `spec.loadSetupFunctions`
+
+-
+
+### `spec.loadSpecFunctions`
+
+-
+
+### `spec.loadTeardownFixtureFunctions`
+
+-
+
+### `spec.loadTeardownFunctions`
+
+-
+
+### `spec.loadTests`
+
+-
+
+### `spec.pendingFunctionPrefixes`
+
+-
+
+### `spec.runFunction`
+
+-
+
+### `spec.runSetup`
+
+-
+
+### `spec.runSetupFixture`
+
+-
+
+### `spec.runTeardown`
+
+-
+
+### `spec.runTeardownFixture`
+
+-
+
+### `spec.runTest`
+
+-
+
+### `spec.runTests`
+
+-
+
+### `spec.setupFixtureFunctionNames`
+
+-
+
+### `spec.setupFunctionNames`
+
+-
+
+### `spec.specFunctionPrefixes`
+
+-
+
+### `spec.specNameMatchesPattern`
+
+-
+
+### `spec.teardownFixtureFunctionNames`
+
+-
+
+### `spec.teardownFunctionNames`
+
+-
