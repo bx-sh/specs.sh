@@ -88,6 +88,39 @@ spec.loadTests() {
   ___spec___.loadTests "$@"
 }
 
+spec.loadSpecFunctions() {
+  ___spec___.loadSpecFunctions "$@"
+}
+
+spec.loadPendingFunctions() {
+  ___spec___.loadPendingFunctions "$@"
+}
+
+spec.loadSetupFunctions() {
+  ___spec___.loadSetupFunctions "$@"
+}
+
+spec.loadSetupFixtureFunctions() {
+  ___spec___.loadSetupFixtureFunctions "$@"
+}
+
+spec.loadTeardownFunctions() {
+  ___spec___.loadTeardownFunctions "$@"
+}
+
+spec.loadTeardownFixtureFunctions() {
+  ___spec___.loadTeardownFixtureFunctions "$@"
+}
+
+declare -a SPEC_FUNCTION_NAMES=()
+declare -a SPEC_DISPLAY_NAMES=()
+declare -a SPEC_PENDING_FUNCTION_NAMES=()
+declare -a SPEC_PENDING_DISPLAY_NAMES=()
+declare -a SPEC_SETUP_FUNCTION_NAMES=()
+declare -a SPEC_TEARDOWN_FUNCTION_NAMES=()
+declare -a SPEC_SETUP_FIXTURE_FUNCTION_NAMES=()
+declare -a SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES=()
+
 spec.listTests() {
   ___spec___.listTests "$@"
 }
@@ -197,6 +230,38 @@ ___spec___.loadHelpers() {
     [ -f "${specHelperPathsToSource[$i]}" ] && source "${specHelperPathsToSource[$i]}"
     (( i -= 1 ))
   done
+}
+
+# declare -a SPEC_FUNCTION_NAMES=()
+# declare -a SPEC_DISPLAY_NAMES=()
+___spec___.loadSpecFunctions() {
+  :
+}
+
+# declare -a SPEC_PENDING_FUNCTION_NAMES=()
+# declare -a SPEC_PENDING_DISPLAY_NAMES=()
+___spec___.loadPendingFunctions() {
+  :
+}
+
+# declare -a SPEC_SETUP_FUNCTION_NAMES=()
+___spec___.loadSetupFunctions() {
+  :
+}
+
+# declare -a SPEC_SETUP_FIXTURE_FUNCTION_NAMES=()
+___spec___.loadSetupFixtureFunctions() {
+  :
+}
+
+# declare -a SPEC_TEARDOWN_FUNCTION_NAMES=()
+___spec___.loadTeardownFunctions() {
+  :
+}
+
+# declare -a SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES=()
+___spec___.loadTeardownFixtureFunctions() {
+  :
 }
 
 ___spec___.beforeFile() {
