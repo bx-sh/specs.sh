@@ -2,6 +2,43 @@
 
 SPEC_VERSION="0.2.4"
 
+print_help() {
+  echo "spec version $SPEC_VERSION
+
+Usage: spec [directory/ or file.spec.sh] [-f -p -e -c -h -v]
+
+Options:
+
+  -e, --name, --pattern [pattern]
+
+  -c, --config [config file]
+
+  -f, --fail-fast, --fast-fail
+
+  -p, --print, --dry--run
+
+  -h, --help
+
+  -v, --version
+
+Examples:
+
+  spec file.spec.sh                   Runs file.spec.sh
+
+  spec file.spec.sh another.spec.sh   Runs two spec files
+
+  spec directory/                     Recursively searches directory/ for
+                                      *.spec.sh and *.test.sh files to run
+
+  spec                                Recursively searches current directory for
+                                      *.spec.sh and *.test.sh files to run
+
+  spec -e ^hello                      Runs tests with names that start with \"hello\"
+
+  spec -e world$                      Runs tests with names that end with \"world\"
+"
+}
+
 spec_harness="${BASH_SOURCE[0]/bin\/spec}private/specHarness"
 test_failed=
 fail_fast=
@@ -28,14 +65,15 @@ do
   elif [ "$arg" = "-p" ] || [ "$arg" = "--print" ] || [ "$arg" = "--dry-run" ]
   then
     print_only=true
-  elif [ "$arg" = "-e" ]
+  elif [ "$arg" = "-e" ] || [ "$arg" = "--pattern" ] || [ "$arg" = "--name" ]
   then
     matcher_is_next=true
   elif [ "$matcher_is_next" = "true" ]
   then
+    [ -n "$name_matcher" ] && { echo "spec currently only supports one -e matcher argument" >&2; exit 1; }
     matcher_is_next=false
     name_matcher="$arg"
-  elif [ "$arg" = "-c" ]
+  elif [ "$arg" = "-c" ] || [ "$arg" = "--config" ]
   then
     spec_config_is_next=true
   elif [ -d "$arg" ]
@@ -47,6 +85,10 @@ do
   elif [ "$arg" = "-v" ] || [ "$arg" = "--version" ]
   then
     echo "spec version $SPEC_VERSION"
+    exit 0
+  elif [ "$arg" = "-h" ] || [ "$arg" = "--help" ]
+  then
+    print_help
     exit 0
   elif [ -n "$arg" ]
   then

@@ -4,7 +4,7 @@
 
 # SPEC_DIR
 # SPEC_FILE
-# SPEC_NAME_PATTERN=
+# SPEC_NAME_PATTERN
 # SPEC_CONFIG
 
 ##
@@ -28,8 +28,12 @@ declare -a SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES=()
 # Placeholders for user customization / point to default implementations
 ##
 
-spec.getTestDisplayName() {
-  ___spec___.getTestDisplayName "$@"
+spec.getSpecDisplayName() {
+  ___spec___.getSpecDisplayName "$@"
+}
+
+spec.specNameMatchesPattern() {
+  ___spec___.specNameMatchesPattern "$@"
 }
 
 spec.specFunctionPrefixes() {
@@ -116,6 +120,14 @@ spec.displayTestsSummary() {
 # Private API
 ##
 
+___spec___.specNameMatchesPattern() {
+  local specFunctionName="$1"
+  local specFunctionNameWithoutPrefix="$2"
+  local specDisplayName="$3"
+  local pattern="$4"
+  [[ "$specFunctionNameWithoutPrefix" =~ $pattern ]]
+}
+
 ___spec___.runSetup() {
   "$1"
 }
@@ -128,7 +140,7 @@ ___spec___.runTest() {
   "$1"
 }
 
-___spec___.getTestDisplayName() {
+___spec___.getSpecDisplayName() {
   printf "${1//_/ }"
 }
 
@@ -277,8 +289,14 @@ ___spec___.loadTests() {
     for specFunctionName in "${specFunctionNames[@]}"
     do
       local withoutPrefix="${specFunctionName#"$specPrefix"}"
-      [ -n "$SPEC_NAME_PATTERN" ] && [[ ! "$withoutPrefix" =~ $SPEC_NAME_PATTERN ]] && continue
-      local specDisplayName="$( spec.getTestDisplayName "$withoutPrefix" )"
+      local specDisplayName="$( spec.getSpecDisplayName "$withoutPrefix" )"
+      if [ -n "$SPEC_NAME_PATTERN" ]
+      then
+        if ! spec.specNameMatchesPattern "$specFunctionName" "$withoutPrefix" "$specDisplayName" "$SPEC_NAME_PATTERN"
+        then
+          continue
+        fi
+      fi
       local alreadyAdded=""
       local existingFunctionName
       for existingFunctionName in "${SPEC_FUNCTION_NAMES[@]}"
@@ -314,8 +332,14 @@ ___spec___.loadTests() {
     for pendingFunctionName in "${pendingFunctionNames[@]}"
     do
       local withoutPrefix="${pendingFunctionName#"$pendingPrefix"}"
-      [ -n "$SPEC_NAME_PATTERN" ] && [[ ! "$withoutPrefix" =~ $SPEC_NAME_PATTERN ]] && continue
-      local pendingDisplayName="$( spec.getTestDisplayName "$withoutPrefix" )"
+      local pendingDisplayName="$( spec.getSpecDisplayName "$withoutPrefix" )"
+      if [ -n "$SPEC_NAME_PATTERN" ]
+      then
+        if ! spec.specNameMatchesPattern "$pendingFunctionName" "$withoutPrefix" "$pendingDisplayName" "$SPEC_NAME_PATTERN"
+        then
+          continue
+        fi
+      fi
       local alreadyAdded=""
       local existingFunctionName
       for existingFunctionName in "${SPEC_PENDING_FUNCTION_NAMES[@]}"

@@ -64,9 +64,9 @@ Tests passed. 1 passed. 1 pending.
 
 #### Command-Line `spec`
 
-- [Running Tests](#foo) - (`spec`)
-- [Running certain tests](#foo) - (`spec -e my_test`)
-- [Printing test names](#foo) - (`spec -p`)
+- [Running specs](#foo) - (`spec`)
+- [Running only certain specs](#foo) - (`spec -e my_test`)
+- [Printing spec names](#foo) - (`spec -p`)
 - [Configuration files](#foo) - (`spec -c`)
 - [Fail fast](#foo) - (`spec -f`)
 
@@ -524,6 +524,48 @@ This allows you to easily share dependencies between various `spec` source code 
 ---
 
 # Command-Line `spec`
+
+## Running specs
+
+To run a `spec` source file:
+
+```sh
+$ spec my-spec.spec.sh
+```
+
+> Your spec file can have any name, but `*.spec.sh` or `*.test.sh` are the most common
+
+You can also run multiple spec files:
+
+```sh
+$ spec spec/first.spec.sh spec/second.spec.sh
+```
+
+You can also run all spec files in a directory by providing `spec` with the directory name:
+
+```sh
+$ spec spec/
+```
+
+> This will search the `spec/` directory for `*.spec.sh` and `*.test.sh` files
+
+If you run `spec` with no arguments, it will run all spec files in the current directory:
+
+```sh
+$ spec
+```
+
+> This is the equivalent of running `spec ./` and searches for `*.spec.sh` and `*.test.sh` files
+
+## Running only certain specs
+
+## Printing spec names
+
+## Configuration files
+
+## Fail fast
+
+---
 
 # Customization
 
