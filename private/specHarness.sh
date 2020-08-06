@@ -169,7 +169,7 @@ ___spec___.teardownFixtureFunctionNames() {
 }
 
 ___spec___.helperFilenames() {
-  echo specHelper.sh testHelper.sh helper.spec.sh helper.test.sh spec.config.sh
+  echo specHelper.sh testHelper.sh helper.spec.sh helper.test.sh
 }
 
 ___spec___.loadHelpers() {

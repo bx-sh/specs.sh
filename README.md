@@ -519,7 +519,6 @@ This allows you to easily share dependencies between various `spec` source code 
 > - `testHelper.sh`
 > - `helper.spec.sh`
 > - `helper.test.sh`
-> - `spec.config.sh`
 
 ---
 
@@ -619,6 +618,20 @@ $ spec -p
 
 ## Configuration files
 
+Configuration files are used for customization and are loaded before `specHelper.sh` helper files.
+
+You can provide a spec configuration file by providing `-c`
+
+```sh
+spec -c spec.config.sh
+```
+
+A `spec` configuration file is a simple BASH script which includes functions used for customization.
+
+> See [Customization](#customization) below
+
+You can also set the `SPEC_CONFIG` environment variable to the path of a file and it will be loaded.
+
 ## Fail fast
 
 If `spec` is provided multiple files, you can _stop_ running files after one fails by providing `-f`
@@ -642,6 +655,23 @@ $ spec -f
 - Use lifecycle hooks to perform actions
 
 ## Custom spec definition syntax
+
+By default, `spec` supports a number of commonly used keywords for defining specs:
+
+- `@spec.<test name>`
+- `@test.<test name>`
+- `@it.<test name>`
+- `@example.<test name>`
+
+Additionally, `spec` supports a number of commonly used keywords for defining pending specs:
+
+- `@pending.<test name>`
+- `@xspec.<test name>`
+- `@xtest.<test name>`
+- `@xit.<test name>`
+- `@xexample.<test name>`
+
+You can easily override or extend this functionality using configuration files.
 
 ## Custom setup and teardown syntax
 

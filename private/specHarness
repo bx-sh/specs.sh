@@ -3,7 +3,7 @@ ___spec___SpecPrivateDirectory="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P
 SPEC_DIR="$1"
 SPEC_FILE="$2"
 SPEC_NAME_PATTERN="$3"
-SPEC_CONFIG="$4"
+[ -z "$SPEC_CONFIG"] && SPEC_CONFIG="$4"
 SPEC_PRINT_ONLY="$5"
 
 source "$___spec___SpecPrivateDirectory/specHarness.sh"
