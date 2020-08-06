@@ -314,7 +314,7 @@ If you want to perform some cleanup **once** after **all** of the tests are run,
 >
 > Note: if the `@teardown` function does not return a non-zero code, it will fail the test.
 
-## Pending tests
+## Pending
 
 Sometimes you may want to define a number of tests which you are not ready to implement yet.
 
@@ -379,6 +379,10 @@ This is useful when initially defining tests or if you want to temporarily disab
 > - `@xexample.<test name>` can also be used
 >
 > For every supported `@spec.<test name>` syntax, you can use an `x` prefix to mark the spec as pending.
+
+## Helper functions
+
+...
 
 ## Shared code
 
