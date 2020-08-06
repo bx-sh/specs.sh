@@ -58,8 +58,16 @@ spec.runTests() {
   ___spec___.runTests "$@"
 }
 
+spec.runSetup() {
+  ___spec___.runSetup "$@"
+}
+
 spec.runTest() {
   ___spec___.runTest "$@"
+}
+
+spec.runTeardown() {
+  ___spec___.runTeardown "$@"
 }
 
 spec.displayTestResult() {
@@ -208,20 +216,38 @@ ___spec___.displayTestsSummary() {
   printf "\n"
 }
 
+___spec___.runSetup() {
+  "$1"
+}
+
+___spec___.runTeardown() {
+  "$1"
+}
+
+___spec___.runTest() {
+  "$1"
+}
+
+##
+# Split up into something so that spec.runTests might be useful to override - specifically: make the arrays part of a public interface
+#
+# spec.loadTests <--- load up all of the arrays
+# spec.runTests <--- runs and displays
+##
 ___spec___.runTests() {
   local specNamePattern="$1"
 
   ##
   # Collect defined functions
   ##
-  declare -a ___spec___AllSpecFunctionNames=()
-  declare -a ___spec___AllSpecDisplayNames=()
-  declare -a ___spec___AllPendingFunctionNames=()
-  declare -a ___spec___AllPendingDisplayNames=()
-  declare -a ___spec___AllSetupFunctionNames=()
-  declare -a ___spec___AllTeardownFunctionNames=()
-  declare -a ___spec___AllSetupFixtureFunctionNames=()
-  declare -a ___spec___AllTeardownFixtureFunctionNames=()
+  declare -a SPEC_FUNCTION_NAMES=()
+  declare -a SPEC_DISPLAY_NAMES=()
+  declare -a SPEC_PENDING_FUNCTION_NAMES=()
+  declare -a SPEC_PENDING_DISPLAY_NAMES=()
+  declare -a SPEC_SETUP_FUNCTION_NAMES=()
+  declare -a SPEC_TEARDOWN_FUNCTION_NAMES=()
+  declare -a SPEC_SETUP_FIXTURE_FUNCTION_NAMES=()
+  declare -a SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES=()
 
   local specPrefix
   for specPrefix in $( spec.specFunctionPrefixes )
@@ -237,7 +263,7 @@ ___spec___.runTests() {
       local specDisplayName="$( spec.getTestDisplayName "$withoutPrefix" )"
       local alreadyAdded=""
       local existingFunctionName
-      for existingFunctionName in "${___spec___AllSpecFunctionNames[@]}"
+      for existingFunctionName in "${SPEC_FUNCTION_NAMES[@]}"
       do
         if [ "$existingFunctionName" = "$specFunctionName" ]
         then
@@ -247,8 +273,8 @@ ___spec___.runTests() {
       done
       if [ -z "$alreadyAdded" ]
       then
-        ___spec___AllSpecFunctionNames+=("$specFunctionName")
-        ___spec___AllSpecDisplayNames+=("$specDisplayName")
+        SPEC_FUNCTION_NAMES+=("$specFunctionName")
+        SPEC_DISPLAY_NAMES+=("$specDisplayName")
       fi
     done
   done
@@ -274,7 +300,7 @@ ___spec___.runTests() {
       local pendingDisplayName="$( spec.getTestDisplayName "$withoutPrefix" )"
       local alreadyAdded=""
       local existingFunctionName
-      for existingFunctionName in "${___spec___AllPendingFunctionNames[@]}"
+      for existingFunctionName in "${SPEC_PENDING_FUNCTION_NAMES[@]}"
       do
         if [ "$existingFunctionName" = "$pendingFunctionName" ]
         then
@@ -284,8 +310,8 @@ ___spec___.runTests() {
       done
       if [ -z "$alreadyAdded" ]
       then
-        ___spec___AllPendingFunctionNames+=("$pendingFunctionName")
-        ___spec___AllPendingDisplayNames+=("$pendingDisplayName")
+        SPEC_PENDING_FUNCTION_NAMES+=("$pendingFunctionName")
+        SPEC_PENDING_DISPLAY_NAMES+=("$pendingDisplayName")
       fi
     done
   done
@@ -303,7 +329,7 @@ ___spec___.runTests() {
     [ -z "$setupFunctionName" ] && continue
     if declare -F | grep "declare -f $setupFunctionName" >/dev/null
     then
-      ___spec___AllSetupFunctionNames+=("$setupFunctionName")
+      SPEC_SETUP_FUNCTION_NAMES+=("$setupFunctionName")
     fi
   done
   unset setupFunctionName
@@ -314,7 +340,7 @@ ___spec___.runTests() {
     [ -z "$teardownFunctionName" ] && continue
     if declare -F | grep "declare -f $teardownFunctionName" >/dev/null
     then
-      ___spec___AllTeardownFunctionNames+=("$teardownFunctionName")
+      SPEC_TEARDOWN_FUNCTION_NAMES+=("$teardownFunctionName")
     fi
   done
   unset teardownFunctionName
@@ -325,7 +351,7 @@ ___spec___.runTests() {
     [ -z "$setupFixtureFunctionName" ] && continue
     if declare -F | grep "declare -f $setupFixtureFunctionName" >/dev/null
     then
-      ___spec___AllSetupFixtureFunctionNames+=("$setupFixtureFunctionName")
+      SPEC_SETUP_FIXTURE_FUNCTION_NAMES+=("$setupFixtureFunctionName")
     fi
   done
   unset setupFixtureFunctionName
@@ -336,7 +362,7 @@ ___spec___.runTests() {
     [ -z "$teardownFixtureFunctionName" ] && continue
     if declare -F | grep "declare -f $teardownFixtureFunctionName" >/dev/null
     then
-      ___spec___AllTeardownFixtureFunctionNames+=("$teardownFixtureFunctionName")
+      SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES+=("$teardownFixtureFunctionName")
     fi
   done
   unset teardownFixtureFunctionName
@@ -345,29 +371,32 @@ ___spec___.runTests() {
 
   spec.displayTestsBanner
 
+  local CURRENT_FUNCTION
+
   ##
   # Run Setup Fixtures, if any (note: unlike setup/teardown these are not in a subshell)
   ##
   set -e
   local ___spec___SetupFixtureFunction
-  for ___spec___SetupFixtureFunction in "${___spec___AllSetupFixtureFunctionNames[@]}"
+  for ___spec___SetupFixtureFunction in "${SPEC_SETUP_FIXTURE_FUNCTION_NAMES[@]}"
   do
+    CURRENT_FUNCTION="$___spec___SetupFixtureFunction"
     "$___spec___SetupFixtureFunction"
   done
   set +e
   ##
 
   ##
-  local ___spec___TotalSpecCount="${#___spec___AllSpecFunctionNames[@]}"
+  local ___spec___TotalSpecCount="${#SPEC_FUNCTION_NAMES[@]}"
   local ___spec___FailedCount=0
   local ___spec___PassedCount=0
   ##
 
   local ___spec___CurrentSpecIndex=0
-  while [ $___spec___CurrentSpecIndex -lt "${#___spec___AllSpecFunctionNames[@]}" ]
+  while [ $___spec___CurrentSpecIndex -lt "${#SPEC_FUNCTION_NAMES[@]}" ]
   do
-    local SPEC_FUNCTION="${___spec___AllSpecFunctionNames[$___spec___CurrentSpecIndex]}"
-    local SPEC_NAME="${___spec___AllSpecDisplayNames[$___spec___CurrentSpecIndex]}"
+    local SPEC_FUNCTION="${SPEC_FUNCTION_NAMES[$___spec___CurrentSpecIndex]}"
+    local SPEC_NAME="${SPEC_DISPLAY_NAMES[$___spec___CurrentSpecIndex]}"
 
     (( ___spec___CurrentSpecIndex++ ))
     
@@ -377,8 +406,49 @@ ___spec___.runTests() {
     spec.displayRunningTest "$SPEC_NAME"
 
     local ___spec___testRunStatus
-    ___spec___unusedOutput="$( spec.runTest "${___spec___AllSetupFunctionNames[@]}" "$SPEC_FUNCTION" "${___spec___AllTeardownFunctionNames[@]}" 1> "$___spec___STDOUT_file" 2> "$___spec___STDERR_file" )"
-    ___spec___testRunStatus=$?
+    local ___spec___unusedOutput # needed to get correct $? while also running in subshell
+    local ___spec___setupFailed=""
+
+    ##
+    # Run setup function(s)
+    ##
+    local ___spec___SetupFunctionName
+    for ___spec___SetupFunctionName in "${SPEC_SETUP_FUNCTION_NAMES[@]}"
+    do
+      CURRENT_FUNCTION="$___spec___SetupFunctionName"
+      ___spec___unusedOutput="$( spec.runSetup "$___spec___SetupFunctionName" 1>>"$___spec___STDOUT_file" 2>>"$___spec___STDERR_file" )"
+      ___spec___testRunStatus=$?
+      if [ $___spec___testRunStatus -ne 0 ]
+      then
+        ___spec___setupFailed=true
+        break
+      fi
+    done
+
+    ##
+    # Run test (if setup passed)
+    ##
+    if [ -z "$___spec___setupFailed" ]
+    then
+      CURRENT_FUNCTION="$SPEC_FUNCTION"
+      ___spec___unusedOutput="$( spec.runTest "$SPEC_FUNCTION" 1>>"$___spec___STDOUT_file" 2>>"$___spec___STDERR_file" )"
+      ___spec___testRunStatus=$?
+    fi
+
+    ##
+    # Run teardown function(s) (even if setup or test failed)
+    ##
+    local ___spec___TeardownFunctionName
+    for ___spec___TeardownFunctionName in "${SPEC_TEARDOWN_FUNCTION_NAMES[@]}"
+    do
+      CURRENT_FUNCTION="$___spec___TeardownFunctionName"
+      ___spec___unusedOutput="$( spec.runTeardown "$___spec___TeardownFunctionName" 1>>"$___spec___STDOUT_file" 2>>"$___spec___STDERR_file" )"
+      if [ $? -ne 0 ]
+      then
+        ___spec___testRunStatus=1
+        break
+      fi
+    done
 
     local ___spec___STDOUT="$( cat "$___spec___STDOUT_file" )"
     local ___spec___STDERR="$( cat "$___spec___STDERR_file" )"
@@ -394,13 +464,14 @@ ___spec___.runTests() {
   done
 
   ##
-  # Run Setup Fixtures, if any (note: unlike setup/teardown these are not in a subshell)
+  # Run Teardown Fixtures, if any (note: unlike setup/teardown these are not in a subshell)
   ##
   set -e
-  local ___spec___SetupFixtureFunction
-  for ___spec___SetupFixtureFunction in "${___spec___AllSetupFixtureFunctionNames[@]}"
+  local ___spec___TeardownFixtureFunction
+  for ___spec___TeardownFixtureFunction in "${SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES[@]}"
   do
-    "$___spec___SetupFixtureFunction"
+    CURRENT_FUNCTION="$___spec___TeardownFixtureFunction"
+    "$___spec___TeardownFixtureFunction"
   done
   set +e
   ##
@@ -409,14 +480,14 @@ ___spec___.runTests() {
   # Print Pending Tests
   ##
   local ___spec___CurrentPendingIndex=0
-  while [ $___spec___CurrentPendingIndex -lt "${#___spec___AllPendingFunctionNames[@]}" ]
+  while [ $___spec___CurrentPendingIndex -lt "${#SPEC_PENDING_FUNCTION_NAMES[@]}" ]
   do
-    local SPEC_FUNCTION="${___spec___AllPendingFunctionNames[$___spec___CurrentPendingIndex]}"
-    local SPEC_NAME="${___spec___AllPendingDisplayNames[$___spec___CurrentPendingIndex]}"
+    local SPEC_FUNCTION="${SPEC_PENDING_FUNCTION_NAMES[$___spec___CurrentPendingIndex]}"
+    local SPEC_NAME="${SPEC_PENDING_DISPLAY_NAMES[$___spec___CurrentPendingIndex]}"
     (( ___spec___CurrentPendingIndex++ ))
     spec.displayTestResult "$SPEC_FUNCTION" "$SPEC_NAME" "PENDING"
   done
-  local ___spec___PendingCount="${#___spec___AllPendingFunctionNames[@]}"
+  local ___spec___PendingCount="${#SPEC_PENDING_FUNCTION_NAMES[@]}"
 
   if [ $___spec___TotalSpecCount -gt 0 ] && [ $___spec___FailedCount -gt 0 ]
   then
@@ -424,19 +495,6 @@ ___spec___.runTests() {
   else
     spec.displayTestsSummary "PASS" $___spec___TotalSpecCount $___spec___PassedCount $___spec___FailedCount $___spec___PendingCount
   fi
-}
-
-___spec___.runTest() {
-  local ___spec___setupOrTestOrTeardownFunction
-  for ___spec___setupOrTestOrTeardownFunction in "$@"
-  do
-    "$___spec___setupOrTestOrTeardownFunction"
-    local ___spec___returnCode=$?
-    if [ $___spec___returnCode -ne 0 ]
-    then
-      return $___spec___returnCode
-    fi
-  done
 }
 
 [ -n "$SPEC_CONFIG" ] && [ -f "$SPEC_CONFIG" ] && source "$SPEC_CONFIG"

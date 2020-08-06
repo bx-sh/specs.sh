@@ -148,7 +148,7 @@ A spec will **`[FAIL]`** when the function is run and either of these conditions
 
 ## Setup and teardown
 
-It is common to have a file where many of the specs perform the same setup:
+It is common to have many specs in the same file which perform the same setup:
 
 ```sh
 @spec.verify_can_write_files_in_directory() {
