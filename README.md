@@ -72,13 +72,13 @@ Tests passed. 1 passed. 1 pending.
 
 #### Customization
 
-- [Pre-defined variables](#foo)
-- [Custom test definitions](#foo)
-- [Custom setup and teardown](#foo)
-- [Extending configuration](#foo)
-- [Wrapping tests](#foo)
-- [Custom test output](#foo)
-- [Extending the CLI](#foo)
+- [Custom spec definition syntax](#foo)
+- [Custom setup and teardown syntax](#foo)
+- [Extending existing configuration](#foo)
+- [Custom display output](#foo)
+- [Lifecycle event hooks](#foo)
+- [Variable reference](#foo)
+- [Function reference](#foo)
 
 ---
 
@@ -632,6 +632,40 @@ $ spec -f
 ---
 
 # Customization
+
+`spec` is incredibly customizable.
+
+### Supported `spec` customizations
+
+- Change syntax of functions detected as specs
+- Change display output of test results
+- Use lifecycle hooks to perform actions
+
+## Custom spec definition syntax
+
+## Custom setup and teardown syntax
+
+## Extending existing configuration
+
+## Custom display output
+
+## Lifecycle event hooks
+
+## Variable reference
+
+## Function reference
+
+---
+
+---
+
+---
+
+---
+
+---
+
+---
 
 ---
 
