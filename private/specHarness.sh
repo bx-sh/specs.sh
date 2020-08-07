@@ -219,7 +219,7 @@ ___spec___.pendingFunctionPrefixes() {
 }
 
 ___spec___.setupFunctionNames() {
-  echo @setup @before @globalSetup @globalBefore
+  echo @globalSetup @globalBefore @setup @before
 }
 
 ___spec___.teardownFunctionNames() {
@@ -227,7 +227,7 @@ ___spec___.teardownFunctionNames() {
 }
 
 ___spec___.setupFixtureFunctionNames() {
-  echo @beforeAll @setupFixture @globalBeforeAll @globalSetupFixture
+  echo @globalBeforeAll @globalSetupFixture @beforeAll @setupFixture
 }
 
 ___spec___.teardownFixtureFunctionNames() {
