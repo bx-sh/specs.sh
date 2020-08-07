@@ -219,19 +219,19 @@ ___spec___.pendingFunctionPrefixes() {
 }
 
 ___spec___.setupFunctionNames() {
-  echo @setup @before
+  echo @setup @before @globalSetup @globalBefore
 }
 
 ___spec___.teardownFunctionNames() {
-  echo @teardown @after
+  echo @teardown @after @globalTeardown @globalAfter
 }
 
 ___spec___.setupFixtureFunctionNames() {
-  echo @beforeAll @setupFixture
+  echo @beforeAll @setupFixture @globalBeforeAll @globalSetupFixture
 }
 
 ___spec___.teardownFixtureFunctionNames() {
-  echo @afterAll @teardownFixture
+  echo @afterAll @teardownFixture @globalAfterAll @globalTeardownFixture
 }
 
 ___spec___.helperFilenames() {

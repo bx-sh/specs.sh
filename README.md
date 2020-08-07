@@ -239,8 +239,11 @@ If you want to perform some setup **once** before **all** of the tests are run, 
 
 > Aliases:
 >
-> - `@setup` can also be named `@before`
-> - `@setupFixture` can also be named `@beforeAll`
+> - `@setup` can also be named `@before`  
+>   _(or `@globalSetup` / `@globalBefore` typically used in a `specHelper.sh`)_
+>
+> - `@setupFixture` can also be named `@beforeAll`  
+>   _(or `@globalSetupFixture` / `@globalBeforeAll` typically used in a `specHelper.sh`)_
 
 ---
 
@@ -298,8 +301,11 @@ If you want to perform some cleanup **once** after **all** of the tests are run,
 
 > Aliases:
 >
-> - `@teardown` can also be named `@after`
-> - `@teardownFixture` can also be named `@afterAll`
+> - `@teardown` can also be named `@after`  
+>   _(or `@globalTeardown` / `@globalAfter` typically used in a `specHelper.sh`)_
+>
+> - `@teardownFixture` can also be named `@afterAll`  
+>   _(or `@globalTeardown` / `@globalAfter` typically used in a `specHelper.sh`)_
 
 ---
 
@@ -461,6 +467,10 @@ source "dependency2.sh"
 source "dependency3.sh"
 source "dependency4.sh"
 
+@setup() {
+  # ...
+}
+
 helperFunctionOne() {
   # ...
 }
@@ -480,6 +490,10 @@ source "dependency1.sh"
 source "dependency2.sh"
 source "dependency3.sh"
 source "dependency4.sh"
+
+@globalSetup() {
+  # ...
+}
 
 helperFunctionOne() {
   # ...
