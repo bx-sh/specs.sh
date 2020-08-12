@@ -1,6 +1,4 @@
-# 🔬 `@spec`
-
-Simple Shell Specifications.
+# 🔬 Simple Shell Specifications
 
 ---
 
