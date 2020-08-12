@@ -8,13 +8,13 @@
 
 ---
 
-Download the [latest version](https://github.com/bx-sh/spec.sh/archive/v0.2.6.tar.gz)
+Download the [latest version](https://github.com/bx-sh/spec.sh/archive/v0.2.7.tar.gz)
 
 ```sh
 $ PATH="$PATH:spec/bin"
 
 $ spec --version
-spec version 0.2.6
+spec version 0.2.7
 ```
 
 ---
