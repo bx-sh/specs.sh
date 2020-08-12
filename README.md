@@ -1,6 +1,4 @@
-# 🔬 `@spec`
-
-Simple Shell Specifications.
+# `@spec` - 🔬 Simple Shell Specifications
 
 ---
 
@@ -240,10 +238,12 @@ If you want to perform some setup **once** before **all** of the tests are run, 
 > Aliases:
 >
 > - `@setup` can also be named `@before`  
->   _(or `@globalSetup` / `@globalBefore` typically used in a `specHelper.sh`)_
+>    (_or `@globalSetup` / `@globalBefore` typically used in a `specHelper.sh`_)  
+>    (_`@globalSetup` runs before `@setup`_)
 >
 > - `@setupFixture` can also be named `@beforeAll`  
->   _(or `@globalSetupFixture` / `@globalBeforeAll` typically used in a `specHelper.sh`)_
+>   _(or `@globalSetupFixture` / `@globalBeforeAll` typically used in a `specHelper.sh`)_  
+>   _(`@globalSetupFixture` runs before `@setupFixture`)_
 
 ---
 
