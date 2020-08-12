@@ -399,7 +399,7 @@ ___spec___.loadSetupFunctions() {
   for setupFunctionName in $( spec.setupFunctionNames )
   do
     [ -z "$setupFunctionName" ] && continue
-    if declare -F | grep "declare -f $setupFunctionName" >/dev/null
+    if declare -F | grep "declare -f $setupFunctionName$" >/dev/null
     then
       SPEC_SETUP_FUNCTION_NAMES+=("$setupFunctionName")
     fi
@@ -414,7 +414,7 @@ ___spec___.loadSetupFixtureFunctions() {
   for setupFixtureFunctionName in $( spec.setupFixtureFunctionNames )
   do
     [ -z "$setupFixtureFunctionName" ] && continue
-    if declare -F | grep "declare -f $setupFixtureFunctionName" >/dev/null
+    if declare -F | grep "declare -f $setupFixtureFunctionName$" >/dev/null
     then
       SPEC_SETUP_FIXTURE_FUNCTION_NAMES+=("$setupFixtureFunctionName")
     fi
@@ -429,7 +429,7 @@ ___spec___.loadTeardownFunctions() {
   for teardownFunctionName in $( spec.teardownFunctionNames )
   do
     [ -z "$teardownFunctionName" ] && continue
-    if declare -F | grep "declare -f $teardownFunctionName" >/dev/null
+    if declare -F | grep "declare -f $teardownFunctionName$" >/dev/null
     then
       SPEC_TEARDOWN_FUNCTION_NAMES+=("$teardownFunctionName")
     fi
@@ -444,7 +444,7 @@ ___spec___.loadTeardownFixtureFunctions() {
   for teardownFixtureFunctionName in $( spec.teardownFixtureFunctionNames )
   do
     [ -z "$teardownFixtureFunctionName" ] && continue
-    if declare -F | grep "declare -f $teardownFixtureFunctionName" >/dev/null
+    if declare -F | grep "declare -f $teardownFixtureFunctionName$" >/dev/null
     then
       SPEC_TEARDOWN_FIXTURE_FUNCTION_NAMES+=("$teardownFixtureFunctionName")
     fi
