@@ -5,3 +5,7 @@ version "$( grep SPEC_VERSION= bin/spec | sed 's/SPEC_VERSION="\([0-9]\.[0-9]\.[
 description "🔬 Test specifications"
 
 exclude examples/ private/
+
+devDependency assert
+devDependency expect
+devDependency run-command

@@ -15,11 +15,11 @@ spec.beforeFile "$SPEC_FILE"
 source "$SPEC_FILE"
 spec.afterFile "$SPEC_FILE"
 
-spec.loadTests
+spec.loadSpecs
 
 if [ "$SPEC_PRINT_ONLY" = "true" ]
 then
-  spec.listTests
+  spec.listSpecs
 else
   spec.runSpecs
 fi

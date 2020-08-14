@@ -47,6 +47,7 @@ matcher_is_next=
 spec_config=
 spec_config_is_next=
 print_only=
+explicitly_provided_paths=
 
 declare -a testFiles=()
 
@@ -58,6 +59,7 @@ do
     spec_config="$arg"
   elif [ -f "$arg" ]
   then
+    explicitly_provided_paths=true
     testFiles+=("$arg")
   elif [ "$arg" = "-f" ] || [ "$arg" = "--fast-fail" ] || [ "$arg" = "--fail-fast" ]
   then
@@ -78,9 +80,10 @@ do
     spec_config_is_next=true
   elif [ -d "$arg" ]
   then
+    explicitly_provided_paths=true
     while read -rd '' specFile
     do
-      testFiles+=("$specFile")
+      [ -f "$specFile" ] && testFiles+=("$specFile")
     done < <( find "$arg" -type f -name "*.spec.sh" -print0 )
   elif [ "$arg" = "-v" ] || [ "$arg" = "--version" ]
   then
@@ -97,9 +100,11 @@ do
   fi
 done
 
-if [ "${#testFiles[@]}" -eq 0 ]
+if [ "${#testFiles[@]}" -eq 0 ] && [ -z "$explicitly_provided_paths" ]
 then
-  while IFS= read -rd '' testFile; do testFiles+=("$testFile")
+  while IFS= read -rd '' testFile
+  do
+    [ -f "$testFile" ] && testFiles+=("$testFile")
   done < <(find . -type d -name packages -prune -o -type f \( -iname "*.spec.sh" -or -iname "*.test.sh" \) -print0)
 fi
 
@@ -111,11 +116,15 @@ do
 done
 
 echo
-if [ -z "$test_failed" ]
+if [ "${#testFiles[@]}" -eq 0 ]
 then
-  echo "Tests passed"
+  echo "No specs found to run" >&2
+  exit 1
+elif [ -z "$test_failed" ]
+then
+  echo "Specs passed"
   exit 0
 else
-  echo "Tests failed"
+  echo "Specs failed"
   exit 1
 fi

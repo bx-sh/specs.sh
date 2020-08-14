@@ -92,8 +92,8 @@ spec.displayRunningSpec() {
   ___spec___.displayRunningSpec "$@"
 }
 
-spec.loadTests() {
-  ___spec___.loadTests "$@"
+spec.loadSpecs() {
+  ___spec___.loadSpecs "$@"
 }
 
 spec.loadSpecFunctions() {
@@ -120,8 +120,8 @@ spec.loadTeardownFixtureFunctions() {
   ___spec___.loadTeardownFixtureFunctions "$@"
 }
 
-spec.listTests() {
-  ___spec___.listTests "$@"
+spec.listSpecs() {
+  ___spec___.listSpecs "$@"
 }
 
 spec.runSpecs() {
@@ -462,7 +462,11 @@ ___spec___.afterFile() {
 
 ___spec___.displaySpecBanner() {
   echo
-  echo -e "[\033[34m$SPEC_FILE\033[0m]"
+  printf "["
+  printf "\033[34m" >&2
+  printf "$SPEC_FILE"
+  printf "\033[0m" >&2
+  printf "]\n"
 }
 
 ___spec___.displayRunningSpec() {
@@ -478,13 +482,25 @@ ___spec___.displaySpecResult() {
 
   if [ "$status" = "PASS" ]
   then
-    echo -e "[\033[32mOK\033[0m] $name"
+    printf "["
+    printf "\033[32m" >&2
+    printf OK
+    printf "\033[0m" >&2
+    printf "] $name\n"
   elif [ "$status" = "FAIL" ]
   then
-    echo -e "[\033[31mFAIL\033[0m] $name"
+    printf "["
+    printf "\033[31m" >&2
+    printf FAIL
+    printf "\033[0m" >&2
+    printf "] $name\n"
   elif [ "$status" = "PENDING" ]
   then
-    echo -e "[\033[33mPENDING\033[0m] $name"
+    printf "["
+    printf "\033[33m" >&2
+    printf PENDING
+    printf "\033[0m" >&2
+    printf "] $name\n"
   elif [ "$status" = "NOT RUN" ]
   then
     echo "$name"
@@ -495,6 +511,7 @@ ___spec___.displaySpecResult() {
     if [ -n "$stderr" ]
     then
       echo
+      # update to not print color codes to STDOUT
       echo -e "\t[\033[31;1mStandard Error\033[0m]"
       echo -e "$stderr" | sed 's/\(.*\)/\t\1/'
       echo
@@ -519,11 +536,11 @@ ___spec___.displaySpecSummary() {
   if [ $total -eq 0 ]
   then
     echo "No tests to run."
-  elif [ "$status" = "PASS" ]
+  elif [ "$failed" -eq 0 ]
   then
-    printf "Tests passed."
+    printf "Specs passed."
   else
-    printf "Tests failed."
+    printf "Specs failed."
   fi
   [ $passed  -gt 0 ] && printf " $passed passed."
   [ $failed  -gt 0 ] && printf " $failed failed."
@@ -531,7 +548,7 @@ ___spec___.displaySpecSummary() {
   printf "\n"
 }
 
-___spec___.loadTests() {
+___spec___.loadSpecs() {
   spec.loadSpecFunctions
   spec.loadPendingFunctions
   spec.loadSetupFunctions
@@ -540,7 +557,7 @@ ___spec___.loadTests() {
   spec.loadTeardownFixtureFunctions
 }
 
-___spec___.listTests() {
+___spec___.listSpecs() {
   local specIndex=0
   while [ $specIndex -lt "${#SPEC_FUNCTION_NAMES[@]}" ]
   do
@@ -671,7 +688,7 @@ ___spec___.runSpecs() {
   #######################################################################################
 
   ##
-  # Print Pending Tests
+  # Print Pending Specs
   ##
   local ___spec___CurrentPendingIndex=0
   while [ $___spec___CurrentPendingIndex -lt "${#SPEC_PENDING_FUNCTION_NAMES[@]}" ]
@@ -693,7 +710,7 @@ ___spec___.runSpecs() {
     spec.displaySpecSummary "$SPEC_STATUS" $SPEC_TOTAL_COUNT $SPEC_PASSED_COUNT $SPEC_FAILED_COUNT $SPEC_PENDING_COUNT
   fi
 
-  [ $SPEC_TOTAL_COUNT -gt 0 ] && [ $SPEC_FAILED_COUNT -eq 0 ]
+  [ $SPEC_FAILED_COUNT -eq 0 ]
 }
 
 [ -n "$SPEC_CONFIG" ] && [ -f "$SPEC_CONFIG" ] && source "$SPEC_CONFIG"
