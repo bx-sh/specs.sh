@@ -511,15 +511,22 @@ ___spec___.displaySpecResult() {
     if [ -n "$stderr" ]
     then
       echo
-      # update to not print color codes to STDOUT
-      echo -e "\t[\033[31;1mStandard Error\033[0m]"
+      printf "\t["
+      printf "\033[31;1m" >&2
+      printf "Standard Error"
+      printf "\033[0m" >&2
+      printf "]\n"
       echo -e "$stderr" | sed 's/\(.*\)/\t\1/'
       echo
     fi
     if [ -n "$stdout" ]
     then
       echo
-      echo -e "\t[\033[34;1mOutput\033[0m]"
+      printf "\t["
+      printf "\033[34;1m" >&2
+      printf "Output"
+      printf "\033[0m" >&2
+      printf "]\n"
       echo -e "$stdout" | sed 's/\(.*\)/\t\1/'
       echo
     fi
