@@ -36,7 +36,7 @@
   expect "$STDOUT" not toContain "[Standard Error]"
 }
 
-@spec.shows_stdout_when_present_and_spec_passed_is_VERBOSE_is_true() {
+@spec.shows_stdout_when_present_and_spec_passed_if_VERBOSE_is_true() {
   VERBOSE=true assert run spec "$test_specs/stdout-stderr.spec.sh" -e "passing stdout and stderr"
 
   expect "$STDOUT" toContain "[OK] passing stdout and stderr"
