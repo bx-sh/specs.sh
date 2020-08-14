@@ -462,7 +462,7 @@ ___spec___.afterFile() {
 
 ___spec___.displaySpecBanner() {
   echo
-  echo -e "[\e[34m$SPEC_FILE\e[0m]"
+  echo -e "[\033[34m$SPEC_FILE\033[0m]"
 }
 
 ___spec___.displayRunningSpec() {
@@ -478,13 +478,13 @@ ___spec___.displaySpecResult() {
 
   if [ "$status" = "PASS" ]
   then
-    echo -e "[\e[32mOK\e[0m] $name"
+    echo -e "[\033[32mOK\033[0m] $name"
   elif [ "$status" = "FAIL" ]
   then
-    echo -e "[\e[31mFAIL\e[0m] $name"
+    echo -e "[\033[31mFAIL\033[0m] $name"
   elif [ "$status" = "PENDING" ]
   then
-    echo -e "[\e[33mPENDING\e[0m] $name"
+    echo -e "[\033[33mPENDING\033[0m] $name"
   elif [ "$status" = "NOT RUN" ]
   then
     echo "$name"
@@ -495,14 +495,14 @@ ___spec___.displaySpecResult() {
     if [ -n "$stderr" ]
     then
       echo
-      echo -e "\t[\e[31;1mStandard Error\e[0m]"
+      echo -e "\t[\033[31;1mStandard Error\033[0m]"
       echo -e "$stderr" | sed 's/\(.*\)/\t\1/'
       echo
     fi
     if [ -n "$stdout" ]
     then
       echo
-      echo -e "\t[\e[34;1mOutput\e[0m]"
+      echo -e "\t[\033[34;1mOutput\033[0m]"
       echo -e "$stdout" | sed 's/\(.*\)/\t\1/'
       echo
     fi
