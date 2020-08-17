@@ -46,5 +46,13 @@
 SPEC_VERSION=0.5.0
 
 spec.main() {
-  :
+  # --version
+  if [ $# -eq 1 ] && [ "$1" = "--version" ]
+  then
+    printf "spec.sh version " >&2
+    printf "$SPEC_VERSION"
+    return 0
+  fi
 }
+
+[ "${0/*\/}" = "spec.sh" ] && spec.main "$@"
