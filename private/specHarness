@@ -1,3 +1,5 @@
+#! /usr/bin/env bash
+
 ___spec___SpecPrivateDirectory="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 SPEC_DIR="$1"

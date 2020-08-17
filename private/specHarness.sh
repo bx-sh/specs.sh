@@ -173,7 +173,7 @@ ___spec___.specNameMatchesPattern() {
   local specFunctionNameWithoutPrefix="$2"
   local specDisplayName="$3"
   local pattern="$4"
-  pattern="${pattern// /\[\[:space:\]\]}"
+  pattern="${pattern// /[[:space:]]}"
   pattern="${pattern//\*/.*}"
   [[ "$specDisplayName" =~ $pattern ]]
 }
