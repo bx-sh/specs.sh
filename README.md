@@ -1,3 +1,5 @@
+[![Spec Status](https://github.com/bx-sh/spec.sh/workflows/Specs/badge.svg)](https://github.com/bx-sh/spec.sh/actions)
+
 # `@spec` - 🔬 Simple Shell Specifications
 
 ---
