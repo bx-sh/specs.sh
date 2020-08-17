@@ -516,7 +516,7 @@ ___spec___.displaySpecResult() {
       printf "Standard Error"
       printf "\033[0m" >&2
       printf "]\n"
-      echo -e "$stderr" | sed 's/\(.*\)/\t\1/'
+      echo -e "$stderr" | sed $'s/\(.*\)/\t\\1/'
       echo
     fi
     if [ -n "$stdout" ]
@@ -527,7 +527,7 @@ ___spec___.displaySpecResult() {
       printf "Output"
       printf "\033[0m" >&2
       printf "]\n"
-      echo -e "$stdout" | sed 's/\(.*\)/\t\1/'
+      echo -e "$stdout" | sed $'s/\(.*\)/\t\\1/'
       echo
     fi
   fi
