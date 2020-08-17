@@ -22,12 +22,14 @@
 }
 
 @spec.run_by_name() {
-  assert run spec "$test_specs/helloWorld/" -e "should pass"
+  # Without spaces
+  assert run spec "$test_specs/helloWorld/" -e "pass"
 
   expect "$STDOUT" toContain "[OK] this should pass"
   expect "$STDOUT" toContain "Specs passed"
   expect "$STDOUT" not toContain "FAIL" "should fail"
 
+  # With spaces
   refute run spec "$test_specs/helloWorld/" -e "should fail"
 
   expect "$STDOUT" toContain "[FAIL] this should fail"

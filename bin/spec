@@ -84,7 +84,7 @@ do
     while read -rd '' specFile
     do
       [ -f "$specFile" ] && testFiles+=("$specFile")
-    done < <( find "$arg" -type f -name "*.spec.sh" -print0 )
+    done < <( find "${arg%\/}" -type f -name "*.spec.sh" -print0 )
   elif [ "$arg" = "-v" ] || [ "$arg" = "--version" ]
   then
     echo "spec version $SPEC_VERSION"
