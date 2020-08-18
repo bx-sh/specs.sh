@@ -274,9 +274,9 @@ spec.load.defaultVariables() {
 }
 
 ___spec___.load.defaultVariables() {
-  SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
-  SPEC_FORMATTER="documentation"
-  SPEC_COLOR=true
+  [ -z "$SPEC_FILE_SUFFIXES" ] && SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
+  [ -z "$SPEC_FORMATTER"     ] && SPEC_FORMATTER="documentation"
+  [ -z "$SPEC_COLOR"         ] && SPEC_COLOR=true
 }
 
 ## @function spec.load.specFiles
@@ -332,8 +332,9 @@ spec.display.formatters.documentation.before:run.specFile() {
 }
 
 ___spec___.display.formatters.documentation.before:run.specFile() {
+  [ -z "$SPEC_FORMATTER_DOCUMENTATION_FILE_COLOR" ] && local SPEC_FORMATTER_DOCUMENTATION_FILE_COLOR=34
   printf "["
-  [ "$SPEC_COLOR" = "true" ] && printf "\033[34m" >&2
+  [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_FORMATTER_DOCUMENTATION_FILE_COLOR}m" >&2
   printf "$SPEC_CURRENT_FILENAME"
   [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
   printf "]\n"
