@@ -3,10 +3,6 @@ spec.main() {
 }
 
 ___spec___.main() {
-  spec.load.defaultVariables
-
-  # spec.load.configs
-
   # --runFile invokes spec.runFile (use this script to run file)
   if [ "$1" = "--runFile" ]
   then

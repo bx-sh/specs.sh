@@ -23,7 +23,6 @@ spec.main() {
   ___spec___.main "$@"
 }
 ___spec___.main() {
-  spec.load.defaultVariables
   if [ "$1" = "--runFile" ]
   then
     shift
@@ -65,6 +64,28 @@ ___spec___.main() {
 spec.get.specSuiteStatus() { ___spec___.get.specSuiteStatus "$@"; }
 ___spec___.get.specSuiteStatus() {
   [ "${#SPEC_FAILED_FILES[@]}" -eq 0 ]
+}
+
+spec.loadAndSource.configFiles() { ___spec___.loadAndSource.configFiles "$@"; }
+___spec___.loadAndSource.configFiles() {
+  declare -a SPEC_CONFIG_FILES=()
+  spec.load.configFiles && spec.source.configFiles
+}
+
+spec.source.configFiles() { ___spec___.source.configFiles "$@"; }
+___spec___.source.configFiles() {
+  local ___spec___localConfigFile
+  for ___spec___localConfigFile in "${SPEC_CONFIG_FILES[@]}"
+  do
+    spec.source.file "$___spec___localConfigFile"
+  done
+}
+
+spec.source.file() { ___spec___.source.file "$@"; }
+___spec___.source.file() {
+  set -e
+  source "$1"
+  set +e
 }
 
 spec.run.specFunction() { ___spec___.run.specFunction "$@"; }
@@ -139,11 +160,44 @@ ___spec___.display.before:run.specFile() {
   [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
 }
 
-spec.load.defaultVariables() { ___spec___.load.defaultVariables "$@"; }
-___spec___.load.defaultVariables() {
-  [ -z "$SPEC_FILE_SUFFIXES" ] && SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
-  [ -z "$SPEC_FORMATTER"     ] && SPEC_FORMATTER="documentation"
-  [ -z "$SPEC_COLOR"         ] && SPEC_COLOR=true
+spec.set.defaultVariables() { ___spec___.set.defaultVariables "$@"; }
+___spec___.set.defaultVariables() {
+  [ -z "$SPEC_FILE_SUFFIXES"     ] && SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
+  [ -z "$SPEC_FORMATTER"         ] && SPEC_FORMATTER="documentation"
+  [ -z "$SPEC_COLOR"             ] && SPEC_COLOR="true"
+  [ -z "$SPEC_CONFIG_FILENAMES"  ] && SPEC_CONFIG_FILENAMES="spec.config.sh"
+}
+
+spec.load.configFiles() { ___spec___.load.configFiles "$@"; }
+___spec___.load.configFiles() {
+  if [ -n "$SPEC_CONFIG" ]
+  then
+    IFS=: read -ra configPaths <<<"$SPEC_CONFIG"
+    local configPath
+    for configPath in "${configPaths[@]}"
+    do
+      if [ -f "$configPath" ]
+      then
+        spec.source.file "$configPath"
+      else
+        echo "Spec config file not found: $configPath" >&2
+        return 1
+      fi
+    done
+  else
+    IFS=: read -ra configFilenames <<<"$SPEC_CONFIG_FILENAMES"
+    local directory="$( pwd )"
+    [ -f "$directory/$configFilename" ] && SPEC_CONFIG_FILES+=("$directory/$configFilename")
+    while [ "$directory" != "/" ] && [ "$directory" != "." ]
+    do
+      directory="$( dirname "$directory" )"
+      local configFilename
+      for configFilename in "${configFilenames[@]}"
+      do
+        [ -f "$directory/$configFilename" ] && SPEC_CONFIG_FILES+=("$directory/$configFilename")
+      done
+    done
+  fi
 }
 
 spec.load.specFiles() { ___spec___.load.specFiles "$@"; }
@@ -192,4 +246,6 @@ ___spec___.display.formatters.documentation.before:run.specFile() {
   printf "]\n"
 }
 
+spec.set.defaultVariables
+spec.loadAndSource.configFiles
 [ "$0" = "${BASH_SOURCE[0]}" ] && spec.main "$@"

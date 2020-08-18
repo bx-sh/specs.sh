@@ -42,8 +42,6 @@ something about SPEC_FORMATTER_DOCUMENTATION_FILE_COLOR
 ...
 
 
-
-
 ### `spec.run.function`
 
 ...
