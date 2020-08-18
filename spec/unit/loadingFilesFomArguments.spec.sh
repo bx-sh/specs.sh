@@ -1,3 +1,5 @@
+source ./spec.sh
+
 @pending.load_zero_file_paths() {
   :
 }

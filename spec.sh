@@ -80,24 +80,10 @@
 
 SPEC_VERSION=0.5.0
 
-## ### `spec.load.defaultVariables`
-##
-## - ...
-##
-spec.load.defaultVariables() { ___spec___.load.defaultVariables "$@"; }
-___spec___.load.defaultVariables() {
-  SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
+spec.main() {
+  ___spec___.main "$@"
 }
 
-# spec.load.configs() {
-#
-# }
-#
-# spec.load.configs "$@" <--- -c/-config arguments are extracted
-#
-# Update so that this is actually what invokes main() or runFile()
-
-spec.main() { ___spec___.main "$@"; }
 ___spec___.main() {
   spec.load.defaultVariables
 
@@ -176,42 +162,16 @@ ___spec___.main() {
   [ "${#failedSpecFiles[@]}" -eq 0 ]
 }
 
-## @function spec.load.specFiles
+## @function spec.run.specFunction
 ##
-## Input: `SPEC_PATH_ARGUMENTS`
+## ...
 ##
-## Responsible for populating `SPEC_FILE_LIST`
-##
-## Default extensions defined in `SPEC_FILE_SUFFIXES`
-##
-spec.load.specFiles() { ___spec___.load.specFiles "$@"; }
-___spec___.load.specFiles() {
-  IFS=: read -ra specFileExtensions <<<"$SPEC_FILE_SUFFIXES"
-  local pathArgument
-  for pathArgument in "${SPEC_PATH_ARGUMENTS[@]}"
-  do
-    if [ -f "$pathArgument" ]
-    then
-      ## Default behavior:
-      ##
-      ## - Allow explicit files regardless of file extension
-      SPEC_FILE_LIST+=("$pathArgument")
-    elif [ -d "$pathArgument" ]
-    then
-      local suffix
-      for suffix in "${specFileExtensions[@]}"
-      do
-        local specFile
-        while read -d '' -r specFile
-        do
-          [ -f "$specFile" ] && SPEC_FILE_LIST+=("$specFile")
-        done < <( find "$pathArgument" -type f -iname "*$suffix" -print0 )
-      done
-    else
-      echo "Unexpected argument for spec.load.specFiles: $pathArgument. Expected: file or directory." >&2
-      return 1
-    fi
-  done
+spec.run.specFunction() {
+  ___spec___.run.specFunction "$@"
+}
+
+___spec___.run.specFunction() {
+  spec.run.function "$@"
 }
 
 ## @function spec.run.specFile
@@ -220,7 +180,10 @@ ___spec___.load.specFiles() {
 ##
 ## It accepts one command-line argument: path to the file
 ##
-spec.run.specFile() { ___spec___.run.specFile "$@"; }
+spec.run.specFile() {
+  ___spec___.run.specFile "$@"
+}
+
 ___spec___.run.specFile() {
   # if args > 1 error ---- unit test this
   local specFile="$1"
@@ -252,24 +215,68 @@ ___spec___.run.specFile() {
   [ "${#failedSpecFunctions[@]}" -eq 0 ]
 }
 
-## @function spec.run.specFunction
-##
-## ...
-##
-spec.run.specFunction() { ___spec___.run.specFunction "$@"; }
-___spec___.run.specFunction() {
-  spec.run.function "$@"
-}
-
 ## @function spec.run.function
 ##
 ## ...
 ##
-spec.run.function() { ___spec___.run.function "$@"; }
+
+spec.run.function() {
+  ___spec___.run.function "$@"
+}
+
 ___spec___.run.function() {
   local functionName="$1"
   shift
   "$functionName" "$@"
+}
+
+spec.load.defaultVariables() {
+  ___spec___.load.defaultVariables "$@"
+}
+
+___spec___.load.defaultVariables() {
+  SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
+}
+
+## @function spec.load.specFiles
+##
+## Input: `SPEC_PATH_ARGUMENTS`
+##
+## Responsible for populating `SPEC_FILE_LIST`
+##
+## Default extensions defined in `SPEC_FILE_SUFFIXES`
+##
+spec.load.specFiles() {
+  ___spec___.load.specFiles "$@"
+}
+
+___spec___.load.specFiles() {
+  IFS=: read -ra specFileExtensions <<<"$SPEC_FILE_SUFFIXES"
+  local pathArgument
+  for pathArgument in "${SPEC_PATH_ARGUMENTS[@]}"
+  do
+    if [ -f "$pathArgument" ]
+    then
+      ## Default behavior:
+      ##
+      ## - Allow explicit files regardless of file extension
+      SPEC_FILE_LIST+=("$pathArgument")
+    elif [ -d "$pathArgument" ]
+    then
+      local suffix
+      for suffix in "${specFileExtensions[@]}"
+      do
+        local specFile
+        while read -d '' -r specFile
+        do
+          [ -f "$specFile" ] && SPEC_FILE_LIST+=("$specFile")
+        done < <( find "$pathArgument" -type f -iname "*$suffix" -print0 )
+      done
+    else
+      echo "Unexpected argument for spec.load.specFiles: $pathArgument. Expected: file or directory." >&2
+      return 1
+    fi
+  done
 }
 
 ##
