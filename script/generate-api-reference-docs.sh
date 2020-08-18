@@ -37,4 +37,28 @@ done < all-comments.md
 
 rm -f all-comments.md
 
-echo "Generated docs/functions/ docs/variables/"
+echo "# API Reference
+
+## Functions
+
+" >> API_REFERENCE.md
+
+while read -d '' -r referenceDoc
+do
+  cat "$referenceDoc" >> API_REFERENCE.md
+  echo >> API_REFERENCE.md
+done < <( find ./docs/functions/ -type f -name "*.md" -print0 )
+
+echo "
+
+## Variables
+
+" >> API_REFERENCE.md
+
+while read -d '' -r referenceDoc
+do
+  cat "$referenceDoc" >> API_REFERENCE.md
+  echo >> API_REFERENCE.md
+done < <( find ./docs/variables/ -type f -name "*.md" -print0 )
+
+echo "Generated API_REFERENCE.md"
