@@ -342,4 +342,4 @@ ___spec___.display.formatters.documentation.before:run.specFile() {
 # Run spec.sh as executable if called directly:
 ##
 
-[ "${0/*\/}" = "spec.sh" ] && spec.main "$@"
+[ "$0" = "${BASH_SOURCE[0]}" ] && spec.main "$@"

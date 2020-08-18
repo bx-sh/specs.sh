@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-rm spec.sh
+rm -f spec.sh
 
 cat src/header.sh >> spec.sh
 echo >> spec.sh
@@ -22,3 +22,5 @@ done < <( find src/formatters -type f -name "*.sh" -print0 )
 cat src/footer.sh >> spec.sh
 
 chmod +x spec.sh
+
+echo "Generated spec.sh"
