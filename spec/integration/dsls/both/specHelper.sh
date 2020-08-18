@@ -1,0 +1,1 @@
+export SPEC_STYLE=xunit_and_spec

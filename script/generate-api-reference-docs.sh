@@ -1,4 +1,5 @@
 rm -f API_REFERENCE.md
+rm -f docs/API_REFERENCE.md
 
 rm -rf docs/{user,customization}/
 
@@ -18,7 +19,7 @@ do
   then
     variableName="${line#@user @variable }"
     CURRENT_OUTPUT_FILE="docs/user/variables/$variableName.md"
-    line="### \`$variableName\`"
+    line="### \`\$$variableName\`"
   fi
 
   # @variable
@@ -26,7 +27,7 @@ do
   then
     variableName="${line#@variable }"
     CURRENT_OUTPUT_FILE="docs/customization/variables/$variableName.md"
-    line="### \`$variableName\`"
+    line="### \`\$$variableName\`"
   fi
 
   # @function
@@ -34,7 +35,7 @@ do
   then
     functionName="${line#@function }"
     CURRENT_OUTPUT_FILE="docs/customization/functions/$functionName.md"
-    line="### \`$functionName\`"
+    line="#### \`$functionName()\`"
   fi
 
   [ -n "$CURRENT_OUTPUT_FILE" ] && echo "$line" >> "$CURRENT_OUTPUT_FILE"
@@ -43,7 +44,7 @@ done < all-comments.md
 
 rm -f all-comments.md
 
-echo "# ⚙️ Variables
+echo "# ⚙️ User Variables
 
 Environment variables for configuring the behavior of \`spec.sh\`
 
@@ -61,10 +62,10 @@ echo "---
 
 # 🎨 Customization API
 
-\`spec.sh\` is extremely customizable
+\`spec.sh\` is extremely customizable.
 
-This documents the variables and functions you may want to override
-to customize \`spec.sh\` to meet your needs.
+This section provides documentation on the variables and functions you
+may want to configure to customize \`spec.sh\` to meet your needs!
 
 Every \`spec.sh\` function documented here can be overriden
 by defining a new function in your \`spec.config.sh\` file.
@@ -95,5 +96,7 @@ do
   cat "$referenceDoc" >> API_REFERENCE.md
   echo >> API_REFERENCE.md
 done < <( find ./docs/customization/functions/ -type f -name "*.md" -print0 )
+
+cp API_REFERENCE.md docs/API_REFERENCE.md
 
 echo "Generated API_REFERENCE.md"

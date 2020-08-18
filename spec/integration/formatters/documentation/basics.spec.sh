@@ -6,8 +6,13 @@
   expect "$STDOUT" toContain "failing.oneSpec.return1.spec.sh"
 }
 
-@pending.prints_the_name_of_the_spec_functions_run() {
-  :
+@spec.prints_the_name_of_the_spec_functions_run() {
+  assert run ./spec.sh examples/specSpecs/basics/passing.threeSpecs.spec.sh
+  expect "$STDOUT" toContain "??????"
+
+  # [PASS] @spec.hello_one$
+	# [PASS] @spec.hello_three$
+	# [PASS] @spec.hello_two'
 }
 
 @pending.prints_OK_for_passing_spec_functions() {

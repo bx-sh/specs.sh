@@ -1,4 +1,4 @@
-### `spec.run.specFile`
+#### `spec.run.specFile()`
 
 spec.runFile is run in a subshell by `spec.sh`
 

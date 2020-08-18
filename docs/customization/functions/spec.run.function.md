@@ -1,4 +1,4 @@
-### `spec.run.function`
+#### `spec.run.function()`
 
 ...
 

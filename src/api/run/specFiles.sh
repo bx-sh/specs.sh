@@ -7,8 +7,7 @@ ___spec___.run.specFiles() {
     SPEC_CURRENT_FILEPATH="$specFile"
     SPEC_CURRENT_FILENAME="${specFile/*\/}"
     spec.display.before:run.specFile
-    local _
-    _="$( spec.run.specFile "$specFile" )"
+    spec.run.specFile "$specFile"
     if [ $? -eq 0 ]
     then
       SPEC_PASSED_FILES+=("$specFile")

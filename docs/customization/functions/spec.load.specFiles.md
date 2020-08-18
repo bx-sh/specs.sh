@@ -1,4 +1,4 @@
-### `spec.load.specFiles`
+#### `spec.load.specFiles()`
 
 Input: `SPEC_PATH_ARGUMENTS`
 

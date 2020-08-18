@@ -130,8 +130,7 @@ ___spec___.run.specFiles() {
     SPEC_CURRENT_FILEPATH="$specFile"
     SPEC_CURRENT_FILENAME="${specFile/*\/}"
     spec.display.before:run.specFile
-    local _
-    _="$( spec.run.specFile "$specFile" )"
+    spec.run.specFile "$specFile"
     if [ $? -eq 0 ]
     then
       SPEC_PASSED_FILES+=("$specFile")
@@ -162,10 +161,28 @@ ___spec___.display.before:run.specFile() {
 
 spec.set.defaultVariables() { ___spec___.set.defaultVariables "$@"; }
 ___spec___.set.defaultVariables() {
-  [ -z "$SPEC_FILE_SUFFIXES"     ] && SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
+  spec.set.themeVariables
   [ -z "$SPEC_FORMATTER"         ] && SPEC_FORMATTER="documentation"
-  [ -z "$SPEC_COLOR"             ] && SPEC_COLOR="true"
+  [ -z "$SPEC_FILE_SUFFIXES"     ] && SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
   [ -z "$SPEC_CONFIG_FILENAMES"  ] && SPEC_CONFIG_FILENAMES="spec.config.sh"
+}
+
+spec.set.themeVariables() { ___spec___.set.themeVariables "$@"; }
+___spec___.set.themeVariables() {
+  [ -z "$SPEC_COLOR"                     ] && SPEC_COLOR="true"
+  [ -z "$SPEC_THEME_TEXT_COLOR"          ] && SPEC_THEME_TEXT_COLOR=39
+  [ -z "$SPEC_THEME_PASS_COLOR"          ] && SPEC_THEME_PASS_COLOR=32
+  [ -z "$SPEC_THEME_FAIL_COLOR"          ] && SPEC_THEME_FAIL_COLOR=31
+  [ -z "$SPEC_THEME_PENDING_COLOR"       ] && SPEC_THEME_PENDING_COLOR=33
+  [ -z "$SPEC_THEME_ERROR_COLOR"         ] && SPEC_THEME_ERROR_COLOR=31
+  [ -z "$SPEC_THEME_FILE_COLOR"          ] && SPEC_THEME_FILE_COLOR=34
+  [ -z "$SPEC_THEME_SPEC_COLOR"          ] && SPEC_THEME_SPEC_COLOR=39
+  [ -z "$SPEC_THEME_SEPARATOR_COLOR"     ] && SPEC_THEME_SEPARATOR_COLOR=39
+  [ -z "$SPEC_THEME_HEADER_COLOR"        ] && SPEC_THEME_HEADER_COLOR=39
+  [ -z "$SPEC_THEME_STDOUT_COLOR"        ] && SPEC_THEME_STDOUT_COLOR=39
+  [ -z "$SPEC_THEME_STDERR_COLOR"        ] && SPEC_THEME_STDERR_COLOR=39
+  [ -z "$SPEC_THEME_STDOUT_HEADER_COLOR" ] && SPEC_THEME_STDOUT_HEADER_COLOR=34;1
+  [ -z "$SPEC_THEME_STDERR_HEADER_COLOR" ] && SPEC_THEME_STDERR_HEADER_COLOR=31;1
 }
 
 spec.load.configFiles() { ___spec___.load.configFiles "$@"; }
@@ -231,7 +248,32 @@ spec.display.formatters.documentation.after:run.specFunction() {
   ___spec___.display.formatters.documentation.after:run.specFunction "$@"
 }
 ___spec___.display.formatters.documentation.after:run.specFunction() {
-  :
+  [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
+  printf "["
+  case "$SPEC_CURRENT_STATUS" in
+    PASS)
+      [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_PASS_COLOR}m" >&2
+      printf "$SPEC_CURRENT_STATUS"
+      ;;
+    FAIL)
+      [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_FAIL_COLOR}m" >&2
+      printf "$SPEC_CURRENT_STATUS"
+      ;;
+    PENDING)
+      [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_PENDING_COLOR}m" >&2
+      printf "$SPEC_CURRENT_STATUS"
+      ;;
+    *)
+  [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
+      printf "$SPEC_CURRENT_STATUS"
+      ;;
+  esac
+  [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
+  printf "] "
+  [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SPEC_COLOR}m" >&2
+  printf "$SPEC_CURRENT_FUNCTION\n"
+  
+  [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
 }
 
 spec.display.formatters.documentation.before:run.specFile() {

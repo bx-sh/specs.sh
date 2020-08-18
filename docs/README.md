@@ -12,10 +12,11 @@ If you've used any popular testing framework `spec.sh` should feel familiar!
 
 ## Features
 
+ - Easy-to-use CLI for running test specification files (`*.spec|test.sh`)
  - Different testing syntax to choose from (_`xUnit`-style or `BDD`-style_)
  - Integrated libraries for `expect`-style or `assert`-style assertions
  - Absurdly customizable: _hook into any function, customize anything!_
- - TAP compliant output (_as well as `jUnit.xml` and pretty formatters_)
+ - TAP compliant output (_as well as `JUnit.xml` and pretty formatters_)
 
 ### xUnit-style tests
 

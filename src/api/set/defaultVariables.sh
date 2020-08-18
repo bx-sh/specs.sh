@@ -1,8 +1,19 @@
+## @function spec.set.defaultVariables
+##
+## - Sets all default variables
+## - This is run BEFORE config files are loaded and therefore CANNOT be customized
+## - All of the default variables are set only if there isn't already a value present for the given variable
+## - To customize variables, either:
+##   - `export` an environment variable or pass it directly to `ENV= ./spec.sh` when running it
+##   - Simply set the variable in your `spec.config.sh`, e.g. `SPEC_FORMATTER=tap`
+##
+
 spec.set.defaultVariables() { ___spec___.set.defaultVariables "$@"; }
 
 ___spec___.set.defaultVariables() {
-  [ -z "$SPEC_FILE_SUFFIXES"     ] && SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
-  [ -z "$SPEC_FORMATTER"         ] && SPEC_FORMATTER="documentation"
-  [ -z "$SPEC_COLOR"             ] && SPEC_COLOR="true"
-  [ -z "$SPEC_CONFIG_FILENAMES"  ] && SPEC_CONFIG_FILENAMES="spec.config.sh"
+  spec.set.defaultStyle
+  spec.set.defaultFormatter
+  spec.set.defaultTheme
+  spec.set.defaultSpecFileSuffixes
+  spec.set.defaultConfigFilenames
 }

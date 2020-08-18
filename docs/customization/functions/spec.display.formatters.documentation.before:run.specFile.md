@@ -1,6 +1,5 @@
-### `spec.display.formatters.documentation.before:run.specFile`
+#### `spec.display.formatters.documentation.before:run.specFile()`
 
-something about SPEC_FORMATTER_DOCUMENTATION_FILE_COLOR
+- Displays the name of the file being run
 
-# this is a header
 
