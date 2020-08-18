@@ -5,10 +5,8 @@
 layout: default
 ---
 
-# Hi from index
+# 🔬 Simple Shell Specifications
 
-
-# Hi from index
 
 <table>
   <thead>
