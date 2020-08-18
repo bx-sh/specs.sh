@@ -44,7 +44,7 @@ done < all-comments.md
 
 rm -f all-comments.md
 
-echo "# ⚙️ User Variables
+echo "## 🎨 User Configuration
 
 Environment variables for configuring the behavior of \`spec.sh\`
 
@@ -60,7 +60,7 @@ done < <( find ./docs/user/variables/ -type f -name "*.md" -print0 )
 
 echo "---
 
-# 🎨 Customization API
+# 🛠️ Customization API
 
 \`spec.sh\` is extremely customizable.
 

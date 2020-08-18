@@ -1,4 +1,4 @@
-# ⚙️ User Variables
+## 🎨 User Configuration
 
 Environment variables for configuring the behavior of `spec.sh`
 
@@ -24,7 +24,7 @@ These can be exported in your shell or configured in `spec.config.sh`
 
 ---
 
-# 🎨 Customization API
+# 🛠️ Customization API
 
 `spec.sh` is extremely customizable.
 
@@ -241,18 +241,15 @@ Sets variables uses for default theme used by some formatters:
 
 #### `spec.run.specFile()`
 
-spec.runFile is run in a subshell by `spec.sh`
-
-It accepts one command-line argument: path to the file
+- `spec.runFile` is run in a subshell by `spec.sh`
+- It accepts one command-line argument: path to the file
 
 
 #### `spec.load.specFiles()`
 
-Input: `SPEC_PATH_ARGUMENTS`
-
-Responsible for populating `SPEC_FILE_LIST`
-
-Default extensions defined in `SPEC_FILE_SUFFIXES`
+- Input: `SPEC_PATH_ARGUMENTS`
+- Responsible for populating `SPEC_FILE_LIST`
+- Default extensions defined in `SPEC_FILE_SUFFIXES`
 
 Default behavior:
 

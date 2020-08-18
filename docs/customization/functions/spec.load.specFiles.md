@@ -1,10 +1,8 @@
 #### `spec.load.specFiles()`
 
-Input: `SPEC_PATH_ARGUMENTS`
-
-Responsible for populating `SPEC_FILE_LIST`
-
-Default extensions defined in `SPEC_FILE_SUFFIXES`
+- Input: `SPEC_PATH_ARGUMENTS`
+- Responsible for populating `SPEC_FILE_LIST`
+- Default extensions defined in `SPEC_FILE_SUFFIXES`
 
 Default behavior:
 
