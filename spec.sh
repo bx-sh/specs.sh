@@ -131,37 +131,29 @@ ___spec___.main() {
   done
 
   declare -a SPEC_FILE_LIST=()
-
+  
+  # spec.load.specFiles is responsible for populating SPEC_FILE_LIST
   spec.load.specFiles
 
-  # local specPathToLoad
-  # for specPathToLoad in "${SPEC_PATH_ARGUMENTS[@]}"
-  # do
-  #   if [ -f "$specPathToLoad" ]
-  #   then
-  #     SPEC_FILE_LIST+="$specPathToLoad"
-  #   fi
-  # done
+  declare SPEC_PASSED_FILES=()
+  declare SPEC_FAILED_FILES=()
 
-  declare passedSpecFiles=()
-  declare failedSpecFiles=()
+  # spec.run.specFiles is responsible for populating SPEC_PASSED_FILES/SPEC_FAILED_FILES
+  #                                       and a whole lot more! kicks off spec.run.specFile
+  spec.run.specFiles
 
-  local specFile
-  for specFile in "${SPEC_FILE_LIST[@]}"
-  do
-    local _
-    _="$( spec.run.specFile "$specFile" )"
-    if [ $? -eq 0 ]
-    then
-      passedSpecFiles+=("$specFile")
-    else
-      failedSpecFiles+=("$specFile")
-    fi
-  done
-
-  [ "${#failedSpecFiles[@]}" -eq 0 ]
+  # spec.get.specSuiteStatus is responsible for returning 0 or a non-zero value to
+  #                                             represent the whole suite's result status
+  spec.get.specSuiteStatus
 }
 
+spec.get.specSuiteStatus() {
+  ___spec___.get.specSuiteStatus "$@"
+}
+
+___spec___.get.specSuiteStatus() {
+  [ "${#SPEC_FAILED_FILES[@]}" -eq 0 ]
+}
 ## @function spec.run.specFunction
 ##
 ## ...
@@ -185,6 +177,8 @@ spec.run.specFile() {
 }
 
 ___spec___.run.specFile() {
+  echo "Hmmm"
+
   # if args > 1 error ---- unit test this
   local specFile="$1"
 
@@ -202,19 +196,48 @@ ___spec___.run.specFile() {
   local specFunction
   for specFunction in "${specFunctions[@]}"
   do
+    SPEC_CURRENT_FUNCTION="$specFunction"
+    #spec.display.before:run.specFunction
     local _
     _="$( spec.run.specFunction "$specFunction" )"
-    if [ $? -eq 0 ]
+    SPEC_CURRENT_EXITCODE=$?
+    if [ $SPEC_CURRENT_EXITCODE -eq 0 ]
     then
+      SPEC_CURRENT_STATUS=PASS
       passedSpecFunctions+="$specFunction"
     else
+      SPEC_CURRENT_STATUS=FAIL
       failedSpecFunctions+="$specFunction"
     fi
+    echo "Hi?"
+    spec.display.after:run.specFunction
   done
 
   [ "${#failedSpecFunctions[@]}" -eq 0 ]
 }
 
+spec.run.specFiles() {
+  ___spec___.run.specFiles "$@"
+}
+
+___spec___.run.specFiles() {
+  local specFile
+  for specFile in "${SPEC_FILE_LIST[@]}"
+  do
+    SPEC_CURRENT_FILEPATH="$specFile"
+    SPEC_CURRENT_FILENAME="${specFile/*\/}"
+    spec.display.before:run.specFile
+    local _
+    _="$( spec.run.specFile "$specFile" )"
+    if [ $? -eq 0 ]
+    then
+      SPEC_PASSED_FILES+=("$specFile")
+    else
+      SPEC_FAILED_FILES+=("$specFile")
+    fi
+    # spec.display.after:run.specFile
+  done
+}
 ## @function spec.run.function
 ##
 ## ...
@@ -230,12 +253,30 @@ ___spec___.run.function() {
   "$functionName" "$@"
 }
 
+spec.display.after:run.specFunction() {
+  ___spec___.display.after:run.specFunction
+}
+
+___spec___.display.after:run.specFunction() {
+  local functionName="spec.display.formatters.$SPEC_FORMATTER.after:run.specFunction"
+  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
+}
+spec.display.before:run.specFile() {
+  ___spec___.display.before:run.specFile "$@"
+}
+
+___spec___.display.before:run.specFile() {
+  local functionName="spec.display.formatters.$SPEC_FORMATTER.before:run.specFile"
+  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
+}
 spec.load.defaultVariables() {
   ___spec___.load.defaultVariables "$@"
 }
 
 ___spec___.load.defaultVariables() {
   SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
+  SPEC_FORMATTER="documentation"
+  SPEC_COLOR=true
 }
 
 ## @function spec.load.specFiles
@@ -279,6 +320,24 @@ ___spec___.load.specFiles() {
   done
 }
 
+spec.display.formatters.documentation.after:run.specFunction() {
+  ___spec___.display.formatters.documentation.after:run.specFunction "$@"
+}
+
+___spec___.display.formatters.documentation.after:run.specFunction() {
+  :
+}
+spec.display.formatters.documentation.before:run.specFile() {
+  ___spec___.display.formatters.documentation.before:run.specFile "$@"
+}
+
+___spec___.display.formatters.documentation.before:run.specFile() {
+  printf "["
+  [ "$SPEC_COLOR" = "true" ] && printf "\033[34m" >&2
+  printf "$SPEC_CURRENT_FILENAME"
+  [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
+  printf "]\n"
+}
 ##
 # Run spec.sh as executable if called directly:
 ##

@@ -49,33 +49,18 @@ ___spec___.main() {
   done
 
   declare -a SPEC_FILE_LIST=()
-
+  
+  # spec.load.specFiles is responsible for populating SPEC_FILE_LIST
   spec.load.specFiles
 
-  # local specPathToLoad
-  # for specPathToLoad in "${SPEC_PATH_ARGUMENTS[@]}"
-  # do
-  #   if [ -f "$specPathToLoad" ]
-  #   then
-  #     SPEC_FILE_LIST+="$specPathToLoad"
-  #   fi
-  # done
+  declare SPEC_PASSED_FILES=()
+  declare SPEC_FAILED_FILES=()
 
-  declare passedSpecFiles=()
-  declare failedSpecFiles=()
+  # spec.run.specFiles is responsible for populating SPEC_PASSED_FILES/SPEC_FAILED_FILES
+  #                                       and a whole lot more! kicks off spec.run.specFile
+  spec.run.specFiles
 
-  local specFile
-  for specFile in "${SPEC_FILE_LIST[@]}"
-  do
-    local _
-    _="$( spec.run.specFile "$specFile" )"
-    if [ $? -eq 0 ]
-    then
-      passedSpecFiles+=("$specFile")
-    else
-      failedSpecFiles+=("$specFile")
-    fi
-  done
-
-  [ "${#failedSpecFiles[@]}" -eq 0 ]
+  # spec.get.specSuiteStatus is responsible for returning 0 or a non-zero value to
+  #                                             represent the whole suite's result status
+  spec.get.specSuiteStatus
 }

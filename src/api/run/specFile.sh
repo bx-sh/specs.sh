@@ -9,6 +9,8 @@ spec.run.specFile() {
 }
 
 ___spec___.run.specFile() {
+  echo "Hmmm"
+
   # if args > 1 error ---- unit test this
   local specFile="$1"
 
@@ -26,14 +28,21 @@ ___spec___.run.specFile() {
   local specFunction
   for specFunction in "${specFunctions[@]}"
   do
+    SPEC_CURRENT_FUNCTION="$specFunction"
+    #spec.display.before:run.specFunction
     local _
     _="$( spec.run.specFunction "$specFunction" )"
-    if [ $? -eq 0 ]
+    SPEC_CURRENT_EXITCODE=$?
+    if [ $SPEC_CURRENT_EXITCODE -eq 0 ]
     then
+      SPEC_CURRENT_STATUS=PASS
       passedSpecFunctions+="$specFunction"
     else
+      SPEC_CURRENT_STATUS=FAIL
       failedSpecFunctions+="$specFunction"
     fi
+    echo "Hi?"
+    spec.display.after:run.specFunction
   done
 
   [ "${#failedSpecFunctions[@]}" -eq 0 ]
