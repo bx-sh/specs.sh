@@ -1,8 +1,8 @@
-# 🔬 Simple Shell Specifications
+# 🔬 Shell Specifications
 
-> - Small
-> - Flexible
-> - Simply BASH
+> - Familiar syntax
+> - Pleasant to write
+> - Small (< 500 LOC)
 
 ---
 
@@ -12,17 +12,16 @@ If you've used any popular testing framework `spec.sh` should feel familiar!
 
 ## Features
 
- - Different testing syntax to choose from (`xUnit`-style or `BDD`-style)
+ - Different testing syntax to choose from (_`xUnit`-style or `BDD`-style_)
  - Integrated libraries for `expect`-style or `assert`-style assertions
- - TAP compliant output (as well as `jUnit.xml` and pretty formatters)
- - y
+ - Absurdly customizable: _hook into any function, customize anything!_
+ - TAP compliant output (_as well as `jUnit.xml` and pretty formatters_)
 
 ### xUnit-style tests
 
 ```sh
-setUp() {
-  directory="$( mktemp -d )"
-}
+setUp()    { directory="$( mktemp -d )"; }
+tearDown() { rm -r "$directory"; }
 
 testFileExists() {
   assert [ -f "$directory/file" ]
@@ -32,9 +31,8 @@ testFileExists() {
 ### BDD-style specs
 
 ```sh
-@before() {
-  directory="$( mktemp -d )"
-}
+@before() { directory="$( mktemp -d )"; }
+@after()  { rm -r "$directory"; }
 
 @spec.file_should_exist() {
   expect { ls "$directory" } toContain "file"
