@@ -1,3 +1,5 @@
+rm -f API_REFERENCE.md
+
 rm -rf docs/functions/
 rm -rf docs/variables/
 
@@ -37,7 +39,7 @@ done < all-comments.md
 
 rm -f all-comments.md
 
-echo "# API Reference
+echo "# 📚 API Reference
 
 ## Functions
 
