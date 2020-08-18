@@ -24,6 +24,12 @@ do
   echo >> spec-full.sh
 done < <( find src/formatters -type f -name "*.sh" -print0 )
 
+while read -d '' -r apiFile
+do
+  cat "$apiFile" | grep -v "^[[:space:]]*#\|^$" >> spec-full.sh
+  echo >> spec-full.sh
+done < <( find src/styles -type f -name "*.sh" -print0 )
+
 ########################################################
 # Embed 'expect' 'assert' 'run-command' libraries
 #

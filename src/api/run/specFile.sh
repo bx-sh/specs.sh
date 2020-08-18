@@ -7,25 +7,22 @@
 spec.run.specFile() { ___spec___.run.specFile "$@"; }
 
 ___spec___.run.specFile() {
+  spec.source.specFile "$1"
 
-  # if args > 1 error ---- unit test this
-  local specFile="$1"
-
-  set -e
-  source "$specFile"
-  set +e
-
-  # move to spec.load.specFunctions
-  # get the @spec functions
-  IFS=$'\n' read -d '' -ra specFunctions < <(declare -F | grep "^declare -f @spec\." | sed 's/^declare -f //' )
+  declare -a SPEC_FUNCTIONS=()
+  declare -a SPEC_DISPLAY_NAMES=()
+  
+  spec.load.specFunctions
 
   declare -a passedSpecFunctions=()
   declare -a failedSpecFunctions=()
 
+  local index=0
   local specFunction
-  for specFunction in "${specFunctions[@]}"
+  for specFunction in "${SPEC_FUNCTIONS[@]}"
   do
     SPEC_CURRENT_FUNCTION="$specFunction"
+    SPEC_CURRENT_DISPLAY_NAME="${SPEC_DISPLAY_NAMES[$index]}"
     #spec.display.before:run.specFunction
     local _
     _="$( spec.run.specFunction "$specFunction" )"
@@ -39,6 +36,7 @@ ___spec___.run.specFile() {
       failedSpecFunctions+="$specFunction"
     fi
     spec.display.after:run.specFunction
+    (( index += 1 ))
   done
 
   [ "${#failedSpecFunctions[@]}" -eq 0 ]

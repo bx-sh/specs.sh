@@ -72,6 +72,11 @@ ___spec___.loadAndSource.configFiles() {
   spec.load.configFiles && spec.source.configFiles
 }
 
+spec.source.specFile() { ___spec___.source.specFile "$@"; }
+___spec___.source.specFile() {
+  spec.source.file "$@"
+}
+
 spec.source.configFiles() { ___spec___.source.configFiles "$@"; }
 ___spec___.source.configFiles() {
   local ___spec___localConfigFile
@@ -95,17 +100,19 @@ ___spec___.run.specFunction() {
 
 spec.run.specFile() { ___spec___.run.specFile "$@"; }
 ___spec___.run.specFile() {
-  local specFile="$1"
-  set -e
-  source "$specFile"
-  set +e
-  IFS=$'\n' read -d '' -ra specFunctions < <(declare -F | grep "^declare -f @spec\." | sed 's/^declare -f //' )
+  spec.source.specFile "$1"
+  declare -a SPEC_FUNCTIONS=()
+  declare -a SPEC_DISPLAY_NAMES=()
+  
+  spec.load.specFunctions
   declare -a passedSpecFunctions=()
   declare -a failedSpecFunctions=()
+  local index=0
   local specFunction
-  for specFunction in "${specFunctions[@]}"
+  for specFunction in "${SPEC_FUNCTIONS[@]}"
   do
     SPEC_CURRENT_FUNCTION="$specFunction"
+    SPEC_CURRENT_DISPLAY_NAME="${SPEC_DISPLAY_NAMES[$index]}"
     local _
     _="$( spec.run.specFunction "$specFunction" )"
     SPEC_CURRENT_EXITCODE=$?
@@ -118,6 +125,7 @@ ___spec___.run.specFile() {
       failedSpecFunctions+="$specFunction"
     fi
     spec.display.after:run.specFunction
+    (( index += 1 ))
   done
   [ "${#failedSpecFunctions[@]}" -eq 0 ]
 }
@@ -149,26 +157,37 @@ ___spec___.run.function() {
 
 spec.display.after:run.specFunction() { ___spec___.display.after:run.specFunction "$@"; }
 ___spec___.display.after:run.specFunction() {
-  local functionName="spec.display.formatters.$SPEC_FORMATTER.after:run.specFunction"
+  local functionName="spec.formatters.$SPEC_FORMATTER.display.after:run.specFunction"
   [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
 }
 
 spec.display.before:run.specFile() { ___spec___.display.before:run.specFile "$@"; }
 ___spec___.display.before:run.specFile() {
-  local functionName="spec.display.formatters.$SPEC_FORMATTER.before:run.specFile"
+  local functionName="spec.formatters.$SPEC_FORMATTER.display.before:run.specFile"
   [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
 }
 
 spec.set.defaultVariables() { ___spec___.set.defaultVariables "$@"; }
 ___spec___.set.defaultVariables() {
-  spec.set.themeVariables
-  [ -z "$SPEC_FORMATTER"         ] && SPEC_FORMATTER="documentation"
-  [ -z "$SPEC_FILE_SUFFIXES"     ] && SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
+  spec.set.defaultStyle
+  spec.set.defaultFormatter
+  spec.set.defaultTheme
+  spec.set.defaultSpecFileSuffixes
+  spec.set.defaultConfigFilenames
+}
+
+spec.set.defaultFormatter() { ___spec___.set.defaultFormatter "$@"; }
+___spec___.set.defaultFormatter() {
+  [ -z "$SPEC_FORMATTER" ] && SPEC_FORMATTER="documentation"
+}
+
+spec.set.defaultConfigFilenames() { ___spec___.set.defaultConfigFilenames "$@"; }
+___spec___.set.defaultConfigFilenames() {
   [ -z "$SPEC_CONFIG_FILENAMES"  ] && SPEC_CONFIG_FILENAMES="spec.config.sh"
 }
 
-spec.set.themeVariables() { ___spec___.set.themeVariables "$@"; }
-___spec___.set.themeVariables() {
+spec.set.defaultTheme() { ___spec___.set.defaultTheme "$@"; }
+___spec___.set.defaultTheme() {
   [ -z "$SPEC_COLOR"                     ] && SPEC_COLOR="true"
   [ -z "$SPEC_THEME_TEXT_COLOR"          ] && SPEC_THEME_TEXT_COLOR=39
   [ -z "$SPEC_THEME_PASS_COLOR"          ] && SPEC_THEME_PASS_COLOR=32
@@ -181,8 +200,24 @@ ___spec___.set.themeVariables() {
   [ -z "$SPEC_THEME_HEADER_COLOR"        ] && SPEC_THEME_HEADER_COLOR=39
   [ -z "$SPEC_THEME_STDOUT_COLOR"        ] && SPEC_THEME_STDOUT_COLOR=39
   [ -z "$SPEC_THEME_STDERR_COLOR"        ] && SPEC_THEME_STDERR_COLOR=39
-  [ -z "$SPEC_THEME_STDOUT_HEADER_COLOR" ] && SPEC_THEME_STDOUT_HEADER_COLOR=34;1
-  [ -z "$SPEC_THEME_STDERR_HEADER_COLOR" ] && SPEC_THEME_STDERR_HEADER_COLOR=31;1
+  [ -z "$SPEC_THEME_STDOUT_HEADER_COLOR" ] && SPEC_THEME_STDOUT_HEADER_COLOR="34;1"
+  [ -z "$SPEC_THEME_STDERR_HEADER_COLOR" ] && SPEC_THEME_STDERR_HEADER_COLOR="31;1"
+}
+
+spec.set.defaultStyle() { ___spec___.set.defaultStyle "$@"; }
+___spec___.set.defaultStyle() {
+  [ -z "$SPEC_STYLE" ] && SPEC_STYLE="xunit_and_spec"
+}
+
+spec.set.defaultSpecFileSuffixes() { ___spec___.set.defaultSpecFileSuffixes "$@"; }
+___spec___.set.defaultSpecFileSuffixes() {
+  [ -z "$SPEC_FILE_SUFFIXES" ] && SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
+}
+
+spec.load.specFunctions() { ___spec___.load.specFunctions "$@"; }
+___spec___.load.specFunctions() {
+  local functionName="spec.styles.$SPEC_STYLE.load.specFunctions"
+  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
 }
 
 spec.load.configFiles() { ___spec___.load.configFiles "$@"; }
@@ -244,10 +279,10 @@ ___spec___.load.specFiles() {
   done
 }
 
-spec.display.formatters.documentation.after:run.specFunction() {
-  ___spec___.display.formatters.documentation.after:run.specFunction "$@"
+spec.formatters.documentation.display.after:run.specFunction() {
+  ___spec___.formatters.documentation.display.after:run.specFunction "$@"
 }
-___spec___.display.formatters.documentation.after:run.specFunction() {
+___spec___.formatters.documentation.display.after:run.specFunction() {
   [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
   printf "["
   case "$SPEC_CURRENT_STATUS" in
@@ -271,21 +306,32 @@ ___spec___.display.formatters.documentation.after:run.specFunction() {
   [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
   printf "] "
   [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SPEC_COLOR}m" >&2
-  printf "$SPEC_CURRENT_FUNCTION\n"
-  
+  printf "$SPEC_CURRENT_DISPLAY_NAME\n"
   [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
 }
 
-spec.display.formatters.documentation.before:run.specFile() {
-  ___spec___.display.formatters.documentation.before:run.specFile "$@"
+spec.formatters.documentation.display.before:run.specFile() {
+  ___spec___.formatters.documentation.display.before:run.specFile "$@"
 }
-___spec___.display.formatters.documentation.before:run.specFile() {
-  [ -z "$SPEC_FORMATTER_DOCUMENTATION_FILE_COLOR" ] && local SPEC_FORMATTER_DOCUMENTATION_FILE_COLOR=34
+___spec___.formatters.documentation.display.before:run.specFile() {
+  [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
   printf "["
-  [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_FORMATTER_DOCUMENTATION_FILE_COLOR}m" >&2
+  [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_FILE_COLOR}m" >&2
   printf "$SPEC_CURRENT_FILENAME"
-  [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
+  [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
   printf "]\n"
+  [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
+}
+
+spec.styles.spec.load.specFunctions() { ___spec___.styles.spec.load.specFunctions "$@"; }
+___spec___.styles.spec.load.specFunctions() {
+  IFS=$'\n' read -d '' -ra specFunctions < <(declare -F | grep "^declare -f @spec\." | sed 's/^declare -f //' )
+  local specFunction
+  for specFunction in "${specFunctions[@]}"
+  do
+    SPEC_FUNCTIONS+=("$specFunction")
+    SPEC_DISPLAY_NAMES+=("$( echo "$specFunction" | sed 's/^@spec\.//' | sed 's/_/ /g' )")
+  done
 }
 
 
