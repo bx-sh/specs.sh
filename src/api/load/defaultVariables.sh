@@ -1,6 +1,4 @@
-spec.load.defaultVariables() {
-  ___spec___.load.defaultVariables "$@"
-}
+spec.load.defaultVariables() { ___spec___.load.defaultVariables "$@"; }
 
 ___spec___.load.defaultVariables() {
   [ -z "$SPEC_FILE_SUFFIXES" ] && SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"

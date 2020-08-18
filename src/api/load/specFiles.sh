@@ -6,9 +6,7 @@
 ##
 ## Default extensions defined in `SPEC_FILE_SUFFIXES`
 ##
-spec.load.specFiles() {
-  ___spec___.load.specFiles "$@"
-}
+spec.load.specFiles() { ___spec___.load.specFiles "$@"; }
 
 ___spec___.load.specFiles() {
   IFS=: read -ra specFileExtensions <<<"$SPEC_FILE_SUFFIXES"

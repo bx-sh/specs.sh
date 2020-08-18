@@ -17,103 +17,27 @@
 # specific language governing permissions and limitations
 # under the License.
 
-##
-# 🔬 Organization of the `spec.sh` file:
-#
-# (1) spec.load.configs - this searches for spec.config.sh
-#                         files and sources them, allowing
-#                         for complete customization of
-#                         any and all `spec.sh` functionality
-#
-# (2) spec.main - this is only executed when `spec.sh` is
-#                 called directly from the command-line
-#
-# (3) spec.run.specFile - this is executed safely in a subshell
-#                         once for every file that is passed to
-#                         `spec.sh` from the command-line
-#
-# (5) Spec Runner API - the functions that make up the rest
-#                       of this file are considered the
-#                       "Spec Runner API" and include all
-#                       of the necessary code for loading
-#                       spec files and executing them
-#
-# (5) bundled dependencies - when `spec-full.sh` is used all
-#                            of the integrated libraries are
-#                            included at the end of this file
-#
-# Note: you'll notice that every function has two versions:
-#
-# - spec.[fn]        This is the public API and these functions
-#                    are called for all `spec.sh` behavior
-#
-# - ___spec___.[fn]  This is the default implementation of the
-#                    given public API function. This allows for
-#                    literally any `spec.sh` function to be
-#                    overriden. To override a function, in your
-#                    spec.config.sh file specify a function
-#                    with the name `spec.[something]`. If you
-#                    want to invoke the default implementation in
-#                    your function, call `___spec___.[something]`.
-#
-#                    This is similar to calling 'super' or 'base'
-#                    in many popular programming languages.
-#
-# The only function that cannot be overriden is: spec.load.configs
-#
-# Conventionally, there are 3 types of functions:
-#
-# - spec.load.[fn]    These should load data into SPEC_* arrays
-#                     for usage by other functions and should not
-#                     run or source anything on their own
-#                     
-# - spec.run.[fn]     These should not load anything but instead
-#                     should read existing variables or arguments
-#                     and execute files or functions
-#
-# - spec.display.[fn] These should only output to STDERR/STDOUT
-#                     and should not themselves load or run anything
-#
-# The only exception to this is spec.main which represents the
-# main entrypoint for running `spec.sh`
-##
-
 SPEC_VERSION=0.5.0
 
 spec.main() {
   ___spec___.main "$@"
 }
-
 ___spec___.main() {
   spec.load.defaultVariables
-
-  # spec.load.configs
-
-  # --runFile invokes spec.runFile (use this script to run file)
   if [ "$1" = "--runFile" ]
   then
     shift
     spec.runFile "$@"
     return $?
   fi
-
-  # --version
   if [ $# -eq 1 ] && [ "$1" = "--version" ]
   then
     printf "spec.sh version " >&2
     printf "$SPEC_VERSION"
     return 0
   fi
-
-  # 'spec' or 'spec.sh' or whatever file is named
   local runningAsFilename="${0/*\/}"
-
   declare -a SPEC_PATH_ARGUMENTS=()
-
-  # Process Command Line Arguments
-  #
-  # TODO move this to a .load. function
-  #
   while [ $# -gt 0 ]
   do
     case "$1" in
@@ -129,75 +53,38 @@ ___spec___.main() {
         ;;
     esac
   done
-
   declare -a SPEC_FILE_LIST=()
   
-  # spec.load.specFiles is responsible for populating SPEC_FILE_LIST
   spec.load.specFiles
-
   declare SPEC_PASSED_FILES=()
   declare SPEC_FAILED_FILES=()
-
-  # spec.run.specFiles is responsible for populating SPEC_PASSED_FILES/SPEC_FAILED_FILES
-  #                                       and a whole lot more! kicks off spec.run.specFile
   spec.run.specFiles
-
-  # spec.get.specSuiteStatus is responsible for returning 0 or a non-zero value to
-  #                                             represent the whole suite's result status
   spec.get.specSuiteStatus
 }
 
-spec.get.specSuiteStatus() {
-  ___spec___.get.specSuiteStatus "$@"
-}
-
+spec.get.specSuiteStatus() { ___spec___.get.specSuiteStatus "$@"; }
 ___spec___.get.specSuiteStatus() {
   [ "${#SPEC_FAILED_FILES[@]}" -eq 0 ]
 }
-## @function spec.run.specFunction
-##
-## ...
-##
-spec.run.specFunction() {
-  ___spec___.run.specFunction "$@"
-}
 
+spec.run.specFunction() { ___spec___.run.specFunction "$@"; }
 ___spec___.run.specFunction() {
   spec.run.function "$@"
 }
 
-## @function spec.run.specFile
-##
-## spec.runFile is run in a subshell by `spec.sh`
-##
-## It accepts one command-line argument: path to the file
-##
-spec.run.specFile() {
-  ___spec___.run.specFile "$@"
-}
-
+spec.run.specFile() { ___spec___.run.specFile "$@"; }
 ___spec___.run.specFile() {
-  echo "Hmmm"
-
-  # if args > 1 error ---- unit test this
   local specFile="$1"
-
   set -e
   source "$specFile"
   set +e
-
-  # move to spec.load.specFunctions
-  # get the @spec functions
   IFS=$'\n' read -d '' -ra specFunctions < <(declare -F | grep "^declare -f @spec\." | sed 's/^declare -f //' )
-
   declare -a passedSpecFunctions=()
   declare -a failedSpecFunctions=()
-
   local specFunction
   for specFunction in "${specFunctions[@]}"
   do
     SPEC_CURRENT_FUNCTION="$specFunction"
-    #spec.display.before:run.specFunction
     local _
     _="$( spec.run.specFunction "$specFunction" )"
     SPEC_CURRENT_EXITCODE=$?
@@ -209,17 +96,12 @@ ___spec___.run.specFile() {
       SPEC_CURRENT_STATUS=FAIL
       failedSpecFunctions+="$specFunction"
     fi
-    echo "Hi?"
     spec.display.after:run.specFunction
   done
-
   [ "${#failedSpecFunctions[@]}" -eq 0 ]
 }
 
-spec.run.specFiles() {
-  ___spec___.run.specFiles "$@"
-}
-
+spec.run.specFiles() { ___spec___.run.specFiles "$@"; }
 ___spec___.run.specFiles() {
   local specFile
   for specFile in "${SPEC_FILE_LIST[@]}"
@@ -235,62 +117,36 @@ ___spec___.run.specFiles() {
     else
       SPEC_FAILED_FILES+=("$specFile")
     fi
-    # spec.display.after:run.specFile
   done
 }
-## @function spec.run.function
-##
-## ...
-##
 
-spec.run.function() {
-  ___spec___.run.function "$@"
-}
-
+spec.run.function() { ___spec___.run.function "$@"; }
 ___spec___.run.function() {
   local functionName="$1"
   shift
   "$functionName" "$@"
 }
 
-spec.display.after:run.specFunction() {
-  ___spec___.display.after:run.specFunction
-}
-
+spec.display.after:run.specFunction() { ___spec___.display.after:run.specFunction "$@"; }
 ___spec___.display.after:run.specFunction() {
   local functionName="spec.display.formatters.$SPEC_FORMATTER.after:run.specFunction"
   [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
 }
-spec.display.before:run.specFile() {
-  ___spec___.display.before:run.specFile "$@"
-}
 
+spec.display.before:run.specFile() { ___spec___.display.before:run.specFile "$@"; }
 ___spec___.display.before:run.specFile() {
   local functionName="spec.display.formatters.$SPEC_FORMATTER.before:run.specFile"
   [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
 }
-spec.load.defaultVariables() {
-  ___spec___.load.defaultVariables "$@"
-}
 
+spec.load.defaultVariables() { ___spec___.load.defaultVariables "$@"; }
 ___spec___.load.defaultVariables() {
   [ -z "$SPEC_FILE_SUFFIXES" ] && SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
   [ -z "$SPEC_FORMATTER"     ] && SPEC_FORMATTER="documentation"
   [ -z "$SPEC_COLOR"         ] && SPEC_COLOR=true
 }
 
-## @function spec.load.specFiles
-##
-## Input: `SPEC_PATH_ARGUMENTS`
-##
-## Responsible for populating `SPEC_FILE_LIST`
-##
-## Default extensions defined in `SPEC_FILE_SUFFIXES`
-##
-spec.load.specFiles() {
-  ___spec___.load.specFiles "$@"
-}
-
+spec.load.specFiles() { ___spec___.load.specFiles "$@"; }
 ___spec___.load.specFiles() {
   IFS=: read -ra specFileExtensions <<<"$SPEC_FILE_SUFFIXES"
   local pathArgument
@@ -298,9 +154,6 @@ ___spec___.load.specFiles() {
   do
     if [ -f "$pathArgument" ]
     then
-      ## Default behavior:
-      ##
-      ## - Allow explicit files regardless of file extension
       SPEC_FILE_LIST+=("$pathArgument")
     elif [ -d "$pathArgument" ]
     then
@@ -323,20 +176,13 @@ ___spec___.load.specFiles() {
 spec.display.formatters.documentation.after:run.specFunction() {
   ___spec___.display.formatters.documentation.after:run.specFunction "$@"
 }
-
 ___spec___.display.formatters.documentation.after:run.specFunction() {
   :
 }
+
 spec.display.formatters.documentation.before:run.specFile() {
   ___spec___.display.formatters.documentation.before:run.specFile "$@"
 }
-
-## @function spec.display.formatters.documentation.before:run.specFile
-##
-## something about SPEC_FORMATTER_DOCUMENTATION_FILE_COLOR
-##
-## # this is a header
-
 ___spec___.display.formatters.documentation.before:run.specFile() {
   [ -z "$SPEC_FORMATTER_DOCUMENTATION_FILE_COLOR" ] && local SPEC_FORMATTER_DOCUMENTATION_FILE_COLOR=34
   printf "["
@@ -345,6 +191,7 @@ ___spec___.display.formatters.documentation.before:run.specFile() {
   [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
   printf "]\n"
 }
+
 
 assert() {
   local command="$1"
@@ -357,6 +204,7 @@ assert() {
   fi
   return 0
 }
+
 refute() {
   local command="$1"
   shift
@@ -368,6 +216,7 @@ refute() {
   fi
   return 0
 }
+
 run() {
   local VERSION="0.3.0"
   [[ "$1" = "--version" ]] && { echo "run version $VERSION"; return 0; }
@@ -395,6 +244,7 @@ run() {
   rm -f "$stderrFile"
   return $EXIT_CODE
 }
+
 expect() {
   [ $# -eq 0 ] && { echo "Missing required argument for 'expect': actual value or { code block } or {{ subshell code block }}" >&2; return 1; }
   EXPECT_VERSION=0.3.0
@@ -410,7 +260,6 @@ expect() {
     shift
     while [ $# -gt 0 ]
     do
-      # Not entirely sure why [[ "$1" =~ $EXPECT_BLOCK_END_PATTERN ]] doesn't work outside of 'eval' 🤷🏼‍♀️
       eval "[[ \"$1\" =~ $EXPECT_BLOCK_END_PATTERN ]] && break" 
       EXPECT_BLOCK+=("$1")
       shift
@@ -444,23 +293,16 @@ expect.fail() {
 }
 
 expect.matcher.toOutput() {
-
   [ "${#EXPECT_BLOCK[@]}" -lt 1 ] && { echo "toOutput requires a block" >&2; exit 1; }
-
   local ___expect___Check_STDOUT=""
   local ___expect___Check_STDERR=""
-
   [ "$1" = "toStdout" ] || [ "$1" = "toSTDOUT" ] && { ___expect___Check_STDOUT=true; shift; }
   [ "$1" = "toStderr" ] || [ "$1" = "toSTDERR" ] && { ___expect___Check_STDERR=true; shift; }
-
   [ $# -lt 1 ] && { echo "toOutput expects 1 or more arguments, received $#" >&2; exit 1; }
-
   local ___expect___RunInSubshell=""
   [ "$EXPECT_BLOCK_TYPE" = "{{" ] && ___expect___RunInSubshell=true
-
   local ___expect___STDOUT_file="$( mktemp )"
   local ___expect___STDERR_file="$( mktemp )"
-
   local ___expect___RunInSubshell_
   local ___expect___ExitCode
   if [ "$___expect___RunInSubshell" = "true" ]
@@ -471,29 +313,20 @@ expect.matcher.toOutput() {
     "${EXPECT_BLOCK[@]}" 1>"$___expect___STDOUT_file" 2>"$___expect___STDERR_file"
     ___expect___ExitCode=$?
   fi
-
   local ___expect___STDOUT="$( cat "$___expect___STDOUT_file" )"
   local ___expect___STDERR="$( cat "$___expect___STDERR_file" )"
   ___expect___STDOUT="${___expect___STDOUT/%"\n"}"
   ___expect___STDERR="${___expect___STDERR/%"\n"}"
   local ___expect___OUTPUT="${___expect___STDOUT}\n${___expect___STDERR}"
-
   rm -rf "$___expect___STDOUT_file"
   rm -rf "$___expect___STDERR_file"
-
-  ##
-  # ------------------------------------------------------------
-  ##
-
   local ___expect___STDOUT_actual="$( echo -e "$___expect___STDOUT" | cat -vet )"
   local ___expect___STDERR_actual="$( echo -e "$___expect___STDERR" | cat -vet )"
   local ___expect___OUTPUT_actual="$( echo -e "$___expect___OUTPUT" | cat -vet )"
-
   local ___expect___expected
   for ___expect___expected in "$@"
   do
     local ___expect___ExpectedResult="$( echo -e "$___expect___expected" | cat -vet )"
-    # STDOUT
     if [ -n "$___expect___Check_STDOUT" ]
     then
       if [ -z "$EXPECT_NOT" ]
@@ -508,7 +341,6 @@ expect.matcher.toOutput() {
           expect.fail "Expected STDOUT not to contain text\nSTDOUT: '$___expect___STDOUT_actual'\nUnexpected text: '$___expect___ExpectedResult'"
         fi
       fi
-    # STDERR:
     elif [ -n "$___expect___Check_STDERR" ]
     then
       if [ -z "$EXPECT_NOT" ]
@@ -523,7 +355,6 @@ expect.matcher.toOutput() {
           expect.fail "Expected STDERR not to contain text\nSTDERR: '$___expect___STDERR_actual'\nUnexpected text: '$___expect___ExpectedResult'"
         fi
       fi
-    # OUTPUT
     else
       if [ -z "$EXPECT_NOT" ]
       then
@@ -539,20 +370,17 @@ expect.matcher.toOutput() {
       fi
     fi
   done
-
   return 0
 }
+
 expect.matcher.toMatch() {
   [ "${#EXPECT_BLOCK[@]}" -eq 0 ] && [ $# -eq 0 ] && { echo "toMatch expects at least 1 argument (BASH regex patterns), received $# [$*]" >&2; exit 1; }
-
   if [ "${#EXPECT_BLOCK[@]}" -gt 0 ]
   then
     local ___expect___RunInSubshell=""
     [ "$EXPECT_BLOCK_TYPE" = "{{" ] && ___expect___RunInSubshell=true
-
     local ___expect___STDOUT_file="$( mktemp )"
     local ___expect___STDERR_file="$( mktemp )"
-
     local ___expect___RunInSubshell_
     local ___expect___ExitCode
     if [ "$___expect___RunInSubshell" = "true" ]
@@ -563,19 +391,12 @@ expect.matcher.toMatch() {
       "${EXPECT_BLOCK[@]}" 1>"$___expect___STDOUT_file" 2>"$___expect___STDERR_file"
       ___expect___ExitCode=$?
     fi
-
     local ___expect___STDOUT="$( cat "$___expect___STDOUT_file" )"
     local ___expect___STDERR="$( cat "$___expect___STDERR_file" )"
     local ___expect___OUTPUT="${___expect___STDOUT}\n${___expect___STDERR}"
-
     rm -rf "$___expect___STDOUT_file"
     rm -rf "$___expect___STDERR_file"
   fi
-
-  ##
-  # ------------------------------------------------------------
-  ##
-
   local actualResult
   
   if [ "${#EXPECT_BLOCK[@]}" -gt 0 ]
@@ -584,9 +405,7 @@ expect.matcher.toMatch() {
   else
     actualResult="$EXPECT_ACTUAL_RESULT"
   fi
-
   local actualResultOutput="$( echo -ne "$actualResult" | cat -vet )"
-
   local pattern
   for pattern in "$@"
   do
@@ -603,20 +422,17 @@ expect.matcher.toMatch() {
       fi
     fi
   done
-
   return 0
 }
+
 expect.matcher.toEqual() {
   [ "${#EXPECT_BLOCK[@]}" -eq 0 ] && [ $# -ne 1 ] && { echo "toEqual expects 1 argument (expected result), received $# [$*]" >&2; exit 1; }
-
   if [ "${#EXPECT_BLOCK[@]}" -gt 0 ]
   then
     local ___expect___RunInSubshell=""
     [ "$EXPECT_BLOCK_TYPE" = "{{" ] && ___expect___RunInSubshell=true
-
     local ___expect___STDOUT_file="$( mktemp )"
     local ___expect___STDERR_file="$( mktemp )"
-
     local ___expect___RunInSubshell_
     local ___expect___ExitCode
     if [ "$___expect___RunInSubshell" = "true" ]
@@ -627,19 +443,12 @@ expect.matcher.toEqual() {
       "${EXPECT_BLOCK[@]}" 1>"$___expect___STDOUT_file" 2>"$___expect___STDERR_file"
       ___expect___ExitCode=$?
     fi
-
     local ___expect___STDOUT="$( cat "$___expect___STDOUT_file" )"
     local ___expect___STDERR="$( cat "$___expect___STDERR_file" )"
     local ___expect___OUTPUT="${___expect___STDOUT}\n${___expect___STDERR}"
-
     rm -rf "$___expect___STDOUT_file"
     rm -rf "$___expect___STDERR_file"
   fi
-
-  ##
-  # ------------------------------------------------------------
-  ##
-
   local actualResult
   
   if [ "${#EXPECT_BLOCK[@]}" -gt 0 ]
@@ -648,10 +457,8 @@ expect.matcher.toEqual() {
   else
     actualResult="$EXPECT_ACTUAL_RESULT"
   fi
-
   local actualResultOutput="$( echo -ne "$actualResult" | cat -vet )"
   local expectedResultOutput="$( echo -ne "$1" | cat -vet )"
-
   if [ -z "$EXPECT_NOT" ]
   then
     if [ "$actualResultOutput" != "$expectedResultOutput" ]
@@ -664,20 +471,17 @@ expect.matcher.toEqual() {
       expect.fail "Expected result not to equal\nActual: '$actualResultOutput'\nExpected: '$expectedResultOutput'"
     fi
   fi
-
   return 0
 }
+
 expect.matcher.toBeEmpty() {
   [ $# -gt 0 ] && { echo "toBeEmpty expects 0 arguments, received $# [$*]" >&2; exit 1; }
-
   if [ "${#EXPECT_BLOCK[@]}" -gt 0 ]
   then
     local ___expect___RunInSubshell=""
     [ "$EXPECT_BLOCK_TYPE" = "{{" ] && ___expect___RunInSubshell=true
-
     local ___expect___STDOUT_file="$( mktemp )"
     local ___expect___STDERR_file="$( mktemp )"
-
     local ___expect___RunInSubshell_
     local ___expect___ExitCode
     if [ "$___expect___RunInSubshell" = "true" ]
@@ -688,19 +492,12 @@ expect.matcher.toBeEmpty() {
       "${EXPECT_BLOCK[@]}" 1>"$___expect___STDOUT_file" 2>"$___expect___STDERR_file"
       ___expect___ExitCode=$?
     fi
-
     local ___expect___STDOUT="$( cat "$___expect___STDOUT_file" )"
     local ___expect___STDERR="$( cat "$___expect___STDERR_file" )"
     local ___expect___OUTPUT="${___expect___STDOUT}\n${___expect___STDERR}"
-
     rm -rf "$___expect___STDOUT_file"
     rm -rf "$___expect___STDERR_file"
   fi
-
-  ##
-  # ------------------------------------------------------------
-  ##
-
   local actualResult
   
   if [ "${#EXPECT_BLOCK[@]}" -gt 0 ]
@@ -709,9 +506,7 @@ expect.matcher.toBeEmpty() {
   else
     actualResult="$EXPECT_ACTUAL_RESULT"
   fi
-
   local actualResultOutput="$( echo -ne "$actualResult" | cat -vet )"
-
   if [ -z "$EXPECT_NOT" ]
   then
     if [ -n "$actualResult" ]
@@ -724,20 +519,17 @@ expect.matcher.toBeEmpty() {
       expect.fail "Expected result not to be empty\nActual: '$actualResultOutput'"
     fi
   fi
-
   return 0
 }
+
 expect.matcher.toContain() {
   [ "${#EXPECT_BLOCK[@]}" -eq 0 ] && [ $# -eq 0 ] && { echo "toContain expects 1 or more arguments, received $# [$*]" >&2; exit 1; }
-
   if [ "${#EXPECT_BLOCK[@]}" -gt 0 ]
   then
     local ___expect___RunInSubshell=""
     [ "$EXPECT_BLOCK_TYPE" = "{{" ] && ___expect___RunInSubshell=true
-
     local ___expect___STDOUT_file="$( mktemp )"
     local ___expect___STDERR_file="$( mktemp )"
-
     local ___expect___RunInSubshell_
     local ___expect___ExitCode
     if [ "$___expect___RunInSubshell" = "true" ]
@@ -748,19 +540,12 @@ expect.matcher.toContain() {
       "${EXPECT_BLOCK[@]}" 1>"$___expect___STDOUT_file" 2>"$___expect___STDERR_file"
       ___expect___ExitCode=$?
     fi
-
     local ___expect___STDOUT="$( cat "$___expect___STDOUT_file" )"
     local ___expect___STDERR="$( cat "$___expect___STDERR_file" )"
     local ___expect___OUTPUT="${___expect___STDOUT}\n${___expect___STDERR}"
-
     rm -rf "$___expect___STDOUT_file"
     rm -rf "$___expect___STDERR_file"
   fi
-
-  ##
-  # ------------------------------------------------------------
-  ##
-
   local actualResult
   
   if [ "${#EXPECT_BLOCK[@]}" -gt 0 ]
@@ -769,14 +554,11 @@ expect.matcher.toContain() {
   else
     actualResult="$EXPECT_ACTUAL_RESULT"
   fi
-
   local actualResultOutput="$( echo -ne "$actualResult" | cat -vet )"
-
   local expected
   for expected in "$@"
   do
     local expectedResultOutput="$( echo -ne "$expected" | cat -vet )"
-
     if [ -z "$EXPECT_NOT" ]
     then
       if [[ "$actualResult" != *"$expected"* ]]
@@ -790,18 +572,15 @@ expect.matcher.toContain() {
       fi
     fi
   done
-
   return 0
 }
+
 expect.matcher.toFail() {
   [ "${#EXPECT_BLOCK[@]}" -lt 1 ] && { echo "toFail requires a block" >&2; exit 1; }
-
   local ___expect___RunInSubshell=""
   [ "$EXPECT_BLOCK_TYPE" = "{{" ] && ___expect___RunInSubshell=true
-
   local ___expect___STDOUT_file="$( mktemp )"
   local ___expect___STDERR_file="$( mktemp )"
-
   local ___expect___RunInSubshell_
   local ___expect___ExitCode
   if [ "$___expect___RunInSubshell" = "true" ]
@@ -812,7 +591,6 @@ expect.matcher.toFail() {
     "${EXPECT_BLOCK[@]}" 1>"$___expect___STDOUT_file" 2>"$___expect___STDERR_file"
     ___expect___ExitCode=$?
   fi
-
   local ___expect___STDOUT="$( cat "$___expect___STDOUT_file" )"
   local ___expect___STDERR="$( cat "$___expect___STDERR_file" )"
   ___expect___STDOUT="${___expect___STDOUT/%"\n"}"
@@ -821,10 +599,8 @@ expect.matcher.toFail() {
   local ___expect___STDOUT_actual="$( echo -e "$___expect___STDOUT" | cat -vet )"
   local ___expect___STDERR_actual="$( echo -e "$___expect___STDERR" | cat -vet )"
   local ___expect___OUTPUT_actual="$( echo -e "$___expect___OUTPUT" | cat -vet )"
-
   rm -rf "$___expect___STDOUT_file"
   rm -rf "$___expect___STDERR_file"
-
   if [ -z "$EXPECT_NOT" ]
   then
     if [ $___expect___ExitCode -eq 0 ]
@@ -837,7 +613,6 @@ expect.matcher.toFail() {
       expect.fail "Expected to pass, but failed\nCommand: ${EXPECT_BLOCK[@]}\nSTDOUT: $___expect___STDOUT\nSTDERR: $___expect___STDERR"
     fi
   fi
-
   local ___expect___expected
   for ___expect___expected in "$@"
   do
@@ -855,13 +630,9 @@ expect.matcher.toFail() {
       fi
     fi
   done
-
   return 0
 }
 
 
-##
-# Run spec.sh as executable if called directly:
-##
 
 [ "$0" = "${BASH_SOURCE[0]}" ] && spec.main "$@"

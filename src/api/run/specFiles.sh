@@ -1,6 +1,4 @@
-spec.run.specFiles() {
-  ___spec___.run.specFiles "$@"
-}
+spec.run.specFiles() { ___spec___.run.specFiles "$@"; }
 
 ___spec___.run.specFiles() {
   local specFile

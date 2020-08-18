@@ -6,6 +6,9 @@ description "🔬 Test specifications"
 
 exclude examples/ private/ spec/ v3_spec/
 
+script build ./script/generate-all.sh
+script spec ./script/spec
+
 devDependency assert
 devDependency expect
 devDependency run-command

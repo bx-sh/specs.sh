@@ -4,12 +4,9 @@
 ##
 ## It accepts one command-line argument: path to the file
 ##
-spec.run.specFile() {
-  ___spec___.run.specFile "$@"
-}
+spec.run.specFile() { ___spec___.run.specFile "$@"; }
 
 ___spec___.run.specFile() {
-  echo "Hmmm"
 
   # if args > 1 error ---- unit test this
   local specFile="$1"
@@ -41,7 +38,6 @@ ___spec___.run.specFile() {
       SPEC_CURRENT_STATUS=FAIL
       failedSpecFunctions+="$specFunction"
     fi
-    echo "Hi?"
     spec.display.after:run.specFunction
   done
 
