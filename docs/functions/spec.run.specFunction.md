@@ -1,6 +1,0 @@
-### `spec.run.specFunction`
-
-...
-
-
-
