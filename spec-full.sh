@@ -331,6 +331,12 @@ spec.display.formatters.documentation.before:run.specFile() {
   ___spec___.display.formatters.documentation.before:run.specFile "$@"
 }
 
+## @function spec.display.formatters.documentation.before:run.specFile
+##
+## something about SPEC_FORMATTER_DOCUMENTATION_FILE_COLOR
+##
+## # this is a header
+
 ___spec___.display.formatters.documentation.before:run.specFile() {
   [ -z "$SPEC_FORMATTER_DOCUMENTATION_FILE_COLOR" ] && local SPEC_FORMATTER_DOCUMENTATION_FILE_COLOR=34
   printf "["
