@@ -80,6 +80,15 @@
 
 SPEC_VERSION=0.5.0
 
+## ### `spec.load.defaultVariables`
+##
+## - ...
+##
+spec.load.defaultVariables() { ___spec___.load.defaultVariables "$@"; }
+___spec___.load.defaultVariables() {
+  SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
+}
+
 # spec.load.configs() {
 #
 # }
@@ -90,6 +99,10 @@ SPEC_VERSION=0.5.0
 
 spec.main() { ___spec___.main "$@"; }
 ___spec___.main() {
+  spec.load.defaultVariables
+
+  # spec.load.configs
+
   # --runFile invokes spec.runFile (use this script to run file)
   if [ "$1" = "--runFile" ]
   then
@@ -109,17 +122,19 @@ ___spec___.main() {
   # 'spec' or 'spec.sh' or whatever file is named
   local runningAsFilename="${0/*\/}"
 
-  declare -a specPathsToLoad=()
-  # declare -a specPathsToIgnore=()
-  # declare -a configFilesToLoad=()
+  declare -a SPEC_PATH_ARGUMENTS=()
 
+  # Process Command Line Arguments
+  #
+  # TODO move this to a .load. function
+  #
   while [ $# -gt 0 ]
   do
     case "$1" in
       *)
-        if [ -f "$1" ]
+        if [ -f "$1" ] || [ -d "$1" ]
         then
-          specPathsToLoad+=("$1")
+          SPEC_PATH_ARGUMENTS+=("$1")
           shift
         else
           echo "$runningAsFilename received unknown argument: $1. Expected file or directory or flag, e.g. --version." >&2
@@ -129,22 +144,24 @@ ___spec___.main() {
     esac
   done
 
-  declare -a specFilesToRun=()
+  declare -a SPEC_FILE_LIST=()
 
-  local specPathToLoad
-  for specPathToLoad in "${specPathsToLoad[@]}"
-  do
-    if [ -f "$specPathToLoad" ]
-    then
-      specFilesToRun+="$specPathToLoad"
-    fi
-  done
+  spec.load.specFiles
+
+  # local specPathToLoad
+  # for specPathToLoad in "${SPEC_PATH_ARGUMENTS[@]}"
+  # do
+  #   if [ -f "$specPathToLoad" ]
+  #   then
+  #     SPEC_FILE_LIST+="$specPathToLoad"
+  #   fi
+  # done
 
   declare passedSpecFiles=()
   declare failedSpecFiles=()
 
   local specFile
-  for specFile in "${specFilesToRun[@]}"
+  for specFile in "${SPEC_FILE_LIST[@]}"
   do
     local _
     _="$( spec.run.specFile "$specFile" )"
@@ -159,7 +176,45 @@ ___spec___.main() {
   [ "${#failedSpecFiles[@]}" -eq 0 ]
 }
 
-## @function spec.runFile
+## @function spec.load.specFiles
+##
+## Input: `SPEC_PATH_ARGUMENTS`
+##
+## Responsible for populating `SPEC_FILE_LIST`
+##
+## Default extensions defined in `SPEC_FILE_SUFFIXES`
+##
+spec.load.specFiles() { ___spec___.load.specFiles "$@"; }
+___spec___.load.specFiles() {
+  IFS=: read -ra specFileExtensions <<<"$SPEC_FILE_SUFFIXES"
+  local pathArgument
+  for pathArgument in "${SPEC_PATH_ARGUMENTS[@]}"
+  do
+    if [ -f "$pathArgument" ]
+    then
+      ## Default behavior:
+      ##
+      ## - Allow explicit files regardless of file extension
+      SPEC_FILE_LIST+=("$pathArgument")
+    elif [ -d "$pathArgument" ]
+    then
+      local suffix
+      for suffix in "${specFileExtensions[@]}"
+      do
+        local specFile
+        while read -d '' -r specFile
+        do
+          [ -f "$specFile" ] && SPEC_FILE_LIST+=("$specFile")
+        done < <( find "$pathArgument" -type f -iname "*$suffix" -print0 )
+      done
+    else
+      echo "Unexpected argument for spec.load.specFiles: $pathArgument. Expected: file or directory." >&2
+      return 1
+    fi
+  done
+}
+
+## @function spec.run.specFile
 ##
 ## spec.runFile is run in a subshell by `spec.sh`
 ##
