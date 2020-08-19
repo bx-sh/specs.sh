@@ -1,11 +1,16 @@
 #! /usr/bin/env installer
 
-downloadUrl="https://github.com/bx-sh/spec.sh/archive/latest.tar.gz"
-
 install() {
   echo "🔬 [spec.sh]"
   echo
-  printf "Downloading latest version... "
+  printf "Checking for latest version... "
+  local latestReleaseInfoUrl="https://api.github.com/repos/bx-sh/spec.sh/releases/latest"
+  local downloadUrl="$( curl -s "$latestReleaseInfoUrl" | grep tarball | awk '{print $2}' | sed 's/[",]//g' )"
+  [ $? -ne 0 ] && { echo -e "\nFailed to get latest release version of spec.sh ($latestReleaseInfoUrl)"; return 1; }
+  local latestVersion="${downloadUrl/*\/}"
+  echo "$latestVersion"
+  echo
+  printf "Downloading... "
   local workingDirectory="$( pwd )"
   local tempDirectory="$( mktemp -d )"
   cd "$tempDirectory"
