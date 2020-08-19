@@ -15,5 +15,6 @@ ___spec___.set.defaultVariables() {
   spec.set.defaultFormatter
   spec.set.defaultTheme
   spec.set.defaultSpecFileSuffixes
+  spec.set.defaultSpecFunctionPrefixes
   spec.set.defaultConfigFilenames
 }

@@ -19,7 +19,7 @@ do
   then
     variableName="${line#@user @variable }"
     CURRENT_OUTPUT_FILE="docs/user/variables/$variableName.md"
-    line="### \`\$$variableName\`"
+    line="## \`\$$variableName\`"
   fi
 
   # @variable
@@ -49,6 +49,21 @@ echo "## 🎨 User Configuration
 Environment variables for configuring the behavior of \`spec.sh\`
 
 These can be exported in your shell or configured in \`spec.config.sh\`
+
+ - Export variables
+   \`\`\`sh
+   export SPEC_FORMATTER=tap
+
+   ./spec.sh file.spec.sh dir/
+   \`\`\`
+ - Set variables in \`spec.config.sh\`
+   \`\`\`sh
+   # spec.config.sh
+
+   SPEC_FORMATTER=tap
+   \`\`\`
+
+> Note: \`spec.config.sh\` runs _after_ default variables are configured.
 
 " >> API_REFERENCE.md
 

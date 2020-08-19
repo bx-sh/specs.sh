@@ -1,6 +1,6 @@
-spec.styles.spec.load.specFunctions() { ___spec___.styles.spec.load.specFunctions "$@"; }
+spec.styles.xunit_and_spec.load.specFunctions() { ___spec___.styles.xunit_and_spec.load.specFunctions "$@"; }
 
-___spec___.styles.spec.load.specFunctions() {
+___spec___.styles.xunit_and_spec.load.specFunctions() {
   local specFunctionPrefixes
   IFS=$'\n' read -d '' -ra specFunctionPrefixes < <(printf "$SPEC_FUNCTION_PREFIXES")
 
@@ -15,6 +15,8 @@ ___spec___.styles.spec.load.specFunctions() {
       SPEC_FUNCTIONS+=("$specFunction")
       local displayName="${specFunction#"$functionPrefix"}"
       displayName="${displayName//_/ }"
+      displayName="$( printf "$displayName" | sed 's/\([A-Z]\)/ \1/g' )"
+      displayName="${displayName##[[:space:]]}"
       SPEC_DISPLAY_NAMES+=("$displayName")
     done
   done

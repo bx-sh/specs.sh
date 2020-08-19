@@ -6,7 +6,7 @@
   expect "$STDOUT" toContain "failing foo"
   # expect "$STDOUT" toContain "pending foo"
 
-  expect "$STDOUT" toContain "bar" "Bar"
+  expect "$STDOUT" toContain "Bar"
   expect "$STDOUT" toContain "[OK] Passing Bar"
   expect "$STDOUT" toContain "[FAIL] Failing Bar"
   # expect "$STDOUT" not toContain "Pending Bar"

@@ -4,17 +4,36 @@ Environment variables for configuring the behavior of `spec.sh`
 
 These can be exported in your shell or configured in `spec.config.sh`
 
+ - Export variables
+   ```sh
+   export SPEC_FORMATTER=tap
 
-### `$SPEC_FORMATTER`
+   ./spec.sh file.spec.sh dir/
+   ```
+ - Set variables in `spec.config.sh`
+   ```sh
+   # spec.config.sh
+
+   SPEC_FORMATTER=tap
+   ```
+
+> Note: `spec.config.sh` runs _after_ default variables are configured.
+
+
+## `$SPEC_FORMATTER`
 
 - Sets the formatter to use, e.g.
-  - `documentation` - default formatter, supports color, prints `[OK]` and `[FAIL]` messages for each spec
+  - `documentation` - default formatter
+    - supports color
+    - prints `[OK]` and `[FAIL]` messages for each spec
   - `tap` - [TAP-compliant](https://testanything.org/) output
-  - `xml` - JUnit-style XML output (_used by many continuous integration platforms_
+    - See [testanything.org](https://testanything.org/) for more information
+  - `xml` - JUnit-style XML output
+    - (_XML format used by many continuous integration platforms_
 - The default syntax style is: `xunit_and_spec` which supports BOTH `xunit` and `spec` syntax
 
 
-### `$SPEC_STYLE`
+## `$SPEC_STYLE`
 
 - Sets the syntax style to use, e.g.
   - `xunit` (_`testFoo()`_)
@@ -53,6 +72,15 @@ For example:
 
 - Default: `31;1` (bold red)
 - Should be used by formatters when printing color of header for STDERR text
+
+
+### `$SPEC_FUNCTION_PREFIXES`
+
+- The list of prefixes to use when determing which functions "represent" spec/tests.
+- Both the `xunit` and `spec` formatters use this to store which function prefixes should be noted as tests
+  - e.g. `xunit` looks for functions starting with `test`
+  - e.g. `spec` looks for functions starting with `@spec.` or `@example.` or `@it.`
+- This is a `\n` separated value (_because function names can include the `:` character_)
 
 
 ### `$SPEC_THEME_PASS_COLOR`
@@ -202,6 +230,11 @@ For example:
 
 ...
 
+
+#### `spec.set.defaultSpecFunctionPrefixes()`
+
+- Sets default `SPEC_FUNCTION_PREFIXES`
+- Delegates to currently set `SPEC_STYLE` to get the default values
 
 #### `spec.set.defaultTheme()`
 

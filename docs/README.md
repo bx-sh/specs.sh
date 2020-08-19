@@ -39,3 +39,15 @@ testFileExists() {
   expect { ls "$directory" } toContain "file"
 }
 ```
+
+## Installation
+
+...
+
+## Getting Started
+
+...
+
+## Integrated Libraries: `assert`, `expect`, `run`
+
+...

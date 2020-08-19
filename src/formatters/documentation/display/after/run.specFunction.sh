@@ -13,7 +13,7 @@ ___spec___.formatters.documentation.display.after:run.specFunction() {
   case "$SPEC_CURRENT_STATUS" in
     PASS)
       [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_PASS_COLOR}m" >&2
-      printf "$SPEC_CURRENT_STATUS"
+      printf "OK"
       ;;
     FAIL)
       [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_FAIL_COLOR}m" >&2

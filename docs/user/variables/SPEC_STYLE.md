@@ -1,4 +1,4 @@
-### `$SPEC_STYLE`
+## `$SPEC_STYLE`
 
 - Sets the syntax style to use, e.g.
   - `xunit` (_`testFoo()`_)

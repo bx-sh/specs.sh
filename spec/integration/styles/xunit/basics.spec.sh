@@ -1,4 +1,4 @@
-@pending.runs_test_prefixed_functions_but_not_at_spec_functions() {
+@spec.runs_test_prefixed_functions_but_not_at_spec_functions() {
   refute run ./spec.sh examples/specSpecs/basics/xunitAndBdd.spec.sh
 
   expect "$STDOUT" toContain "Bar"

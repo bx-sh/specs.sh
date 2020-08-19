@@ -2,7 +2,7 @@
   echo "Hello from spec-style foo spec, I pass"
 }
 
-@spec.failing_foo() {
+@example.failing_foo() {
   echo "Hello from spec-style bar spec, I fail"
   return 1
 }
