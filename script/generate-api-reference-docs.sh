@@ -99,7 +99,7 @@ while read -d '' -r referenceDoc
 do
   cat "$referenceDoc" >> API_REFERENCE.md
   echo >> API_REFERENCE.md
-done < <( find ./docs/customization/variables/ -type f -name "*.md" -print0 )
+done < <( find ./docs/customization/variables/ -type f -name "*.md" -print0 | sort -z )
 
 echo "
 ## Functions
@@ -110,7 +110,7 @@ while read -d '' -r referenceDoc
 do
   cat "$referenceDoc" >> API_REFERENCE.md
   echo >> API_REFERENCE.md
-done < <( find ./docs/customization/functions/ -type f -name "*.md" -print0 )
+done < <( find ./docs/customization/functions/ -type f -name "*.md" -print0 | sort -z )
 
 cp API_REFERENCE.md docs/API_REFERENCE.md
 
