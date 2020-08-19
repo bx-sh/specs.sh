@@ -110,6 +110,9 @@ ___spec___.run.specFile() {
   declare -a SPEC_DISPLAY_NAMES=()
   
   spec.load.specFunctions
+  declare -a SPEC_PENDING_FUNCTIONS=()
+  declare -a SPEC_PENDING_DISPLAY_NAMES=()
+  spec.load.pendingFunctions
   declare -a passedSpecFunctions=()
   declare -a failedSpecFunctions=()
   local index=0
@@ -129,6 +132,16 @@ ___spec___.run.specFile() {
       SPEC_CURRENT_STATUS=FAIL
       failedSpecFunctions+="$specFunction"
     fi
+    spec.display.after:run.specFunction
+    (( index += 1 ))
+  done
+  local index=0
+  local pendingFunction
+  for pendingFunction in "${SPEC_PENDING_FUNCTIONS[@]}"
+  do
+    SPEC_CURRENT_FUNCTION="$pendingFunction"
+    SPEC_CURRENT_DISPLAY_NAME="${SPEC_PENDING_DISPLAY_NAMES[$index]}"
+    SPEC_CURRENT_STATUS=PENDING
     spec.display.after:run.specFunction
     (( index += 1 ))
   done
@@ -249,6 +262,12 @@ ___spec___.set.defaultPendingFunctionPrefixes() {
   [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
 }
 
+spec.load.pendingFunctions() { ___spec___.load.pendingFunctions "$@"; }
+___spec___.load.pendingFunctions() {
+  local functionName="spec.styles.$SPEC_STYLE.load.pendingFunctions"
+  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
+}
+
 spec.load.specFunctions() { ___spec___.load.specFunctions "$@"; }
 ___spec___.load.specFunctions() {
   local functionName="spec.styles.$SPEC_STYLE.load.specFunctions"
@@ -363,6 +382,33 @@ ___spec___.styles.xunit.set.defaultSpecFunctionPrefixes() {
   [ -z "$SPEC_FUNCTION_PREFIXES" ] && SPEC_FUNCTION_PREFIXES="test"
 }
 
+spec.styles.xunit.set.defaultPendingFunctionPrefixes() { ___spec___.styles.xunit.set.defaultPendingFunctionPrefixes "$@"; }
+___spec___.styles.xunit.set.defaultPendingFunctionPrefixes() {
+  [ -z "$SPEC_PENDING_FUNCTION_PREFIXES" ] && SPEC_PENDING_FUNCTION_PREFIXES="xtest"
+}
+
+spec.styles.xunit.load.pendingFunctions() { ___spec___.styles.xunit.load.pendingFunctions "$@"; }
+___spec___.styles.xunit.load.pendingFunctions() {
+  local specFunctionPrefixes
+  IFS=$'\n' read -d '' -ra specFunctionPrefixes < <(printf "$SPEC_PENDING_FUNCTION_PREFIXES")
+  local functionPrefix
+  for functionPrefix in "${specFunctionPrefixes[@]}"
+  do
+    local specFunctions
+    IFS=$'\n' read -d '' -ra specFunctions < <(declare -F | grep "^declare -f $functionPrefix" | sed 's/^declare -f //' )
+    local specFunction
+    for specFunction in "${specFunctions[@]}"
+    do
+      SPEC_PENDING_FUNCTIONS+=("$specFunction")
+      local displayName="${specFunction#"$functionPrefix"}"
+      displayName="${displayName//_/ }"
+      displayName="$( printf "$displayName" | sed 's/\([A-Z]\)/ \1/g' )"
+      displayName="${displayName##[[:space:]]}"
+      SPEC_PENDING_DISPLAY_NAMES+=("$displayName")
+    done
+  done
+}
+
 spec.styles.xunit.load.specFunctions() { ___spec___.styles.xunit.load.specFunctions "$@"; }
 ___spec___.styles.xunit.load.specFunctions() {
   local specFunctionPrefixes
@@ -390,6 +436,34 @@ ___spec___.styles.xunit_and_spec.set.defaultSpecFunctionPrefixes() {
   [ -z "$SPEC_FUNCTION_PREFIXES" ] && SPEC_FUNCTION_PREFIXES="test\n@spec.\n@example.\n@it."
 }
 
+spec.styles.xunit_and_spec.set.defaultPendingFunctionPrefixes() { ___spec___.styles.xunit_and_spec.set.defaultPendingFunctionPrefixes "$@"; }
+___spec___.styles.xunit_and_spec.set.defaultPendingFunctionPrefixes() {
+  [ -z "$SPEC_PENDING_FUNCTION_PREFIXES" ] && SPEC_PENDING_FUNCTION_PREFIXES="xtest\n@pending.\n@xspec.\n@xexample.\n@xit.\n@_."
+}
+
+spec.styles.xunit_and_spec.load.pendingFunctions() { ___spec___.styles.xunit_and_spec.load.pendingFunctions "$@"; }
+___spec___.styles.xunit_and_spec.load.pendingFunctions() {
+  local specFunctionPrefixes
+  IFS=$'\n' read -d '' -ra specFunctionPrefixes < <(printf "$SPEC_PENDING_FUNCTION_PREFIXES")
+  echo "XU/BDD LOAD PENDING ${#specFunctionPrefixes[@]} - ${specFunctionPrefixes[@]}"
+  local functionPrefix
+  for functionPrefix in "${specFunctionPrefixes[@]}"
+  do
+    local specFunctions
+    IFS=$'\n' read -d '' -ra specFunctions < <(declare -F | grep "^declare -f $functionPrefix" | sed 's/^declare -f //' )
+    local specFunction
+    for specFunction in "${specFunctions[@]}"
+    do
+      SPEC_PENDING_FUNCTIONS+=("$specFunction")
+      local displayName="${specFunction#"$functionPrefix"}"
+      displayName="${displayName//_/ }"
+      displayName="$( printf "$displayName" | sed 's/\([A-Z]\)/ \1/g' )"
+      displayName="${displayName##[[:space:]]}"
+      SPEC_PENDING_DISPLAY_NAMES+=("$displayName")
+    done
+  done
+}
+
 spec.styles.xunit_and_spec.load.specFunctions() { ___spec___.styles.xunit_and_spec.load.specFunctions "$@"; }
 ___spec___.styles.xunit_and_spec.load.specFunctions() {
   local specFunctionPrefixes
@@ -415,6 +489,31 @@ ___spec___.styles.xunit_and_spec.load.specFunctions() {
 spec.styles.spec.set.defaultSpecFunctionPrefixes() { ___spec___.styles.spec.set.defaultSpecFunctionPrefixes "$@"; }
 ___spec___.styles.spec.set.defaultSpecFunctionPrefixes() {
   [ -z "$SPEC_FUNCTION_PREFIXES" ] && SPEC_FUNCTION_PREFIXES="@spec.\n@example.\n@it."
+}
+
+spec.styles.spec.set.defaultPendingFunctionPrefixes() { ___spec___.styles.spec.set.defaultPendingFunctionPrefixes "$@"; }
+___spec___.styles.spec.set.defaultPendingFunctionPrefixes() {
+  [ -z "$SPEC_PENDING_FUNCTION_PREFIXES" ] && SPEC_PENDING_FUNCTION_PREFIXES="@pending.\n@xspec.\n@xexample.\n@xit.\n@_."
+}
+
+spec.styles.spec.load.pendingFunctions() { _.spec___.styles.spec.load.pendingFunctions "$@"; }
+_.spec___.styles.spec.load.pendingFunctions() {
+  local specFunctionPrefixes
+  IFS=$'\n' read -d '' -ra specFunctionPrefixes < <(printf "$SPEC_PENDING_FUNCTION_PREFIXES")
+  local functionPrefix
+  for functionPrefix in "${specFunctionPrefixes[@]}"
+  do
+    local specFunctions
+    IFS=$'\n' read -d '' -ra specFunctions < <(declare -F | grep "^declare -f $functionPrefix" | sed 's/^declare -f //' )
+    local specFunction
+    for specFunction in "${specFunctions[@]}"
+    do
+      SPEC_PENDING_FUNCTIONS+=("$specFunction")
+      local displayName="${specFunction#"$functionPrefix"}"
+      displayName="${displayName//_/ }"
+      SPEC_PENDING_DISPLAY_NAMES+=("$displayName")
+    done
+  done
 }
 
 spec.styles.spec.load.specFunctions() { ___spec___.styles.spec.load.specFunctions "$@"; }

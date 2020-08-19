@@ -13,9 +13,15 @@ ___spec___.run.specFile() {
   
   spec.load.specFunctions
 
+  declare -a SPEC_PENDING_FUNCTIONS=()
+  declare -a SPEC_PENDING_DISPLAY_NAMES=()
+
+  spec.load.pendingFunctions
+
   declare -a passedSpecFunctions=()
   declare -a failedSpecFunctions=()
 
+  # TODO extract
   local index=0
   local specFunction
   for specFunction in "${SPEC_FUNCTIONS[@]}"
@@ -34,6 +40,20 @@ ___spec___.run.specFile() {
       SPEC_CURRENT_STATUS=FAIL
       failedSpecFunctions+="$specFunction"
     fi
+    spec.display.after:run.specFunction
+    (( index += 1 ))
+  done
+
+  # "run" all pending functions after the rest (uses same display formatter but status=PENDING)
+  # TODO extract
+  local index=0
+  local pendingFunction
+  for pendingFunction in "${SPEC_PENDING_FUNCTIONS[@]}"
+  do
+    SPEC_CURRENT_FUNCTION="$pendingFunction"
+    SPEC_CURRENT_DISPLAY_NAME="${SPEC_PENDING_DISPLAY_NAMES[$index]}"
+    SPEC_CURRENT_STATUS=PENDING
+    #spec.display.before:run.specFunction
     spec.display.after:run.specFunction
     (( index += 1 ))
   done

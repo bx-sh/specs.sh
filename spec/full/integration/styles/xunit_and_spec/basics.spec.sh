@@ -4,10 +4,10 @@
   expect "$STDOUT" toContain "foo"
   expect "$STDOUT" toContain "passing foo"
   expect "$STDOUT" toContain "failing foo"
-  # expect "$STDOUT" toContain "pending foo"
+  expect "$STDOUT" toContain "pending foo"
 
   expect "$STDOUT" toContain "Bar"
   expect "$STDOUT" toContain "[OK] Passing Bar"
   expect "$STDOUT" toContain "[FAIL] Failing Bar"
-  # expect "$STDOUT" not toContain "Pending Bar"
+  expect "$STDOUT" toContain "[PENDING] Pending Bar"
 }
