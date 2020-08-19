@@ -8,7 +8,16 @@
   expect "$STDERR" toEqual "spec.sh version "
 }
 
-@pending.can_print_help_usage_documentation() {
+@spec.can_print_help_usage_documentation() {
+  # This is how to get 'spec.sh' or 'spec-full.sh' in a spec
+  local commandName="./spec-full.sh "
+  local displayName="${commandName#\.\/}"
+
+  assert run ./spec-full.sh --help
+  expect "$OUTPUT" toContain "${displayName}[file.spec.sh]"
+}
+
+@pending.runs_all_specs_in_the_current_directory_when_called_with_no_arguments() {
   :
 }
 

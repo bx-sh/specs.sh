@@ -16,5 +16,10 @@ ___spec___.set.defaultVariables() {
   spec.set.defaultTheme
   spec.set.defaultSpecFileSuffixes
   spec.set.defaultSpecFunctionPrefixes
+  spec.set.defaultPendingFunctionPrefixes
+  # spec.set.defaultSetupFunctionNames
+  # spec.set.defaultSetupFixtureFunctionNames
+  # spec.set.defaultTeardownFunctionNames
+  # spec.set.defaultTeardownFixtureFunctionNames
   spec.set.defaultConfigFilenames
 }

@@ -35,6 +35,11 @@ ___spec___.main() {
     printf "$SPEC_VERSION"
     return 0
   fi
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]
+  then
+    spec.display.cliUsage
+    return 0
+  fi
   local runningAsFilename="${0/*\/}"
   declare -a SPEC_PATH_ARGUMENTS=()
   while [ $# -gt 0 ]
@@ -167,6 +172,22 @@ ___spec___.display.before:run.specFile() {
   [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
 }
 
+spec.display.cliUsage() { ___spec___.display.cliUsage "$@"; }
+___spec___.display.cliUsage() {
+  spec.display.cliUsage.header
+  spec.display.cliUsage.footer
+}
+
+spec.display.cliUsage.footer() { ___spec___.display.cliUsage.footer "$@"; }
+___spec___.display.cliUsage.footer() {
+  :
+}
+
+spec.display.cliUsage.header() { ___spec___.display.cliUsage.header "$@"; }
+___spec___.display.cliUsage.header() {
+  echo "${0/*\/} [file.spec.sh] [directory/] [-f/--flags]"
+}
+
 spec.set.defaultVariables() { ___spec___.set.defaultVariables "$@"; }
 ___spec___.set.defaultVariables() {
   spec.set.defaultStyle
@@ -174,6 +195,7 @@ ___spec___.set.defaultVariables() {
   spec.set.defaultTheme
   spec.set.defaultSpecFileSuffixes
   spec.set.defaultSpecFunctionPrefixes
+  spec.set.defaultPendingFunctionPrefixes
   spec.set.defaultConfigFilenames
 }
 
@@ -219,6 +241,12 @@ ___spec___.set.defaultStyle() {
 spec.set.defaultSpecFileSuffixes() { ___spec___.set.defaultSpecFileSuffixes "$@"; }
 ___spec___.set.defaultSpecFileSuffixes() {
   [ -z "$SPEC_FILE_SUFFIXES" ] && SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
+}
+
+spec.set.defaultPendingFunctionPrefixes() { ___spec___.set.defaultPendingFunctionPrefixes "$@"; }
+___spec___.set.defaultPendingFunctionPrefixes() {
+  local functionName="spec.styles.$SPEC_STYLE.set.defaultPendingFunctionPrefixes"
+  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
 }
 
 spec.load.specFunctions() { ___spec___.load.specFunctions "$@"; }

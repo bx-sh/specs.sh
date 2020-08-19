@@ -19,6 +19,13 @@ ___spec___.main() {
     return 0
   fi
 
+  # -h, --help
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]
+  then
+    spec.display.cliUsage
+    return 0
+  fi
+
   # 'spec' or 'spec.sh' or whatever file is named
   local runningAsFilename="${0/*\/}"
 

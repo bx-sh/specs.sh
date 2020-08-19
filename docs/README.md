@@ -2,7 +2,7 @@
 
 > - Familiar syntax
 > - Pleasant to write
-> - Small (< 500 LOC)
+> - Just one BASH file
 
 ---
 
@@ -42,7 +42,20 @@ testFileExists() {
 
 ## Installation
 
-...
+```sh
+curl -o- https://specs.sh/installer.sh | curl
+```
+
+> _Or click the `.zip` or `.tar.gz` download link at the top of the website!_
+
+##### Available versions
+
+`spec.sh` comes in two varieties:
+
+ - `spec.sh` is just the `spec.sh` spec runner and library
+ - `spec-full.sh` bundles the `assert`, `expect`, and `run` libraries
+
+> _The installer script downloads the latest versions of these files, puts them into your current directory, and prints helpful usage documentation!_
 
 ## Getting Started
 
