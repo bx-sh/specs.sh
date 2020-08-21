@@ -13,8 +13,8 @@ ___spec___.styles.spec.load.specFunctions() {
     for specFunction in "${specFunctions[@]}"
     do
       SPEC_FUNCTIONS+=("$specFunction")
-      local displayName="${specFunction#"$functionPrefix"}"
-      displayName="${displayName//_/ }"
+      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
+      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
       SPEC_DISPLAY_NAMES+=("$displayName")
     done
   done

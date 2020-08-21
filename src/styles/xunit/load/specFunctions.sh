@@ -13,10 +13,8 @@ ___spec___.styles.xunit.load.specFunctions() {
     for specFunction in "${specFunctions[@]}"
     do
       SPEC_FUNCTIONS+=("$specFunction")
-      local displayName="${specFunction#"$functionPrefix"}"
-      displayName="${displayName//_/ }"
-      displayName="$( printf "$displayName" | sed 's/\([A-Z]\)/ \1/g' )"
-      displayName="${displayName##[[:space:]]}"
+      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
+      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
       SPEC_DISPLAY_NAMES+=("$displayName")
     done
   done

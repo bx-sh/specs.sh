@@ -2,10 +2,10 @@
   return 0
 }
 
-@spec.hello_two() {
+@spec.hello.two() {
   :
 }
 
-@spec.hello_three() {
+@spec.hello_._three() {
   true
 }

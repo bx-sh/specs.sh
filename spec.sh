@@ -71,6 +71,17 @@ ___spec___.get.specSuiteStatus() {
   [ "${#SPEC_FAILED_FILES[@]}" -eq 0 ]
 }
 
+spec.get.functionDisplayName() { ___spec___.get.functionDisplayName "$@"; }
+___spec___.get.functionDisplayName() {
+  local functionName="spec.styles.$SPEC_STYLE.get.functionDisplayName"
+  if [ "$( type -t "$functionName" )" = "function" ]
+  then
+    "$functionName" "$@"
+  else
+    printf "$*"
+  fi
+}
+
 spec.loadAndSource.configFiles() { ___spec___.loadAndSource.configFiles "$@"; }
 ___spec___.loadAndSource.configFiles() {
   declare -a SPEC_CONFIG_FILES=()
@@ -377,6 +388,17 @@ ___spec___.formatters.documentation.display.before:run.specFile() {
   [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
 }
 
+spec.styles.xunit.get.functionDisplayName() { ___spec___.styles.xunit.get.functionDisplayName "$@"; }
+___spec___.styles.xunit.get.functionDisplayName() {
+  local functionName="$1"
+  displayName="${functionName//_/ }" # convert _ into space
+  displayName="${displayName//\./ }" # convert . into space
+  displayName="$( printf "$displayName" | sed 's/\([A-Z]\)/ \1/g' )" # convert 'camelCase' to ' Camel Case'
+  displayName="${displayName##[[:space:]]}" # strip extraneous leading space
+  displayName="$( echo "$displayName" | sed 's/ \+/ /g' )" # compact spaces
+  printf "$displayName"
+}
+
 spec.styles.xunit.set.defaultSpecFunctionPrefixes() { ___spec___.styles.xunit.set.defaultSpecFunctionPrefixes "$@"; }
 ___spec___.styles.xunit.set.defaultSpecFunctionPrefixes() {
   [ -z "$SPEC_FUNCTION_PREFIXES" ] && SPEC_FUNCTION_PREFIXES="test"
@@ -400,10 +422,8 @@ ___spec___.styles.xunit.load.pendingFunctions() {
     for specFunction in "${specFunctions[@]}"
     do
       SPEC_PENDING_FUNCTIONS+=("$specFunction")
-      local displayName="${specFunction#"$functionPrefix"}"
-      displayName="${displayName//_/ }"
-      displayName="$( printf "$displayName" | sed 's/\([A-Z]\)/ \1/g' )"
-      displayName="${displayName##[[:space:]]}"
+      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
+      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
       SPEC_PENDING_DISPLAY_NAMES+=("$displayName")
     done
   done
@@ -422,13 +442,22 @@ ___spec___.styles.xunit.load.specFunctions() {
     for specFunction in "${specFunctions[@]}"
     do
       SPEC_FUNCTIONS+=("$specFunction")
-      local displayName="${specFunction#"$functionPrefix"}"
-      displayName="${displayName//_/ }"
-      displayName="$( printf "$displayName" | sed 's/\([A-Z]\)/ \1/g' )"
-      displayName="${displayName##[[:space:]]}"
+      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
+      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
       SPEC_DISPLAY_NAMES+=("$displayName")
     done
   done
+}
+
+spec.styles.xunit_and_spec.get.functionDisplayName() { ___spec___.styles.xunit_and_spec.get.functionDisplayName "$@"; }
+___spec___.styles.xunit_and_spec.get.functionDisplayName() {
+  local functionName="$1"
+  displayName="${functionName//_/ }" # convert _ into space
+  displayName="${displayName//\./ }" # convert . into space
+  displayName="$( printf "$displayName" | sed 's/\([A-Z]\)/ \1/g' )" # convert 'camelCase' to ' Camel Case'
+  displayName="${displayName##[[:space:]]}" # strip extraneous leading space
+  displayName="$( echo "$displayName" | sed 's/ \+/ /g' )" # compact spaces
+  printf "$displayName"
 }
 
 spec.styles.xunit_and_spec.set.defaultSpecFunctionPrefixes() { ___spec___.styles.xunit_and_spec.set.defaultSpecFunctionPrefixes "$@"; }
@@ -454,10 +483,8 @@ ___spec___.styles.xunit_and_spec.load.pendingFunctions() {
     for specFunction in "${specFunctions[@]}"
     do
       SPEC_PENDING_FUNCTIONS+=("$specFunction")
-      local displayName="${specFunction#"$functionPrefix"}"
-      displayName="${displayName//_/ }"
-      displayName="$( printf "$displayName" | sed 's/\([A-Z]\)/ \1/g' )"
-      displayName="${displayName##[[:space:]]}"
+      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
+      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
       SPEC_PENDING_DISPLAY_NAMES+=("$displayName")
     done
   done
@@ -476,13 +503,20 @@ ___spec___.styles.xunit_and_spec.load.specFunctions() {
     for specFunction in "${specFunctions[@]}"
     do
       SPEC_FUNCTIONS+=("$specFunction")
-      local displayName="${specFunction#"$functionPrefix"}"
-      displayName="${displayName//_/ }"
-      displayName="$( printf "$displayName" | sed 's/\([A-Z]\)/ \1/g' )"
-      displayName="${displayName##[[:space:]]}"
+      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
+      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
       SPEC_DISPLAY_NAMES+=("$displayName")
     done
   done
+}
+
+spec.styles.spec.get.functionDisplayName() { ___spec___.styles.spec.get.functionDisplayName "$@"; }
+___spec___.styles.spec.get.functionDisplayName() {
+  local functionName="$1"
+  displayName="${functionName//_/ }" # convert _ into space
+  displayName="${displayName//\./ }" # convert . into space
+  displayName="$( echo "$displayName" | sed 's/ \+/ /g' )" # compact spaces
+  printf "$displayName"
 }
 
 spec.styles.spec.set.defaultSpecFunctionPrefixes() { ___spec___.styles.spec.set.defaultSpecFunctionPrefixes "$@"; }
@@ -508,8 +542,8 @@ _.spec___.styles.spec.load.pendingFunctions() {
     for specFunction in "${specFunctions[@]}"
     do
       SPEC_PENDING_FUNCTIONS+=("$specFunction")
-      local displayName="${specFunction#"$functionPrefix"}"
-      displayName="${displayName//_/ }"
+      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
+      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
       SPEC_PENDING_DISPLAY_NAMES+=("$displayName")
     done
   done
@@ -528,8 +562,8 @@ ___spec___.styles.spec.load.specFunctions() {
     for specFunction in "${specFunctions[@]}"
     do
       SPEC_FUNCTIONS+=("$specFunction")
-      local displayName="${specFunction#"$functionPrefix"}"
-      displayName="${displayName//_/ }"
+      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
+      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
       SPEC_DISPLAY_NAMES+=("$displayName")
     done
   done

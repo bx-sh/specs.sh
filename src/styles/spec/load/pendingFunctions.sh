@@ -13,8 +13,8 @@ _.spec___.styles.spec.load.pendingFunctions() {
     for specFunction in "${specFunctions[@]}"
     do
       SPEC_PENDING_FUNCTIONS+=("$specFunction")
-      local displayName="${specFunction#"$functionPrefix"}"
-      displayName="${displayName//_/ }"
+      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
+      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
       SPEC_PENDING_DISPLAY_NAMES+=("$displayName")
     done
   done
