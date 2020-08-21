@@ -11,4 +11,4 @@ script spec ./script/spec
 
 devDependency assert
 devDependency expect
-devDependency run-command
+devDependency run

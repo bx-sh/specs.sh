@@ -38,7 +38,7 @@ cat ./packages/assert-*/assert.sh | grep -v "^[[:space:]]*#\|^$" >> spec-full.sh
 echo >> spec-full.sh
 cat ./packages/assert-*/refute.sh | grep -v "^[[:space:]]*#\|^$" >> spec-full.sh
 echo >> spec-full.sh
-cat ./packages/run-command-*/run-command.sh | grep -v "^[[:space:]]*#\|^$" >> spec-full.sh
+cat ./packages/run-*/run.sh | grep -v "^[[:space:]]*#\|^$" >> spec-full.sh
 echo >> spec-full.sh
 cat ./packages/expect-*/expect.sh | grep -v "^[[:space:]]*#\|^$" >> spec-full.sh
 echo >> spec-full.sh

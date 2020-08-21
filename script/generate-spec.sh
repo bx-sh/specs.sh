@@ -1,7 +1,5 @@
 #! /usr/bin/env bash
 
-# TODO - STRIP COMMENT LINES
-
 rm -f spec.sh
 
 cat src/header.sh >> spec.sh

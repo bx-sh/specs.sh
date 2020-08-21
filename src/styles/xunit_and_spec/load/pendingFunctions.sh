@@ -4,8 +4,6 @@ ___spec___.styles.xunit_and_spec.load.pendingFunctions() {
   local specFunctionPrefixes
   IFS=$'\n' read -d '' -ra specFunctionPrefixes < <(printf "$SPEC_PENDING_FUNCTION_PREFIXES")
 
-  echo "XU/BDD LOAD PENDING ${#specFunctionPrefixes[@]} - ${specFunctionPrefixes[@]}"
-
   local functionPrefix
   for functionPrefix in "${specFunctionPrefixes[@]}"
   do

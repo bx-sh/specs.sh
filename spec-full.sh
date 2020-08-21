@@ -438,14 +438,13 @@ ___spec___.styles.xunit_and_spec.set.defaultSpecFunctionPrefixes() {
 
 spec.styles.xunit_and_spec.set.defaultPendingFunctionPrefixes() { ___spec___.styles.xunit_and_spec.set.defaultPendingFunctionPrefixes "$@"; }
 ___spec___.styles.xunit_and_spec.set.defaultPendingFunctionPrefixes() {
-  [ -z "$SPEC_PENDING_FUNCTION_PREFIXES" ] && SPEC_PENDING_FUNCTION_PREFIXES="xtest\n@pending.\n@xspec.\n@xexample.\n@xit.\n@_."
+  [ -z "$SPEC_PENDING_FUNCTION_PREFIXES" ] && SPEC_PENDING_FUNCTION_PREFIXES="xtest\n@pending.\n@xspec.\n@xexample.\n@xit."
 }
 
 spec.styles.xunit_and_spec.load.pendingFunctions() { ___spec___.styles.xunit_and_spec.load.pendingFunctions "$@"; }
 ___spec___.styles.xunit_and_spec.load.pendingFunctions() {
   local specFunctionPrefixes
   IFS=$'\n' read -d '' -ra specFunctionPrefixes < <(printf "$SPEC_PENDING_FUNCTION_PREFIXES")
-  echo "XU/BDD LOAD PENDING ${#specFunctionPrefixes[@]} - ${specFunctionPrefixes[@]}"
   local functionPrefix
   for functionPrefix in "${specFunctionPrefixes[@]}"
   do
@@ -493,7 +492,7 @@ ___spec___.styles.spec.set.defaultSpecFunctionPrefixes() {
 
 spec.styles.spec.set.defaultPendingFunctionPrefixes() { ___spec___.styles.spec.set.defaultPendingFunctionPrefixes "$@"; }
 ___spec___.styles.spec.set.defaultPendingFunctionPrefixes() {
-  [ -z "$SPEC_PENDING_FUNCTION_PREFIXES" ] && SPEC_PENDING_FUNCTION_PREFIXES="@pending.\n@xspec.\n@xexample.\n@xit.\n@_."
+  [ -z "$SPEC_PENDING_FUNCTION_PREFIXES" ] && SPEC_PENDING_FUNCTION_PREFIXES="@pending.\n@xspec.\n@xexample.\n@xit."
 }
 
 spec.styles.spec.load.pendingFunctions() { _.spec___.styles.spec.load.pendingFunctions "$@"; }
