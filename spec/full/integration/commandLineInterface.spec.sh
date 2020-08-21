@@ -14,7 +14,7 @@
   local displayName="${commandName#\.\/}"
 
   assert run ./spec-full.sh --help
-  expect "$OUTPUT" toContain "${displayName}[file.spec.sh]"
+  expect "$STDOUT" toContain "${displayName}[file.spec.sh]"
 }
 
 @pending.runs_all_specs_in_the_current_directory_when_called_with_no_arguments() {
