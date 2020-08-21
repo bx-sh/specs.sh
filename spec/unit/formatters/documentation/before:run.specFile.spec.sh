@@ -6,7 +6,7 @@
   export SPEC_COLOR=true
   assert run ./spec.sh examples/specSpecs/basics/passing.spec.sh
   expect "$STDOUT" toContain "[passing.spec.sh]"
-  expect "$STDERR" toEqual "^[[34m^[[0m"
+  expect "$STDERR" toContain "$( printf "\033[34m" )"
 }
 
 @spec.does_not_print_color_when_SPEC_COLOR_not_equal_true() {
@@ -21,7 +21,8 @@
   export SPEC_THEME_FILE_COLOR="32;1"
   assert run ./spec.sh examples/specSpecs/basics/passing.spec.sh
   expect "$STDOUT" toContain "[passing.spec.sh]"
-  expect "$STDERR" toEqual "^[[32;1m^[[0m"
+  expect "$STDERR" not toContain "$( printf "\033[34m" )"
+  expect "$STDERR" toContain "$( printf "\033[32;1m" )"
 }
 
 
