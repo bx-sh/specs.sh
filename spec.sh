@@ -124,39 +124,47 @@ ___spec___.run.specFile() {
   declare -a SPEC_PENDING_FUNCTIONS=()
   declare -a SPEC_PENDING_DISPLAY_NAMES=()
   spec.load.pendingFunctions
-  declare -a passedSpecFunctions=()
-  declare -a failedSpecFunctions=()
-  local index=0
-  local specFunction
-  for specFunction in "${SPEC_FUNCTIONS[@]}"
+  declare -a SPEC_PASSED_FUNCTIONS=()
+  declare -a SPEC_PASSED_DISPLAY_NAMES=()
+  declare -a SPEC_FAILED_FUNCTIONS=()
+  declare -a SPEC_FAILED_DISPLAY_NAMES=()
+  local SPEC_CURRENT_INDEX=0
+  local SPEC_CURRENT_FUNCTION
+  for SPEC_CURRENT_FUNCTION in "${SPEC_FUNCTIONS[@]}"
   do
-    SPEC_CURRENT_FUNCTION="$specFunction"
-    SPEC_CURRENT_DISPLAY_NAME="${SPEC_DISPLAY_NAMES[$index]}"
-    local _
-    _="$( spec.run.specFunction "$specFunction" )"
+    SPEC_CURRENT_DISPLAY_NAME="${SPEC_DISPLAY_NAMES[$SPEC_CURRENT_INDEX]}"
+    local SPEC_TEMP_STDOUT_FILE="$( mktemp )"
+    local SPEC_TEMP_STDERR_FILE="$( mktemp )"
+    local ___spec___unusedOutput
+    ___spec___unusedOutput="$( spec.run.specFunction "$SPEC_CURRENT_FUNCTION" 1>>"$SPEC_TEMP_STDOUT_FILE" 2>>"$SPEC_TEMP_STDERR_FILE" )"
     SPEC_CURRENT_EXITCODE=$?
+    local SPEC_CURRENT_STDOUT="$( < "$SPEC_TEMP_STDOUT_FILE" )"
+    local SPEC_CURRENT_STDERR="$( < "$SPEC_TEMP_STDERR_FILE" )"
+    rm "$SPEC_TEMP_STDOUT_FILE"
+    rm "$SPEC_TEMP_STDERR_FILE"
     if [ $SPEC_CURRENT_EXITCODE -eq 0 ]
     then
-      SPEC_CURRENT_STATUS=PASS
-      passedSpecFunctions+="$specFunction"
+      local SPEC_CURRENT_STATUS=PASS
+      SPEC_PASSED_FUNCTIONS+="$SPEC_CURRENT_FUNCTION"
+      SPEC_PASSED_DISPLAY_NAMES+="${SPEC_DISPLAY_NAMES[$SPEC_CURRENT_INDEX]}"
     else
-      SPEC_CURRENT_STATUS=FAIL
-      failedSpecFunctions+="$specFunction"
+      local SPEC_CURRENT_STATUS=FAIL
+      SPEC_FAILED_FUNCTIONS+="$SPEC_CURRENT_FUNCTION"
+      SPEC_FAILED_DISPLAY_NAMES+="${SPEC_DISPLAY_NAMES[$SPEC_CURRENT_INDEX]}"
     fi
     spec.display.after:run.specFunction
-    (( index += 1 ))
+    (( SPEC_CURRENT_INDEX += 1 ))
   done
-  local index=0
-  local pendingFunction
-  for pendingFunction in "${SPEC_PENDING_FUNCTIONS[@]}"
+  local SPEC_CURRENT_INDEX=0
+  local SPEC_CURRENT_FUNCTION
+  for SPEC_CURRENT_FUNCTION in "${SPEC_PENDING_FUNCTIONS[@]}"
   do
-    SPEC_CURRENT_FUNCTION="$pendingFunction"
-    SPEC_CURRENT_DISPLAY_NAME="${SPEC_PENDING_DISPLAY_NAMES[$index]}"
+    SPEC_CURRENT_DISPLAY_NAME="${SPEC_PENDING_DISPLAY_NAMES[$SPEC_CURRENT_INDEX]}"
     SPEC_CURRENT_STATUS=PENDING
     spec.display.after:run.specFunction
-    (( index += 1 ))
+    (( SPEC_CURRENT_INDEX += 1 ))
   done
-  [ "${#failedSpecFunctions[@]}" -eq 0 ]
+  [ "${#SPEC_FAILED_FUNCTIONS[@]}" -eq 0 ]
 }
 
 spec.run.specFiles() { ___spec___.run.specFiles "$@"; }
@@ -373,6 +381,33 @@ ___spec___.formatters.documentation.display.after:run.specFunction() {
   [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SPEC_COLOR}m" >&2
   printf "$SPEC_CURRENT_DISPLAY_NAME\n"
   [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
+  if [ "$SPEC_DISPLAY_OUTPUT" = "true" ] || [ "$SPEC_CURRENT_STATUS" = "FAIL" ]
+  then
+    if [ -n "$SPEC_CURRENT_STDOUT" ]
+    then
+      echo
+      [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
+      printf "["
+      [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_STDOUT_HEADER_COLOR}m" >&2
+      printf "Standard Output"
+      [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
+      printf "]\n"
+      [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_STDOUT_COLOR}m" >&2
+      printf "$SPEC_CURRENT_STDOUT\n"
+    fi
+    if [ -n "$SPEC_CURRENT_STDERR" ]
+    then
+      echo
+      [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
+      printf "["
+      [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_STDERR_HEADER_COLOR}m" >&2
+      printf "Standard Error"
+      [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
+      printf "]\n"
+      [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_STDERR_COLOR}m" >&2
+      printf "$SPEC_CURRENT_STDERR\n"
+    fi
+  fi
 }
 
 spec.formatters.documentation.display.before:run.specFile() {
