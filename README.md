@@ -1,3 +1,7 @@
+ℹ️ - _This is the documentation for v3. Stay tuned for upcoming v5._
+
+---
+
 [![Spec Status](https://github.com/bx-sh/spec.sh/workflows/Specs/badge.svg)](https://github.com/bx-sh/spec.sh/actions)
 
 # `@spec` - 🔬 Simple Shell Specifications
