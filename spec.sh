@@ -341,6 +341,7 @@ spec.formatters.documentation.display.after:run.specFunction() {
 ___spec___.formatters.documentation.display.after:run.specFunction() {
   [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
   printf "["
+  [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
   case "$SPEC_CURRENT_STATUS" in
     PASS)
       [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_PASS_COLOR}m" >&2
@@ -359,8 +360,10 @@ ___spec___.formatters.documentation.display.after:run.specFunction() {
       printf "$SPEC_CURRENT_STATUS"
       ;;
   esac
+  [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
   [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
   printf "] "
+  [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
   [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SPEC_COLOR}m" >&2
   printf "$SPEC_CURRENT_DISPLAY_NAME\n"
   [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
@@ -391,6 +394,7 @@ ___spec___.formatters.documentation.display.after:run.specFunction() {
       printf "$SPEC_CURRENT_STDERR\n"
     fi
   fi
+  [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
 }
 
 spec.formatters.documentation.display.before:run.specFile() {
