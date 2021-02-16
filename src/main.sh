@@ -29,7 +29,7 @@ ___spec___.main() {
   # 'spec' or 'spec.sh' or whatever file is named
   local runningAsFilename="${0/*\/}"
 
-  declare -a SPEC_PATH_ARGUMENTS=()
+  declare SPEC_PATH_ARGUMENTS=()
 
   # Process Command Line Arguments
   #
@@ -51,7 +51,7 @@ ___spec___.main() {
     esac
   done
 
-  declare -a SPEC_FILE_LIST=()
+  declare SPEC_FILE_LIST=()
   
   # spec.load.specFiles is responsible for populating SPEC_FILE_LIST
   spec.load.specFiles

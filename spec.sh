@@ -1,22 +1,5 @@
 #! /usr/bin/env bash
 
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
-# 
-#   http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
-
 SPEC_VERSION=0.5.0
 
 spec.main() {
@@ -41,7 +24,7 @@ ___spec___.main() {
     return 0
   fi
   local runningAsFilename="${0/*\/}"
-  declare -a SPEC_PATH_ARGUMENTS=()
+  declare SPEC_PATH_ARGUMENTS=()
   while [ $# -gt 0 ]
   do
     case "$1" in
@@ -57,7 +40,7 @@ ___spec___.main() {
         ;;
     esac
   done
-  declare -a SPEC_FILE_LIST=()
+  declare SPEC_FILE_LIST=()
   
   spec.load.specFiles
   declare SPEC_PASSED_FILES=()
@@ -66,9 +49,164 @@ ___spec___.main() {
   spec.get.specSuiteStatus
 }
 
-spec.get.specSuiteStatus() { ___spec___.get.specSuiteStatus "$@"; }
-___spec___.get.specSuiteStatus() {
-  [ "${#SPEC_FAILED_FILES[@]}" -eq 0 ]
+spec.set.defaultSpecFunctionPrefixes() { ___spec___.set.defaultSpecFunctionPrefixes "$@"; }
+___spec___.set.defaultSpecFunctionPrefixes() {
+  local functionName="spec.styles.$SPEC_STYLE.set.defaultSpecFunctionPrefixes"
+  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
+}
+
+spec.set.defaultFormatter() { ___spec___.set.defaultFormatter "$@"; }
+___spec___.set.defaultFormatter() {
+  [ -z "$SPEC_FORMATTER" ] && SPEC_FORMATTER="documentation"
+}
+
+spec.set.defaultVariables() { ___spec___.set.defaultVariables "$@"; }
+___spec___.set.defaultVariables() {
+  spec.set.defaultStyle
+  spec.set.defaultFormatter
+  spec.set.defaultTheme
+  spec.set.defaultSpecFileSuffixes
+  spec.set.defaultSpecFunctionPrefixes
+  spec.set.defaultPendingFunctionPrefixes
+  spec.set.defaultConfigFilenames
+}
+
+spec.set.defaultStyle() { ___spec___.set.defaultStyle "$@"; }
+___spec___.set.defaultStyle() {
+  [ -z "$SPEC_STYLE" ] && SPEC_STYLE="xunit_and_spec"
+}
+
+spec.set.defaultConfigFilenames() { ___spec___.set.defaultConfigFilenames "$@"; }
+___spec___.set.defaultConfigFilenames() {
+  [ -z "$SPEC_CONFIG_FILENAMES"  ] && SPEC_CONFIG_FILENAMES="spec.config.sh"
+}
+
+spec.set.defaultPendingFunctionPrefixes() { ___spec___.set.defaultPendingFunctionPrefixes "$@"; }
+___spec___.set.defaultPendingFunctionPrefixes() {
+  local functionName="spec.styles.$SPEC_STYLE.set.defaultPendingFunctionPrefixes"
+  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
+}
+
+spec.set.defaultSpecFileSuffixes() { ___spec___.set.defaultSpecFileSuffixes "$@"; }
+___spec___.set.defaultSpecFileSuffixes() {
+  [ -z "$SPEC_FILE_SUFFIXES" ] && SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
+}
+
+spec.set.defaultTheme() { ___spec___.set.defaultTheme "$@"; }
+___spec___.set.defaultTheme() {
+  [ -z "$SPEC_COLOR"                     ] && SPEC_COLOR="true"
+  [ -z "$SPEC_THEME_TEXT_COLOR"          ] && SPEC_THEME_TEXT_COLOR=39
+  [ -z "$SPEC_THEME_PASS_COLOR"          ] && SPEC_THEME_PASS_COLOR=32
+  [ -z "$SPEC_THEME_FAIL_COLOR"          ] && SPEC_THEME_FAIL_COLOR=31
+  [ -z "$SPEC_THEME_PENDING_COLOR"       ] && SPEC_THEME_PENDING_COLOR=33
+  [ -z "$SPEC_THEME_ERROR_COLOR"         ] && SPEC_THEME_ERROR_COLOR=31
+  [ -z "$SPEC_THEME_FILE_COLOR"          ] && SPEC_THEME_FILE_COLOR=34
+  [ -z "$SPEC_THEME_SPEC_COLOR"          ] && SPEC_THEME_SPEC_COLOR=39
+  [ -z "$SPEC_THEME_SEPARATOR_COLOR"     ] && SPEC_THEME_SEPARATOR_COLOR=39
+  [ -z "$SPEC_THEME_HEADER_COLOR"        ] && SPEC_THEME_HEADER_COLOR=39
+  [ -z "$SPEC_THEME_STDOUT_COLOR"        ] && SPEC_THEME_STDOUT_COLOR=39
+  [ -z "$SPEC_THEME_STDERR_COLOR"        ] && SPEC_THEME_STDERR_COLOR=39
+  [ -z "$SPEC_THEME_STDOUT_HEADER_COLOR" ] && SPEC_THEME_STDOUT_HEADER_COLOR="34;1"
+  [ -z "$SPEC_THEME_STDERR_HEADER_COLOR" ] && SPEC_THEME_STDERR_HEADER_COLOR="31;1"
+}
+
+spec.display.cliUsage.header() { ___spec___.display.cliUsage.header "$@"; }
+___spec___.display.cliUsage.header() {
+  echo "${0/*\/} [file.spec.sh] [directory/] [-f/--flags]"
+}
+
+spec.display.cliUsage() { ___spec___.display.cliUsage "$@"; }
+___spec___.display.cliUsage() {
+  spec.display.cliUsage.header
+  spec.display.cliUsage.footer
+}
+
+spec.display.after:run.specFunction() { ___spec___.display.after:run.specFunction "$@"; }
+___spec___.display.after:run.specFunction() {
+  local functionName="spec.formatters.$SPEC_FORMATTER.display.after:run.specFunction"
+  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
+}
+
+spec.display.cliUsage.footer() { ___spec___.display.cliUsage.footer "$@"; }
+___spec___.display.cliUsage.footer() {
+  :
+}
+
+spec.display.before:run.specFile() { ___spec___.display.before:run.specFile "$@"; }
+___spec___.display.before:run.specFile() {
+  local functionName="spec.formatters.$SPEC_FORMATTER.display.before:run.specFile"
+  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
+}
+
+spec.load.specFunctions() { ___spec___.load.specFunctions "$@"; }
+___spec___.load.specFunctions() {
+  local functionName="spec.styles.$SPEC_STYLE.load.specFunctions"
+  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
+}
+
+spec.load.specFiles() { ___spec___.load.specFiles "$@"; }
+___spec___.load.specFiles() {
+  IFS=: read -ra specFileExtensions <<<"$SPEC_FILE_SUFFIXES"
+  local pathArgument
+  for pathArgument in "${SPEC_PATH_ARGUMENTS[@]}"
+  do
+    if [ -f "$pathArgument" ]
+    then
+      SPEC_FILE_LIST+=("$pathArgument")
+    elif [ -d "$pathArgument" ]
+    then
+      local suffix
+      for suffix in "${specFileExtensions[@]}"
+      do
+        local specFile
+        while read -d '' -r specFile
+        do
+          [ -f "$specFile" ] && SPEC_FILE_LIST+=("$specFile")
+        done < <( find "$pathArgument" -type f -iname "*$suffix" -print0 )
+      done
+    else
+      echo "Unexpected argument for spec.load.specFiles: $pathArgument. Expected: file or directory." >&2
+      return 1
+    fi
+  done
+}
+
+spec.load.configFiles() { ___spec___.load.configFiles "$@"; }
+___spec___.load.configFiles() {
+  if [ -n "$SPEC_CONFIG" ]
+  then
+    IFS=: read -ra configPaths <<<"$SPEC_CONFIG"
+    local configPath
+    for configPath in "${configPaths[@]}"
+    do
+      if [ -f "$configPath" ]
+      then
+        spec.source.file "$configPath"
+      else
+        echo "Spec config file not found: $configPath" >&2
+        return 1
+      fi
+    done
+  else
+    IFS=: read -ra configFilenames <<<"$SPEC_CONFIG_FILENAMES"
+    local directory="$( pwd )"
+    [ -f "$directory/$configFilename" ] && SPEC_CONFIG_FILES+=("$directory/$configFilename")
+    while [ "$directory" != "/" ] && [ "$directory" != "." ]
+    do
+      directory="$( dirname "$directory" )"
+      local configFilename
+      for configFilename in "${configFilenames[@]}"
+      do
+        [ -f "$directory/$configFilename" ] && SPEC_CONFIG_FILES+=("$directory/$configFilename")
+      done
+    done
+  fi
+}
+
+spec.load.pendingFunctions() { ___spec___.load.pendingFunctions "$@"; }
+___spec___.load.pendingFunctions() {
+  local functionName="spec.styles.$SPEC_STYLE.load.pendingFunctions"
+  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
 }
 
 spec.get.functionDisplayName() { ___spec___.get.functionDisplayName "$@"; }
@@ -82,10 +220,9 @@ ___spec___.get.functionDisplayName() {
   fi
 }
 
-spec.loadAndSource.configFiles() { ___spec___.loadAndSource.configFiles "$@"; }
-___spec___.loadAndSource.configFiles() {
-  declare -a SPEC_CONFIG_FILES=()
-  spec.load.configFiles && spec.source.configFiles
+spec.get.specSuiteStatus() { ___spec___.get.specSuiteStatus "$@"; }
+___spec___.get.specSuiteStatus() {
+  [ "${#SPEC_FAILED_FILES[@]}" -eq 0 ]
 }
 
 spec.source.specFile() { ___spec___.source.specFile "$@"; }
@@ -109,9 +246,11 @@ ___spec___.source.file() {
   set +e
 }
 
-spec.run.specFunction() { ___spec___.run.specFunction "$@"; }
-___spec___.run.specFunction() {
-  spec.run.function "$@"
+spec.run.function() { ___spec___.run.function "$@"; }
+___spec___.run.function() {
+  local functionName="$1"
+  shift
+  "$functionName" "$@"
 }
 
 spec.run.specFile() { ___spec___.run.specFile "$@"; }
@@ -167,6 +306,11 @@ ___spec___.run.specFile() {
   [ "${#SPEC_FAILED_FUNCTIONS[@]}" -eq 0 ]
 }
 
+spec.run.specFunction() { ___spec___.run.specFunction "$@"; }
+___spec___.run.specFunction() {
+  spec.run.function "$@"
+}
+
 spec.run.specFiles() { ___spec___.run.specFiles "$@"; }
 ___spec___.run.specFiles() {
   local specFile
@@ -185,171 +329,10 @@ ___spec___.run.specFiles() {
   done
 }
 
-spec.run.function() { ___spec___.run.function "$@"; }
-___spec___.run.function() {
-  local functionName="$1"
-  shift
-  "$functionName" "$@"
-}
-
-spec.display.after:run.specFunction() { ___spec___.display.after:run.specFunction "$@"; }
-___spec___.display.after:run.specFunction() {
-  local functionName="spec.formatters.$SPEC_FORMATTER.display.after:run.specFunction"
-  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
-}
-
-spec.display.before:run.specFile() { ___spec___.display.before:run.specFile "$@"; }
-___spec___.display.before:run.specFile() {
-  local functionName="spec.formatters.$SPEC_FORMATTER.display.before:run.specFile"
-  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
-}
-
-spec.display.cliUsage() { ___spec___.display.cliUsage "$@"; }
-___spec___.display.cliUsage() {
-  spec.display.cliUsage.header
-  spec.display.cliUsage.footer
-}
-
-spec.display.cliUsage.footer() { ___spec___.display.cliUsage.footer "$@"; }
-___spec___.display.cliUsage.footer() {
-  :
-}
-
-spec.display.cliUsage.header() { ___spec___.display.cliUsage.header "$@"; }
-___spec___.display.cliUsage.header() {
-  echo "${0/*\/} [file.spec.sh] [directory/] [-f/--flags]"
-}
-
-spec.set.defaultVariables() { ___spec___.set.defaultVariables "$@"; }
-___spec___.set.defaultVariables() {
-  spec.set.defaultStyle
-  spec.set.defaultFormatter
-  spec.set.defaultTheme
-  spec.set.defaultSpecFileSuffixes
-  spec.set.defaultSpecFunctionPrefixes
-  spec.set.defaultPendingFunctionPrefixes
-  spec.set.defaultConfigFilenames
-}
-
-spec.set.defaultFormatter() { ___spec___.set.defaultFormatter "$@"; }
-___spec___.set.defaultFormatter() {
-  [ -z "$SPEC_FORMATTER" ] && SPEC_FORMATTER="documentation"
-}
-
-spec.set.defaultConfigFilenames() { ___spec___.set.defaultConfigFilenames "$@"; }
-___spec___.set.defaultConfigFilenames() {
-  [ -z "$SPEC_CONFIG_FILENAMES"  ] && SPEC_CONFIG_FILENAMES="spec.config.sh"
-}
-
-spec.set.defaultSpecFunctionPrefixes() { ___spec___.set.defaultSpecFunctionPrefixes "$@"; }
-___spec___.set.defaultSpecFunctionPrefixes() {
-  local functionName="spec.styles.$SPEC_STYLE.set.defaultSpecFunctionPrefixes"
-  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
-}
-
-spec.set.defaultTheme() { ___spec___.set.defaultTheme "$@"; }
-___spec___.set.defaultTheme() {
-  [ -z "$SPEC_COLOR"                     ] && SPEC_COLOR="true"
-  [ -z "$SPEC_THEME_TEXT_COLOR"          ] && SPEC_THEME_TEXT_COLOR=39
-  [ -z "$SPEC_THEME_PASS_COLOR"          ] && SPEC_THEME_PASS_COLOR=32
-  [ -z "$SPEC_THEME_FAIL_COLOR"          ] && SPEC_THEME_FAIL_COLOR=31
-  [ -z "$SPEC_THEME_PENDING_COLOR"       ] && SPEC_THEME_PENDING_COLOR=33
-  [ -z "$SPEC_THEME_ERROR_COLOR"         ] && SPEC_THEME_ERROR_COLOR=31
-  [ -z "$SPEC_THEME_FILE_COLOR"          ] && SPEC_THEME_FILE_COLOR=34
-  [ -z "$SPEC_THEME_SPEC_COLOR"          ] && SPEC_THEME_SPEC_COLOR=39
-  [ -z "$SPEC_THEME_SEPARATOR_COLOR"     ] && SPEC_THEME_SEPARATOR_COLOR=39
-  [ -z "$SPEC_THEME_HEADER_COLOR"        ] && SPEC_THEME_HEADER_COLOR=39
-  [ -z "$SPEC_THEME_STDOUT_COLOR"        ] && SPEC_THEME_STDOUT_COLOR=39
-  [ -z "$SPEC_THEME_STDERR_COLOR"        ] && SPEC_THEME_STDERR_COLOR=39
-  [ -z "$SPEC_THEME_STDOUT_HEADER_COLOR" ] && SPEC_THEME_STDOUT_HEADER_COLOR="34;1"
-  [ -z "$SPEC_THEME_STDERR_HEADER_COLOR" ] && SPEC_THEME_STDERR_HEADER_COLOR="31;1"
-}
-
-spec.set.defaultStyle() { ___spec___.set.defaultStyle "$@"; }
-___spec___.set.defaultStyle() {
-  [ -z "$SPEC_STYLE" ] && SPEC_STYLE="xunit_and_spec"
-}
-
-spec.set.defaultSpecFileSuffixes() { ___spec___.set.defaultSpecFileSuffixes "$@"; }
-___spec___.set.defaultSpecFileSuffixes() {
-  [ -z "$SPEC_FILE_SUFFIXES" ] && SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
-}
-
-spec.set.defaultPendingFunctionPrefixes() { ___spec___.set.defaultPendingFunctionPrefixes "$@"; }
-___spec___.set.defaultPendingFunctionPrefixes() {
-  local functionName="spec.styles.$SPEC_STYLE.set.defaultPendingFunctionPrefixes"
-  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
-}
-
-spec.load.pendingFunctions() { ___spec___.load.pendingFunctions "$@"; }
-___spec___.load.pendingFunctions() {
-  local functionName="spec.styles.$SPEC_STYLE.load.pendingFunctions"
-  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
-}
-
-spec.load.specFunctions() { ___spec___.load.specFunctions "$@"; }
-___spec___.load.specFunctions() {
-  local functionName="spec.styles.$SPEC_STYLE.load.specFunctions"
-  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
-}
-
-spec.load.configFiles() { ___spec___.load.configFiles "$@"; }
-___spec___.load.configFiles() {
-  if [ -n "$SPEC_CONFIG" ]
-  then
-    IFS=: read -ra configPaths <<<"$SPEC_CONFIG"
-    local configPath
-    for configPath in "${configPaths[@]}"
-    do
-      if [ -f "$configPath" ]
-      then
-        spec.source.file "$configPath"
-      else
-        echo "Spec config file not found: $configPath" >&2
-        return 1
-      fi
-    done
-  else
-    IFS=: read -ra configFilenames <<<"$SPEC_CONFIG_FILENAMES"
-    local directory="$( pwd )"
-    [ -f "$directory/$configFilename" ] && SPEC_CONFIG_FILES+=("$directory/$configFilename")
-    while [ "$directory" != "/" ] && [ "$directory" != "." ]
-    do
-      directory="$( dirname "$directory" )"
-      local configFilename
-      for configFilename in "${configFilenames[@]}"
-      do
-        [ -f "$directory/$configFilename" ] && SPEC_CONFIG_FILES+=("$directory/$configFilename")
-      done
-    done
-  fi
-}
-
-spec.load.specFiles() { ___spec___.load.specFiles "$@"; }
-___spec___.load.specFiles() {
-  IFS=: read -ra specFileExtensions <<<"$SPEC_FILE_SUFFIXES"
-  local pathArgument
-  for pathArgument in "${SPEC_PATH_ARGUMENTS[@]}"
-  do
-    if [ -f "$pathArgument" ]
-    then
-      SPEC_FILE_LIST+=("$pathArgument")
-    elif [ -d "$pathArgument" ]
-    then
-      local suffix
-      for suffix in "${specFileExtensions[@]}"
-      do
-        local specFile
-        while read -d '' -r specFile
-        do
-          [ -f "$specFile" ] && SPEC_FILE_LIST+=("$specFile")
-        done < <( find "$pathArgument" -type f -iname "*$suffix" -print0 )
-      done
-    else
-      echo "Unexpected argument for spec.load.specFiles: $pathArgument. Expected: file or directory." >&2
-      return 1
-    fi
-  done
+spec.loadAndSource.configFiles() { ___spec___.loadAndSource.configFiles "$@"; }
+___spec___.loadAndSource.configFiles() {
+  declare -a SPEC_CONFIG_FILES=()
+  spec.load.configFiles && spec.source.configFiles
 }
 
 spec.formatters.documentation.display.after:run.specFunction() {
@@ -423,137 +406,6 @@ ___spec___.formatters.documentation.display.before:run.specFile() {
   [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
 }
 
-spec.styles.xunit.get.functionDisplayName() { ___spec___.styles.xunit.get.functionDisplayName "$@"; }
-___spec___.styles.xunit.get.functionDisplayName() {
-  local functionName="$1"
-  displayName="${functionName//_/ }" # convert _ into space
-  displayName="${displayName//\./ }" # convert . into space
-  displayName="$( printf "$displayName" | sed 's/\([A-Z]\)/ \1/g' )" # convert 'camelCase' to ' Camel Case'
-  displayName="${displayName##[[:space:]]}" # strip extraneous leading space
-  displayName="$( echo "$displayName" | sed 's/ \+/ /g' )" # compact spaces
-  printf "$displayName"
-}
-
-spec.styles.xunit.set.defaultSpecFunctionPrefixes() { ___spec___.styles.xunit.set.defaultSpecFunctionPrefixes "$@"; }
-___spec___.styles.xunit.set.defaultSpecFunctionPrefixes() {
-  [ -z "$SPEC_FUNCTION_PREFIXES" ] && SPEC_FUNCTION_PREFIXES="test"
-}
-
-spec.styles.xunit.set.defaultPendingFunctionPrefixes() { ___spec___.styles.xunit.set.defaultPendingFunctionPrefixes "$@"; }
-___spec___.styles.xunit.set.defaultPendingFunctionPrefixes() {
-  [ -z "$SPEC_PENDING_FUNCTION_PREFIXES" ] && SPEC_PENDING_FUNCTION_PREFIXES="xtest"
-}
-
-spec.styles.xunit.load.pendingFunctions() { ___spec___.styles.xunit.load.pendingFunctions "$@"; }
-___spec___.styles.xunit.load.pendingFunctions() {
-  local specFunctionPrefixes
-  IFS=$'\n' read -d '' -ra specFunctionPrefixes < <(printf "$SPEC_PENDING_FUNCTION_PREFIXES")
-  local functionPrefix
-  for functionPrefix in "${specFunctionPrefixes[@]}"
-  do
-    local specFunctions
-    IFS=$'\n' read -d '' -ra specFunctions < <(declare -F | grep "^declare -f $functionPrefix" | sed 's/^declare -f //' )
-    local specFunction
-    for specFunction in "${specFunctions[@]}"
-    do
-      SPEC_PENDING_FUNCTIONS+=("$specFunction")
-      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
-      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
-      SPEC_PENDING_DISPLAY_NAMES+=("$displayName")
-    done
-  done
-}
-
-spec.styles.xunit.load.specFunctions() { ___spec___.styles.xunit.load.specFunctions "$@"; }
-___spec___.styles.xunit.load.specFunctions() {
-  local specFunctionPrefixes
-  IFS=$'\n' read -d '' -ra specFunctionPrefixes < <(printf "$SPEC_FUNCTION_PREFIXES")
-  local functionPrefix
-  for functionPrefix in "${specFunctionPrefixes[@]}"
-  do
-    local specFunctions
-    IFS=$'\n' read -d '' -ra specFunctions < <(declare -F | grep "^declare -f $functionPrefix" | sed 's/^declare -f //' )
-    local specFunction
-    for specFunction in "${specFunctions[@]}"
-    do
-      SPEC_FUNCTIONS+=("$specFunction")
-      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
-      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
-      SPEC_DISPLAY_NAMES+=("$displayName")
-    done
-  done
-}
-
-spec.styles.xunit_and_spec.get.functionDisplayName() { ___spec___.styles.xunit_and_spec.get.functionDisplayName "$@"; }
-___spec___.styles.xunit_and_spec.get.functionDisplayName() {
-  local functionName="$1"
-  displayName="${functionName//_/ }" # convert _ into space
-  displayName="${displayName//\./ }" # convert . into space
-  displayName="$( printf "$displayName" | sed 's/\([A-Z]\)/ \1/g' )" # convert 'camelCase' to ' Camel Case'
-  displayName="${displayName##[[:space:]]}" # strip extraneous leading space
-  displayName="$( echo "$displayName" | sed 's/ \+/ /g' )" # compact spaces
-  printf "$displayName"
-}
-
-spec.styles.xunit_and_spec.set.defaultSpecFunctionPrefixes() { ___spec___.styles.xunit_and_spec.set.defaultSpecFunctionPrefixes "$@"; }
-___spec___.styles.xunit_and_spec.set.defaultSpecFunctionPrefixes() {
-  [ -z "$SPEC_FUNCTION_PREFIXES" ] && SPEC_FUNCTION_PREFIXES="test\n@spec.\n@example.\n@it."
-}
-
-spec.styles.xunit_and_spec.set.defaultPendingFunctionPrefixes() { ___spec___.styles.xunit_and_spec.set.defaultPendingFunctionPrefixes "$@"; }
-___spec___.styles.xunit_and_spec.set.defaultPendingFunctionPrefixes() {
-  [ -z "$SPEC_PENDING_FUNCTION_PREFIXES" ] && SPEC_PENDING_FUNCTION_PREFIXES="xtest\n@pending.\n@xspec.\n@xexample.\n@xit."
-}
-
-spec.styles.xunit_and_spec.load.pendingFunctions() { ___spec___.styles.xunit_and_spec.load.pendingFunctions "$@"; }
-___spec___.styles.xunit_and_spec.load.pendingFunctions() {
-  local specFunctionPrefixes
-  IFS=$'\n' read -d '' -ra specFunctionPrefixes < <(printf "$SPEC_PENDING_FUNCTION_PREFIXES")
-  local functionPrefix
-  for functionPrefix in "${specFunctionPrefixes[@]}"
-  do
-    local specFunctions
-    IFS=$'\n' read -d '' -ra specFunctions < <(declare -F | grep "^declare -f $functionPrefix" | sed 's/^declare -f //' )
-    local specFunction
-    for specFunction in "${specFunctions[@]}"
-    do
-      SPEC_PENDING_FUNCTIONS+=("$specFunction")
-      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
-      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
-      SPEC_PENDING_DISPLAY_NAMES+=("$displayName")
-    done
-  done
-}
-
-spec.styles.xunit_and_spec.load.specFunctions() { ___spec___.styles.xunit_and_spec.load.specFunctions "$@"; }
-___spec___.styles.xunit_and_spec.load.specFunctions() {
-  local specFunctionPrefixes
-  IFS=$'\n' read -d '' -ra specFunctionPrefixes < <(printf "$SPEC_FUNCTION_PREFIXES")
-  local functionPrefix
-  for functionPrefix in "${specFunctionPrefixes[@]}"
-  do
-    local specFunctions
-    IFS=$'\n' read -d '' -ra specFunctions < <(declare -F | grep "^declare -f $functionPrefix" | sed 's/^declare -f //' )
-    local specFunction
-    for specFunction in "${specFunctions[@]}"
-    do
-      SPEC_FUNCTIONS+=("$specFunction")
-      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
-      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
-      SPEC_DISPLAY_NAMES+=("$displayName")
-    done
-  done
-}
-
-spec.styles.spec.get.functionDisplayName() { ___spec___.styles.spec.get.functionDisplayName "$@"; }
-___spec___.styles.spec.get.functionDisplayName() {
-  local functionName="$1"
-  displayName="${functionName//_/ }" # convert _ into space
-  displayName="${displayName//\./ }" # convert . into space
-  displayName="$( echo "$displayName" | sed 's/ \+/ /g' )" # compact spaces
-  printf "$displayName"
-}
-
 spec.styles.spec.set.defaultSpecFunctionPrefixes() { ___spec___.styles.spec.set.defaultSpecFunctionPrefixes "$@"; }
 ___spec___.styles.spec.set.defaultSpecFunctionPrefixes() {
   [ -z "$SPEC_FUNCTION_PREFIXES" ] && SPEC_FUNCTION_PREFIXES="@spec.\n@example.\n@it."
@@ -562,6 +414,26 @@ ___spec___.styles.spec.set.defaultSpecFunctionPrefixes() {
 spec.styles.spec.set.defaultPendingFunctionPrefixes() { ___spec___.styles.spec.set.defaultPendingFunctionPrefixes "$@"; }
 ___spec___.styles.spec.set.defaultPendingFunctionPrefixes() {
   [ -z "$SPEC_PENDING_FUNCTION_PREFIXES" ] && SPEC_PENDING_FUNCTION_PREFIXES="@pending.\n@xspec.\n@xexample.\n@xit."
+}
+
+spec.styles.spec.load.specFunctions() { ___spec___.styles.spec.load.specFunctions "$@"; }
+___spec___.styles.spec.load.specFunctions() {
+  local specFunctionPrefixes
+  IFS=$'\n' read -d '' -ra specFunctionPrefixes < <(printf "$SPEC_FUNCTION_PREFIXES")
+  local functionPrefix
+  for functionPrefix in "${specFunctionPrefixes[@]}"
+  do
+    local specFunctions
+    IFS=$'\n' read -d '' -ra specFunctions < <(declare -F | grep "^declare -f $functionPrefix" | sed 's/^declare -f //' )
+    local specFunction
+    for specFunction in "${specFunctions[@]}"
+    do
+      SPEC_FUNCTIONS+=("$specFunction")
+      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
+      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
+      SPEC_DISPLAY_NAMES+=("$displayName")
+    done
+  done
 }
 
 spec.styles.spec.load.pendingFunctions() { _.spec___.styles.spec.load.pendingFunctions "$@"; }
@@ -584,8 +456,27 @@ _.spec___.styles.spec.load.pendingFunctions() {
   done
 }
 
-spec.styles.spec.load.specFunctions() { ___spec___.styles.spec.load.specFunctions "$@"; }
-___spec___.styles.spec.load.specFunctions() {
+spec.styles.spec.get.functionDisplayName() { ___spec___.styles.spec.get.functionDisplayName "$@"; }
+___spec___.styles.spec.get.functionDisplayName() {
+  local functionName="$1"
+  displayName="${functionName//_/ }" # convert _ into space
+  displayName="${displayName//\./ }" # convert . into space
+  displayName="$( echo "$displayName" | sed 's/ \+/ /g' )" # compact spaces
+  printf "$displayName"
+}
+
+spec.styles.xunit.set.defaultSpecFunctionPrefixes() { ___spec___.styles.xunit.set.defaultSpecFunctionPrefixes "$@"; }
+___spec___.styles.xunit.set.defaultSpecFunctionPrefixes() {
+  [ -z "$SPEC_FUNCTION_PREFIXES" ] && SPEC_FUNCTION_PREFIXES="test"
+}
+
+spec.styles.xunit.set.defaultPendingFunctionPrefixes() { ___spec___.styles.xunit.set.defaultPendingFunctionPrefixes "$@"; }
+___spec___.styles.xunit.set.defaultPendingFunctionPrefixes() {
+  [ -z "$SPEC_PENDING_FUNCTION_PREFIXES" ] && SPEC_PENDING_FUNCTION_PREFIXES="xtest"
+}
+
+spec.styles.xunit.load.specFunctions() { ___spec___.styles.xunit.load.specFunctions "$@"; }
+___spec___.styles.xunit.load.specFunctions() {
   local specFunctionPrefixes
   IFS=$'\n' read -d '' -ra specFunctionPrefixes < <(printf "$SPEC_FUNCTION_PREFIXES")
   local functionPrefix
@@ -602,6 +493,98 @@ ___spec___.styles.spec.load.specFunctions() {
       SPEC_DISPLAY_NAMES+=("$displayName")
     done
   done
+}
+
+spec.styles.xunit.load.pendingFunctions() { ___spec___.styles.xunit.load.pendingFunctions "$@"; }
+___spec___.styles.xunit.load.pendingFunctions() {
+  local specFunctionPrefixes
+  IFS=$'\n' read -d '' -ra specFunctionPrefixes < <(printf "$SPEC_PENDING_FUNCTION_PREFIXES")
+  local functionPrefix
+  for functionPrefix in "${specFunctionPrefixes[@]}"
+  do
+    local specFunctions
+    IFS=$'\n' read -d '' -ra specFunctions < <(declare -F | grep "^declare -f $functionPrefix" | sed 's/^declare -f //' )
+    local specFunction
+    for specFunction in "${specFunctions[@]}"
+    do
+      SPEC_PENDING_FUNCTIONS+=("$specFunction")
+      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
+      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
+      SPEC_PENDING_DISPLAY_NAMES+=("$displayName")
+    done
+  done
+}
+
+spec.styles.xunit.get.functionDisplayName() { ___spec___.styles.xunit.get.functionDisplayName "$@"; }
+___spec___.styles.xunit.get.functionDisplayName() {
+  local functionName="$1"
+  displayName="${functionName//_/ }" # convert _ into space
+  displayName="${displayName//\./ }" # convert . into space
+  displayName="$( printf "$displayName" | sed 's/\([A-Z]\)/ \1/g' )" # convert 'camelCase' to ' Camel Case'
+  displayName="${displayName##[[:space:]]}" # strip extraneous leading space
+  displayName="$( echo "$displayName" | sed 's/ \+/ /g' )" # compact spaces
+  printf "$displayName"
+}
+
+spec.styles.xunit_and_spec.set.defaultSpecFunctionPrefixes() { ___spec___.styles.xunit_and_spec.set.defaultSpecFunctionPrefixes "$@"; }
+___spec___.styles.xunit_and_spec.set.defaultSpecFunctionPrefixes() {
+  [ -z "$SPEC_FUNCTION_PREFIXES" ] && SPEC_FUNCTION_PREFIXES="test\n@spec.\n@example.\n@it."
+}
+
+spec.styles.xunit_and_spec.set.defaultPendingFunctionPrefixes() { ___spec___.styles.xunit_and_spec.set.defaultPendingFunctionPrefixes "$@"; }
+___spec___.styles.xunit_and_spec.set.defaultPendingFunctionPrefixes() {
+  [ -z "$SPEC_PENDING_FUNCTION_PREFIXES" ] && SPEC_PENDING_FUNCTION_PREFIXES="xtest\n@pending.\n@xspec.\n@xexample.\n@xit."
+}
+
+spec.styles.xunit_and_spec.load.specFunctions() { ___spec___.styles.xunit_and_spec.load.specFunctions "$@"; }
+___spec___.styles.xunit_and_spec.load.specFunctions() {
+  local specFunctionPrefixes
+  IFS=$'\n' read -d '' -ra specFunctionPrefixes < <(printf "$SPEC_FUNCTION_PREFIXES")
+  local functionPrefix
+  for functionPrefix in "${specFunctionPrefixes[@]}"
+  do
+    local specFunctions
+    IFS=$'\n' read -d '' -ra specFunctions < <(declare -F | grep "^declare -f $functionPrefix" | sed 's/^declare -f //' )
+    local specFunction
+    for specFunction in "${specFunctions[@]}"
+    do
+      SPEC_FUNCTIONS+=("$specFunction")
+      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
+      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
+      SPEC_DISPLAY_NAMES+=("$displayName")
+    done
+  done
+}
+
+spec.styles.xunit_and_spec.load.pendingFunctions() { ___spec___.styles.xunit_and_spec.load.pendingFunctions "$@"; }
+___spec___.styles.xunit_and_spec.load.pendingFunctions() {
+  local specFunctionPrefixes
+  IFS=$'\n' read -d '' -ra specFunctionPrefixes < <(printf "$SPEC_PENDING_FUNCTION_PREFIXES")
+  local functionPrefix
+  for functionPrefix in "${specFunctionPrefixes[@]}"
+  do
+    local specFunctions
+    IFS=$'\n' read -d '' -ra specFunctions < <(declare -F | grep "^declare -f $functionPrefix" | sed 's/^declare -f //' )
+    local specFunction
+    for specFunction in "${specFunctions[@]}"
+    do
+      SPEC_PENDING_FUNCTIONS+=("$specFunction")
+      local functionNameWithoutPrefix="${specFunction#"$functionPrefix"}"
+      local displayName="$( spec.get.functionDisplayName "$functionNameWithoutPrefix" )"
+      SPEC_PENDING_DISPLAY_NAMES+=("$displayName")
+    done
+  done
+}
+
+spec.styles.xunit_and_spec.get.functionDisplayName() { ___spec___.styles.xunit_and_spec.get.functionDisplayName "$@"; }
+___spec___.styles.xunit_and_spec.get.functionDisplayName() {
+  local functionName="$1"
+  displayName="${functionName//_/ }" # convert _ into space
+  displayName="${displayName//\./ }" # convert . into space
+  displayName="$( printf "$displayName" | sed 's/\([A-Z]\)/ \1/g' )" # convert 'camelCase' to ' Camel Case'
+  displayName="${displayName##[[:space:]]}" # strip extraneous leading space
+  displayName="$( echo "$displayName" | sed 's/ \+/ /g' )" # compact spaces
+  printf "$displayName"
 }
 
 spec.set.defaultVariables
