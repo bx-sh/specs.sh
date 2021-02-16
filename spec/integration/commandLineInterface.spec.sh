@@ -14,7 +14,7 @@
   local displayName="${commandName#\.\/}"
 
   assert run ./specs.sh --help
-  expect "$STDOUT" toContain "${displayName}[file.specs.sh]"
+  expect "$STDOUT" toContain "${displayName}[file.spec.sh]"
 }
 
 @pending.runs_all_specs_in_the_current_directory_when_called_with_no_arguments() {
@@ -26,8 +26,8 @@
   local commandName="./specs.sh "
   local displayName="${commandName#\.\/}"
 
-  refute run ./specs.sh this-doesnt-exist.specs.sh
+  refute run ./specs.sh this-doesnt-exist.spec.sh
   expect "$STDOUT" toBeEmpty
-  expect "$STDERR" toContain "${displayName}received unknown argument: this-doesnt-exist.specs.sh"
+  expect "$STDERR" toContain "${displayName}received unknown argument: this-doesnt-exist.spec.sh"
   expect "$STDERR" toContain "Expected file or directory or flag, e.g. --version"
 }

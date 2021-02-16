@@ -54,7 +54,7 @@ These can be exported in your shell or configured in \`spec.config.sh\`
    \`\`\`sh
    export SPEC_FORMATTER=tap
 
-   ./specs.sh file.specs.sh dir/
+   ./specs.sh file.spec.sh dir/
    \`\`\`
  - Set variables in \`spec.config.sh\`
    \`\`\`sh

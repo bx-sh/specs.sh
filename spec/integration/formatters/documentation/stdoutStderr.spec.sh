@@ -1,5 +1,5 @@
 @spec.displays_stdout_and_stderr_if_spec_fails() {
-  refute run ./specs.sh examples/specSpecs/basics/failing.stderrAndStdout.specs.sh
+  refute run ./specs.sh examples/specSpecs/basics/failing.stderrAndStdout.spec.sh
   
   # The STDERR from the test goes to out STDOUT not error
   expect "$STDERR" not toContain "[Standard Output]" "[Standard Error]"
@@ -14,7 +14,7 @@
 }
 
 @spec.does_not_display_stdout_and_stderr_if_spec_passes() {
-  assert run ./specs.sh examples/specSpecs/basics/passing.stderrAndStdout.specs.sh
+  assert run ./specs.sh examples/specSpecs/basics/passing.stderrAndStdout.spec.sh
 
   expect "$STDERR" not toContain "[Standard Output]"
   expect "$STDOUT" not toContain "[Standard Output]"
@@ -23,7 +23,7 @@
 @spec.displays_stdout_and_stderr_if_SPEC_DISPLAY_OUTPUT_is_true.spec_passes() {
   export SPEC_DISPLAY_OUTPUT=true
 
-  assert run ./specs.sh examples/specSpecs/basics/passing.stderrAndStdout.specs.sh
+  assert run ./specs.sh examples/specSpecs/basics/passing.stderrAndStdout.spec.sh
 
   expect "$STDERR" not toContain "[Standard Output]" "[Standard Error]"
 

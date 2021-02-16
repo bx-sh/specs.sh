@@ -8,7 +8,7 @@ These can be exported in your shell or configured in `spec.config.sh`
    ```sh
    export SPEC_FORMATTER=tap
 
-   ./specs.sh file.specs.sh dir/
+   ./specs.sh file.spec.sh dir/
    ```
  - Set variables in `spec.config.sh`
    ```sh
@@ -71,7 +71,7 @@ For example:
 ### `$SPEC_FILE_SUFFIXES`
 
 - Sets the list of suffixes to use when searching directories for specs.
-- Default: `.specs.sh:.test.sh`
+- Default: `.spec.sh:.test.sh`
 - Can provide multiple `:`-separated suffixes
 
 
@@ -281,7 +281,7 @@ Default behavior:
 
 #### `spec.set.defaultSpecFileSuffixes()`
 
-- Sets default `SPEC_FILE_SUFFIXES` value: `.specs.sh:.test.sh`
+- Sets default `SPEC_FILE_SUFFIXES` value: `.spec.sh:.test.sh`
 
 #### `spec.set.defaultSpecFunctionPrefixes()`
 

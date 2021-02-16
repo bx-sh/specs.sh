@@ -1,24 +1,24 @@
 @spec.exits_zero_when_running_one_file_with_passing_specs() {
-  assert run ./specs.sh examples/specSpecs/basics/passing.oneSpec.return0.specs.sh
-  assert run ./specs.sh examples/specSpecs/basics/passing.oneSpec.exit0.specs.sh
-  assert run ./specs.sh examples/specSpecs/basics/passing.threeSpecs.return0.specs.sh
-  assert run ./specs.sh examples/specSpecs/basics/passing.threeSpecs.exit0.specs.sh
+  assert run ./specs.sh examples/specSpecs/basics/passing.oneSpec.return0.spec.sh
+  assert run ./specs.sh examples/specSpecs/basics/passing.oneSpec.exit0.spec.sh
+  assert run ./specs.sh examples/specSpecs/basics/passing.threeSpecs.return0.spec.sh
+  assert run ./specs.sh examples/specSpecs/basics/passing.threeSpecs.exit0.spec.sh
 }
 
 @spec.returns_zero_when_running_one_file_with_passing_specs() {
-  refute run ./specs.sh examples/specSpecs/basics/failing.oneSpec.return1.specs.sh
-  refute run ./specs.sh examples/specSpecs/basics/failing.oneSpec.exit1.specs.sh
-  refute run ./specs.sh examples/specSpecs/basics/failing.threeSpecs.return1.specs.sh
-  refute run ./specs.sh examples/specSpecs/basics/failing.threeSpecs.exit1.specs.sh
+  refute run ./specs.sh examples/specSpecs/basics/failing.oneSpec.return1.spec.sh
+  refute run ./specs.sh examples/specSpecs/basics/failing.oneSpec.exit1.spec.sh
+  refute run ./specs.sh examples/specSpecs/basics/failing.threeSpecs.return1.spec.sh
+  refute run ./specs.sh examples/specSpecs/basics/failing.threeSpecs.exit1.spec.sh
 }
 
 
 @spec.exits_zero_when_running_one_file_with_passing_and_pending_specs() {
-  assert run ./specs.sh examples/specSpecs/basics/passing.somePending.onePasses.specs.sh
+  assert run ./specs.sh examples/specSpecs/basics/passing.somePending.onePasses.spec.sh
 }
 
 @spec.exits_non_zero_when_running_one_file_with_a_failing_spec() {
-  refute run ./specs.sh examples/specSpecs/basics/failing.somePass.oneFails.specs.sh
+  refute run ./specs.sh examples/specSpecs/basics/failing.somePass.oneFails.spec.sh
 }
 
 @pending.runs_spec_files_in_separate_processes() {

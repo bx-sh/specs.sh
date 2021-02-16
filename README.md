@@ -37,7 +37,7 @@ spec version 0.3.0
 ## Shell Specifications
 
 ```sh
-# [ my-file.specs.sh ]
+# [ my-file.spec.sh ]
 
 @spec.one_equals_one() {
   [ 1 -eq 1 ]
@@ -49,7 +49,7 @@ spec version 0.3.0
 ```
 
 ```sh
-$ spec my-file.specs.sh
+$ spec my-file.spec.sh
 
 [OK] one equals one
 [FAIL] one equals two
@@ -520,7 +520,7 @@ helperFunctionTwo() {
 ```
 
 ```sh
-# [ spec/myFile.specs.sh ]
+# [ spec/myFile.spec.sh ]
 
 @spec.this_individual_spec() {
   helperFunctionOne
@@ -535,7 +535,7 @@ This allows you to easily share dependencies between various `spec` source code 
 >
 > `spec` will search the path for `specHelper.sh` files.
 >
-> If your spec file is `/foo/bar/baz.specs.sh` then `spec` will search for:
+> If your spec file is `/foo/bar/baz.spec.sh` then `spec` will search for:
 >
 > - `/specHelper.sh`
 > - `/foo/specHelper.sh`
@@ -554,7 +554,7 @@ This allows you to easily share dependencies between various `spec` source code 
 > In addition to `specHelper.sh`, `spec` also searches for the following filenames to autoload:
 >
 > - `testHelper.sh`
-> - `helper.specs.sh`
+> - `helper.spec.sh`
 > - `helper.test.sh`
 
 ---
@@ -566,7 +566,7 @@ $ spec --help
 
 spec version 0.2.6
 
-Usage: spec [directory/ or file.specs.sh] [-f -p -e -c -h -v]
+Usage: spec [directory/ or file.spec.sh] [-f -p -e -c -h -v]
 
 Options:
 
@@ -584,15 +584,15 @@ Options:
 
 Examples:
 
-  spec file.specs.sh                   Runs file.specs.sh
+  spec file.spec.sh                   Runs file.spec.sh
 
-  spec file.specs.sh another.specs.sh   Runs two spec files
+  spec file.spec.sh another.spec.sh   Runs two spec files
 
   spec directory/                     Recursively searches directory/ for
-                                      *.specs.sh and *.test.sh files to run
+                                      *.spec.sh and *.test.sh files to run
 
   spec                                Recursively searches current directory for
-                                      *.specs.sh and *.test.sh files to run
+                                      *.spec.sh and *.test.sh files to run
 
   spec -e ^hello                      Runs tests with names that start with "hello"
 
@@ -606,15 +606,15 @@ Examples:
 To run a `spec` source file:
 
 ```sh
-$ spec my-spec.specs.sh
+$ spec my-spec.spec.sh
 ```
 
-> Your spec file can have any name, but `*.specs.sh` or `*.test.sh` are the most common
+> Your spec file can have any name, but `*.spec.sh` or `*.test.sh` are the most common
 
 You can also run multiple spec files:
 
 ```sh
-$ spec spec/first.specs.sh spec/second.specs.sh
+$ spec spec/first.spec.sh spec/second.spec.sh
 ```
 
 You can also run all spec files in a directory by providing `spec` with the directory name:
@@ -623,7 +623,7 @@ You can also run all spec files in a directory by providing `spec` with the dire
 $ spec spec/
 ```
 
-> This will search the `spec/` directory for `*.specs.sh` and `*.test.sh` files
+> This will search the `spec/` directory for `*.spec.sh` and `*.test.sh` files
 
 If you run `spec` with no arguments, it will run all spec files in the current directory:
 
@@ -631,7 +631,7 @@ If you run `spec` with no arguments, it will run all spec files in the current d
 $ spec
 ```
 
-> This is the equivalent of running `spec ./` and searches for `*.specs.sh` and `*.test.sh` files
+> This is the equivalent of running `spec ./` and searches for `*.spec.sh` and `*.test.sh` files
 
 ## Running only certain specs
 
@@ -954,7 +954,7 @@ That should get you started 🔬
 
 ### Example Specs
 
-Create two files, `specOne.specs.sh` and `specTwo.specs.sh` and give the both this content:
+Create two files, `specOne.spec.sh` and `specTwo.spec.sh` and give the both this content:
 
 ```sh
 @setupFixture() {
@@ -1043,11 +1043,11 @@ spec.displaySpecSummary() {
 Now run the specs:
 
 ```sh
-$ spec specOne.specs.sh specTwo.specs.sh
+$ spec specOne.spec.sh specTwo.spec.sh
 
-[Spec File: examples/formatter/specOne.specs.sh]
+[Spec File: examples/formatter/specOne.spec.sh]
 	[RUN @setupFixture]
-Hi from setupFixture. This function: @setupFixture This file examples/formatter/specOne.specs.sh
+Hi from setupFixture. This function: @setupFixture This file examples/formatter/specOne.spec.sh
 	> Running i fail ... [FAIL]
 
 	> Running spec one ... [PASS]
@@ -1056,13 +1056,13 @@ Hi from setupFixture. This function: @setupFixture This file examples/formatter/
 	> Running spec two ... [PASS]
 
 	[RUN @teardownFixture]
-Hi from teardownFixture. This function: @teardownFixture This file examples/formatter/specOne.specs.sh
+Hi from teardownFixture. This function: @teardownFixture This file examples/formatter/specOne.spec.sh
 	> Running i am pending ... [PENDING]
 
 [FAIL] Tests failed. 2 passed, 1 failed, 1 pending.
-[Spec File: examples/formatter/specTwo.specs.sh]
+[Spec File: examples/formatter/specTwo.spec.sh]
 	[RUN @setupFixture]
-Hi from setupFixture. This function: @setupFixture This file examples/formatter/specTwo.specs.sh
+Hi from setupFixture. This function: @setupFixture This file examples/formatter/specTwo.spec.sh
 	> Running i fail ... [FAIL]
 
 	> Running spec one ... [PASS]
@@ -1071,7 +1071,7 @@ Hi from setupFixture. This function: @setupFixture This file examples/formatter/
 	> Running spec two ... [PASS]
 
 	[RUN @teardownFixture]
-Hi from teardownFixture. This function: @teardownFixture This file examples/formatter/specTwo.specs.sh
+Hi from teardownFixture. This function: @teardownFixture This file examples/formatter/specTwo.spec.sh
 	> Running i am pending ... [PENDING]
 
 [FAIL] Tests failed. 2 passed, 1 failed, 1 pending.
@@ -1199,7 +1199,7 @@ All of these functions have access to the following variables:
 #### `spec.helperFilenames`
 
 > Caller: `spec.loadHelpers`  
-> Default: `echo specHelper.sh testHelper.sh helper.specs.sh helper.test.sh`
+> Default: `echo specHelper.sh testHelper.sh helper.spec.sh helper.test.sh`
 
 - Function should echo a list of strings
 - Each item will be used as the basename of a file to search for and load

@@ -1,5 +1,5 @@
 @spec.runs_at_spec_functions_but_not_test_prefixed_functions() {
-  refute run ./specs.sh examples/specSpecs/basics/xunitAndBdd.specs.sh
+  refute run ./specs.sh examples/specSpecs/basics/xunitAndBdd.spec.sh
 
   expect "$STDOUT" toContain "foo"
   expect "$STDOUT" toContain "passing foo"

@@ -1,15 +1,15 @@
 @spec.prints_the_name_of_the_file_being_run() {
-  assert run ./specs.sh examples/specSpecs/basics/passing.oneSpec.return0.specs.sh
-  expect "$STDOUT" toContain "passing.oneSpec.return0.specs.sh"
+  assert run ./specs.sh examples/specSpecs/basics/passing.oneSpec.return0.spec.sh
+  expect "$STDOUT" toContain "passing.oneSpec.return0.spec.sh"
 
-  ./specs.sh examples/specSpecs/basics/failing.oneSpec.return1.specs.sh
-  refute run ./specs.sh examples/specSpecs/basics/failing.oneSpec.return1.specs.sh
-  expect "$STDOUT" toContain "failing.oneSpec.return1.specs.sh"
+  ./specs.sh examples/specSpecs/basics/failing.oneSpec.return1.spec.sh
+  refute run ./specs.sh examples/specSpecs/basics/failing.oneSpec.return1.spec.sh
+  expect "$STDOUT" toContain "failing.oneSpec.return1.spec.sh"
 }
 
 @spec.prints_the_name_of_the_spec_functions_run() {
-  assert run ./specs.sh examples/specSpecs/basics/passing.threeSpecs.specs.sh
-  expect "$STDOUT" toContain "passing.threeSpecs.specs.sh"
+  assert run ./specs.sh examples/specSpecs/basics/passing.threeSpecs.spec.sh
+  expect "$STDOUT" toContain "passing.threeSpecs.spec.sh"
   expect "$STDOUT" toContain "[OK] hello one"
   expect "$STDOUT" toContain "[OK] hello two"
   expect "$STDOUT" toContain "[OK] hello three"
