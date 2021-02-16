@@ -8,7 +8,7 @@ do
   newSpecFilename="${fullSpecFile/*\/}"
   newSpecFolder="${fullSpecFile%"$newSpecFilename"}"
   mkdir -p "$newSpecFolder"
-  cat "$specFile" | sed 's/\.\/spec\.sh /.\/spec-full.sh /g' > "$fullSpecFile"
-done < <( find spec/integration \( -iname "*.spec.sh" -o -iname specHelper.sh \) -print0 )
+  cat "$specFile" | sed 's/\.\/specs\.sh /.\/specs-full.sh /g' > "$fullSpecFile"
+done < <( find spec/integration \( -iname "*.specs.sh" -o -iname specHelper.sh \) -print0 )
 
-echo "Generated spec/full/integration specs (copy of spec.sh specs for spec-full.sh)"
+echo "Generated spec/full/integration specs (copy of specs.sh specs for specs-full.sh)"

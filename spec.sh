@@ -14,7 +14,7 @@ ___spec___.main() {
   fi
   if [ $# -eq 1 ] && [ "$1" = "--version" ]
   then
-    printf "spec.sh version " >&2
+    printf "specs.sh version " >&2
     printf "$SPEC_VERSION"
     return 0
   fi
@@ -89,7 +89,7 @@ ___spec___.set.defaultPendingFunctionPrefixes() {
 
 spec.set.defaultSpecFileSuffixes() { ___spec___.set.defaultSpecFileSuffixes "$@"; }
 ___spec___.set.defaultSpecFileSuffixes() {
-  [ -z "$SPEC_FILE_SUFFIXES" ] && SPEC_FILE_SUFFIXES=".spec.sh:.test.sh"
+  [ -z "$SPEC_FILE_SUFFIXES" ] && SPEC_FILE_SUFFIXES=".specs.sh:.test.sh"
 }
 
 spec.set.defaultTheme() { ___spec___.set.defaultTheme "$@"; }
@@ -112,7 +112,7 @@ ___spec___.set.defaultTheme() {
 
 spec.display.cliUsage.header() { ___spec___.display.cliUsage.header "$@"; }
 ___spec___.display.cliUsage.header() {
-  echo "${0/*\/} [file.spec.sh] [directory/] [-f/--flags]"
+  echo "${0/*\/} [file.specs.sh] [directory/] [-f/--flags]"
 }
 
 spec.display.cliUsage() { ___spec___.display.cliUsage "$@"; }

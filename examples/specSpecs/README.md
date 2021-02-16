@@ -1,3 +1,3 @@
 # 🔬 Spec Specs
 
-This folder contains the specs used for the `spec.sh` specs in `spec/`
+This folder contains the specs used for the `specs.sh` specs in `spec/`

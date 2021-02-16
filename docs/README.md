@@ -6,9 +6,9 @@
 
 ---
 
-`spec.sh` is a shell script testing library written for developer happiness 💝
+`specs.sh` is a shell script testing library written for developer happiness 💝
 
-If you've used any popular testing framework `spec.sh` should feel familiar!
+If you've used any popular testing framework `specs.sh` should feel familiar!
 
 ## Features
 
@@ -50,10 +50,10 @@ curl -o- https://specs.sh/installer.sh | curl
 
 ##### Available versions
 
-`spec.sh` comes in two varieties:
+`specs.sh` comes in two varieties:
 
- - `spec.sh` is just the `spec.sh` spec runner and library
- - `spec-full.sh` bundles the `assert`, `expect`, and `run` libraries
+ - `specs.sh` is just the `specs.sh` spec runner and library
+ - `specs-full.sh` bundles the `assert`, `expect`, and `run` libraries
 
 > _The installer script downloads the latest versions of these files, puts them into your current directory, and prints helpful usage documentation!_
 

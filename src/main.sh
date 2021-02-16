@@ -14,7 +14,7 @@ ___spec___.main() {
   # --version
   if [ $# -eq 1 ] && [ "$1" = "--version" ]
   then
-    printf "spec.sh version " >&2
+    printf "specs.sh version " >&2
     printf "$SPEC_VERSION"
     return 0
   fi
@@ -26,7 +26,7 @@ ___spec___.main() {
     return 0
   fi
 
-  # 'spec' or 'spec.sh' or whatever file is named
+  # 'spec' or 'specs.sh' or whatever file is named
   local runningAsFilename="${0/*\/}"
 
   declare SPEC_PATH_ARGUMENTS=()

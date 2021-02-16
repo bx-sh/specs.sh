@@ -235,7 +235,7 @@ ___spec___.teardownFixtureFunctionNames() {
 }
 
 ___spec___.helperFilenames() {
-  echo specHelper.sh testHelper.sh helper.spec.sh helper.test.sh
+  echo specHelper.sh testHelper.sh helper.specs.sh helper.test.sh
 }
 
 ___spec___.configFilenames() {

@@ -5,7 +5,7 @@ SPEC_VERSION="0.3.0"
 print_help() {
   echo "spec version $SPEC_VERSION
 
-Usage: spec [directory/ or file.spec.sh] [-f -p -e -c -h -v]
+Usage: spec [directory/ or file.specs.sh] [-f -p -e -c -h -v]
 
 Options:
 
@@ -23,15 +23,15 @@ Options:
 
 Examples:
 
-  spec file.spec.sh                   Runs file.spec.sh
+  spec file.specs.sh                   Runs file.specs.sh
 
-  spec file.spec.sh another.spec.sh   Runs two spec files
+  spec file.specs.sh another.specs.sh   Runs two spec files
 
   spec directory/                     Recursively searches directory/ for
-                                      *.spec.sh and *.test.sh files to run
+                                      *.specs.sh and *.test.sh files to run
 
   spec                                Recursively searches current directory for
-                                      *.spec.sh and *.test.sh files to run
+                                      *.specs.sh and *.test.sh files to run
 
   spec -e ^hello                      Runs tests with names that start with \"hello\"
 
@@ -84,7 +84,7 @@ do
     while read -rd '' specFile
     do
       [ -f "$specFile" ] && testFiles+=("$specFile")
-    done < <( find "${arg%\/}" -type f -name "*.spec.sh" -print0 )
+    done < <( find "${arg%\/}" -type f -name "*.specs.sh" -print0 )
   elif [ "$arg" = "-v" ] || [ "$arg" = "--version" ]
   then
     echo "spec version $SPEC_VERSION"
@@ -105,7 +105,7 @@ then
   while IFS= read -rd '' testFile
   do
     [ -f "$testFile" ] && testFiles+=("$testFile")
-  done < <(find . -type d -name packages -prune -o -type f \( -iname "*.spec.sh" -or -iname "*.test.sh" \) -print0)
+  done < <(find . -type d -name packages -prune -o -type f \( -iname "*.specs.sh" -or -iname "*.test.sh" \) -print0)
 fi
 
 for filePath in "${testFiles[@]}"

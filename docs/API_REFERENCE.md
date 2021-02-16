@@ -1,6 +1,6 @@
 ## 🎨 User Configuration
 
-Environment variables for configuring the behavior of `spec.sh`
+Environment variables for configuring the behavior of `specs.sh`
 
 These can be exported in your shell or configured in `spec.config.sh`
 
@@ -8,7 +8,7 @@ These can be exported in your shell or configured in `spec.config.sh`
    ```sh
    export SPEC_FORMATTER=tap
 
-   ./spec.sh file.spec.sh dir/
+   ./specs.sh file.specs.sh dir/
    ```
  - Set variables in `spec.config.sh`
    ```sh
@@ -45,12 +45,12 @@ These can be exported in your shell or configured in `spec.config.sh`
 
 # 🛠️ Customization API
 
-`spec.sh` is extremely customizable.
+`specs.sh` is extremely customizable.
 
 This section provides documentation on the variables and functions you
-may want to configure to customize `spec.sh` to meet your needs!
+may want to configure to customize `specs.sh` to meet your needs!
 
-Every `spec.sh` function documented here can be overriden
+Every `specs.sh` function documented here can be overriden
 by defining a new function in your `spec.config.sh` file.
 
 For example:
@@ -71,7 +71,7 @@ For example:
 ### `$SPEC_FILE_SUFFIXES`
 
 - Sets the list of suffixes to use when searching directories for specs.
-- Default: `.spec.sh:.test.sh`
+- Default: `.specs.sh:.test.sh`
 - Can provide multiple `:`-separated suffixes
 
 
@@ -260,7 +260,7 @@ Default behavior:
 
 #### `spec.run.specFile()`
 
-- `spec.runFile` is run in a subshell by `spec.sh`
+- `spec.runFile` is run in a subshell by `specs.sh`
 - It accepts one command-line argument: path to the file
 
 
@@ -281,7 +281,7 @@ Default behavior:
 
 #### `spec.set.defaultSpecFileSuffixes()`
 
-- Sets default `SPEC_FILE_SUFFIXES` value: `.spec.sh:.test.sh`
+- Sets default `SPEC_FILE_SUFFIXES` value: `.specs.sh:.test.sh`
 
 #### `spec.set.defaultSpecFunctionPrefixes()`
 
@@ -320,7 +320,7 @@ Sets variables uses for default theme used by some formatters:
 - This is run BEFORE config files are loaded and therefore CANNOT be customized
 - All of the default variables are set only if there isn't already a value present for the given variable
 - To customize variables, either:
-  - `export` an environment variable or pass it directly to `ENV= ./spec.sh` when running it
+  - `export` an environment variable or pass it directly to `ENV= ./specs.sh` when running it
   - Simply set the variable in your `spec.config.sh`, e.g. `SPEC_FORMATTER=tap`
 
 

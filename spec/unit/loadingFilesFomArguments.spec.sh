@@ -1,4 +1,4 @@
-source ./spec.sh
+source ./specs.sh
 
 @pending.load_zero_file_paths() {
   :

@@ -4,5 +4,5 @@ spec.set.defaultVariables
 # Before anything happens, load config files
 spec.loadAndSource.configFiles
 
-# Run spec.sh as executable if called directly:
+# Run specs.sh as executable if called directly:
 [ "$0" = "${BASH_SOURCE[0]}" ] && spec.main "$@"

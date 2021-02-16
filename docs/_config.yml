@@ -14,31 +14,28 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: spec.sh
+title: specs.sh
 description: Lovely shell testing framework for the 21st century
 theme: jekyll-theme-merlot
 show_downloads: true
 twitter_username: rebeccca_taylor
 github_username: beccasaurus
 
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: '' # the subpath of your site, e.g. /blog
+url: '' # the base hostname & protocol for your site, e.g. http://example.com
 
 github:
-  zip_url: https://github.com/bx-sh/spec.sh/archive/v0.3.0.zip
-  tar_url: https://github.com/bx-sh/spec.sh/archive/v0.3.0.tar.gz
+  zip_url: https://github.com/bx-sh/specs.sh/archive/v0.3.0.zip
+  tar_url: https://github.com/bx-sh/specs.sh/archive/v0.3.0.tar.gz
   owner_url: https://github.com/beccasaurus
-  owner_name: "@beccasaurus"
+  owner_name: '@beccasaurus'
 
 defaults:
-  -
-    values:
+  - values:
       layout: default
 
 # Build settings
 markdown: kramdown
-
-
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.

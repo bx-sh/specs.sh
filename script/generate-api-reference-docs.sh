@@ -46,7 +46,7 @@ rm -f all-comments.md
 
 echo "## 🎨 User Configuration
 
-Environment variables for configuring the behavior of \`spec.sh\`
+Environment variables for configuring the behavior of \`specs.sh\`
 
 These can be exported in your shell or configured in \`spec.config.sh\`
 
@@ -54,7 +54,7 @@ These can be exported in your shell or configured in \`spec.config.sh\`
    \`\`\`sh
    export SPEC_FORMATTER=tap
 
-   ./spec.sh file.spec.sh dir/
+   ./specs.sh file.specs.sh dir/
    \`\`\`
  - Set variables in \`spec.config.sh\`
    \`\`\`sh
@@ -77,12 +77,12 @@ echo "---
 
 # 🛠️ Customization API
 
-\`spec.sh\` is extremely customizable.
+\`specs.sh\` is extremely customizable.
 
 This section provides documentation on the variables and functions you
-may want to configure to customize \`spec.sh\` to meet your needs!
+may want to configure to customize \`specs.sh\` to meet your needs!
 
-Every \`spec.sh\` function documented here can be overriden
+Every \`specs.sh\` function documented here can be overriden
 by defining a new function in your \`spec.config.sh\` file.
 
 For example:
