@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] Rename to `specs`
+- [X] Rename to `specs`
 - [X] Fix colors / bold with resets
 - [X] Indent output
 - [ ] Include total numbers when there are multiple spec files (p1)
@@ -13,7 +13,7 @@
 
 [![Spec Status](https://github.com/bx-sh/specs.sh/workflows/Specs/badge.svg)](https://github.com/bx-sh/specs.sh/actions)
 
-# `specs.sh` - 🔬 Simple Shell Specifications
+# `$ specs` - 🔬 Simple Shell Specifications
 
 ---
 
