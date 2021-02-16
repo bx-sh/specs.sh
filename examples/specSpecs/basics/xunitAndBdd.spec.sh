@@ -3,7 +3,7 @@
 }
 
 @example.failing_foo() {
-  echo "Hello from spec-style bar spec, I fail"
+  echo "Hello from spec-style foo spec, I fail"
   return 1
 }
 
