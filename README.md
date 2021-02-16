@@ -1,3 +1,15 @@
+# TODO
+
+- [ ] Rename to `specs`
+- [ ] Fix colors / bold with resets
+- [ ] Indent output
+- [ ] Include total numbers when there are multiple spec files
+- [ ] TAP formatter (p1)
+- [ ] Progress formatter (p3)
+- [ ] JUnit XML formatter (p2)
+
+---
+
 [![Spec Status](https://github.com/bx-sh/spec.sh/workflows/Specs/badge.svg)](https://github.com/bx-sh/spec.sh/actions)
 
 # `@spec` - 🔬 Simple Shell Specifications
