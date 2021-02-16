@@ -374,12 +374,16 @@ ___spec___.formatters.documentation.display.after:run.specFunction() {
       echo
       [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
       printf "["
+      [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
       [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_STDOUT_HEADER_COLOR}m" >&2
       printf "Standard Output"
+      [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
       [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
       printf "]\n"
+      [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
       [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_STDOUT_COLOR}m" >&2
       printf "$SPEC_CURRENT_STDOUT\n"
+      [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
     fi
     if [ -n "$SPEC_CURRENT_STDERR" ]
     then
