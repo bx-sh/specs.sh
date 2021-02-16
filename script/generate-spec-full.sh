@@ -31,7 +31,7 @@ do
 done < <( find src/styles -type f -name "*.sh" -print0 )
 
 ########################################################
-# Embed 'expect' 'assert' 'run-command' libraries
+# Embed 'expect' 'assert' 'run' libraries
 #
 echo >> spec-full.sh
 cat ./packages/assert-*/assert.sh | grep -v "^[[:space:]]*#\|^$" >> spec-full.sh
