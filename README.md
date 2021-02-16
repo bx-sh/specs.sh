@@ -1,9 +1,10 @@
 # TODO
 
 - [ ] Rename to `specs`
-- [ ] Fix colors / bold with resets
-- [ ] Indent output
-- [ ] Include total numbers when there are multiple spec files
+- [X] Fix colors / bold with resets
+- [X] Indent output
+- [ ] Include total numbers when there are multiple spec files (p1)
+- [ ] Random order support (p3)
 - [ ] TAP formatter (p1)
 - [ ] Progress formatter (p3)
 - [ ] JUnit XML formatter (p2)
