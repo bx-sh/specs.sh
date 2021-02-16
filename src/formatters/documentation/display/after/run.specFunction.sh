@@ -44,7 +44,7 @@ ___spec___.formatters.documentation.display.after:run.specFunction() {
     then
       echo
       [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
-      printf "["
+      printf "\t["
       [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
       [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_STDOUT_HEADER_COLOR}m" >&2
       printf "Standard Output"
@@ -53,20 +53,20 @@ ___spec___.formatters.documentation.display.after:run.specFunction() {
       printf "]\n"
       [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
       [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_STDOUT_COLOR}m" >&2
-      printf "$SPEC_CURRENT_STDOUT\n"
+      printf "$SPEC_CURRENT_STDOUT\n\n" | sed 's/^/\t/'
       [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
     fi
     if [ -n "$SPEC_CURRENT_STDERR" ]
     then
       echo
       [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
-      printf "["
+      printf "\t["
       [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_STDERR_HEADER_COLOR}m" >&2
       printf "Standard Error"
       [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
       printf "]\n"
       [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_STDERR_COLOR}m" >&2
-      printf "$SPEC_CURRENT_STDERR\n"
+      printf "$SPEC_CURRENT_STDERR\n\n" | sed 's/^/\t/'
     fi
   fi
   [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2
