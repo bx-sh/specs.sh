@@ -22,4 +22,5 @@ ___spec___.set.defaultVariables() {
   # spec.set.defaultTeardownFunctionNames
   # spec.set.defaultTeardownFixtureFunctionNames
   spec.set.defaultConfigFilenames
+  spec.set.defaultHelperFilenames
 }

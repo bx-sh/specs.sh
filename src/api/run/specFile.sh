@@ -1,16 +1,20 @@
 ## @function spec.run.specFile
 ##
 ## - `spec.runFile` is run in a subshell by `specs.sh`
-## - It accepts one command-line argument: path to the file
+## - It accepts one argument: path to the file
 ##
 spec.run.specFile() { ___spec___.run.specFile "$@"; }
 
 ___spec___.run.specFile() {
+  declare -a SPEC_HELPER_FILES=()
+  spec.load.helperFiles "$1"
+
+  spec.source.helperFiles
   spec.source.specFile "$1"
 
   declare -a SPEC_FUNCTIONS=()
   declare -a SPEC_DISPLAY_NAMES=()
-  
+
   spec.load.specFunctions
 
   declare -a SPEC_PENDING_FUNCTIONS=()

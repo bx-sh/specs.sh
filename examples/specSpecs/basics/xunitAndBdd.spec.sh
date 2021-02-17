@@ -12,14 +12,14 @@
 }
 
 testPassingBar() {
-  echo "Hello from xUnit-style test, I pass"
+  echo "Hello from xUnit-style bar test, I pass"
 }
 
 testFailingBar() {
-  echo "Hello from xUnit-style test, I fail"
+  echo "Hello from xUnit-style bar test, I fail"
   return 1
 }
 
 xtestPendingBar() {
-  echo "This doesn't run, it's pending xUnit-style"
+  echo "This doesn't run, it's pending xUnit-style bar test"
 }

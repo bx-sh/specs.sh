@@ -3,14 +3,6 @@ spec.main() {
 }
 
 ___spec___.main() {
-  # --runFile invokes spec.runFile (use this script to run file)
-  if [ "$1" = "--runFile" ]
-  then
-    shift
-    spec.runFile "$@"
-    return $?
-  fi
-
   # --version
   if [ $# -eq 1 ] && [ "$1" = "--version" ]
   then
@@ -26,10 +18,10 @@ ___spec___.main() {
     return 0
   fi
 
-  # 'spec' or 'specs.sh' or whatever file is named
+  # 'specs' or 'specs.sh' or whatever file is named
   local runningAsFilename="${0/*\/}"
 
-  declare SPEC_PATH_ARGUMENTS=()
+  declare -a SPEC_PATH_ARGUMENTS=()
 
   # Process Command Line Arguments
   #
@@ -51,13 +43,13 @@ ___spec___.main() {
     esac
   done
 
-  declare SPEC_FILE_LIST=()
+  declare -a SPEC_FILE_LIST=()
   
   # spec.load.specFiles is responsible for populating SPEC_FILE_LIST
   spec.load.specFiles
 
-  declare SPEC_PASSED_FILES=()
-  declare SPEC_FAILED_FILES=()
+  declare -a SPEC_PASSED_FILES=()
+  declare -a SPEC_FAILED_FILES=()
 
   # spec.run.specFiles is responsible for populating SPEC_PASSED_FILES/SPEC_FAILED_FILES
   #                                       and a whole lot more! kicks off spec.run.specFile

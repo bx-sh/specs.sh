@@ -6,12 +6,6 @@ spec.main() {
   ___spec___.main "$@"
 }
 ___spec___.main() {
-  if [ "$1" = "--runFile" ]
-  then
-    shift
-    spec.runFile "$@"
-    return $?
-  fi
   if [ $# -eq 1 ] && [ "$1" = "--version" ]
   then
     printf "specs.sh version " >&2
@@ -24,7 +18,7 @@ ___spec___.main() {
     return 0
   fi
   local runningAsFilename="${0/*\/}"
-  declare SPEC_PATH_ARGUMENTS=()
+  declare -a SPEC_PATH_ARGUMENTS=()
   while [ $# -gt 0 ]
   do
     case "$1" in
@@ -40,11 +34,11 @@ ___spec___.main() {
         ;;
     esac
   done
-  declare SPEC_FILE_LIST=()
+  declare -a SPEC_FILE_LIST=()
   
   spec.load.specFiles
-  declare SPEC_PASSED_FILES=()
-  declare SPEC_FAILED_FILES=()
+  declare -a SPEC_PASSED_FILES=()
+  declare -a SPEC_FAILED_FILES=()
   spec.run.specFiles
   spec.get.specSuiteStatus
 }
@@ -69,6 +63,7 @@ ___spec___.set.defaultVariables() {
   spec.set.defaultSpecFunctionPrefixes
   spec.set.defaultPendingFunctionPrefixes
   spec.set.defaultConfigFilenames
+  spec.set.defaultHelperFilenames
 }
 
 spec.set.defaultStyle() { ___spec___.set.defaultStyle "$@"; }
@@ -79,6 +74,11 @@ ___spec___.set.defaultStyle() {
 spec.set.defaultConfigFilenames() { ___spec___.set.defaultConfigFilenames "$@"; }
 ___spec___.set.defaultConfigFilenames() {
   [ -z "$SPEC_CONFIG_FILENAMES"  ] && SPEC_CONFIG_FILENAMES="spec.config.sh"
+}
+
+spec.set.defaultHelperFilenames() { ___spec___.set.defaultHelperFilenames "$@"; }
+___spec___.set.defaultHelperFilenames() {
+  [ -z "$SPEC_HELPER_FILENAMES"  ] && SPEC_HELPER_FILENAMES="specHelper.sh:testHelper.sh"
 }
 
 spec.set.defaultPendingFunctionPrefixes() { ___spec___.set.defaultPendingFunctionPrefixes "$@"; }
@@ -121,6 +121,12 @@ ___spec___.display.cliUsage() {
   spec.display.cliUsage.footer
 }
 
+spec.display.after:run.specFile() { ___spec___.display.after:run.specFile "$@"; }
+___spec___.display.after:run.specFile() {
+  local functionName="spec.formatters.$SPEC_FORMATTER.display.after:run.specFile"
+  [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
+}
+
 spec.display.after:run.specFunction() { ___spec___.display.after:run.specFunction "$@"; }
 ___spec___.display.after:run.specFunction() {
   local functionName="spec.formatters.$SPEC_FORMATTER.display.after:run.specFunction"
@@ -142,6 +148,21 @@ spec.load.specFunctions() { ___spec___.load.specFunctions "$@"; }
 ___spec___.load.specFunctions() {
   local functionName="spec.styles.$SPEC_STYLE.load.specFunctions"
   [ "$( type -t "$functionName" )" = "function" ] && "$functionName" "$@"
+}
+
+spec.load.helperFiles() { ___spec___.load.helperFiles "$@"; }
+___spec___.load.helperFiles() {
+  IFS=: read -ra helperFilenames <<<"$SPEC_HELPER_FILENAMES"
+  local directory="$( dirname "$1" )"
+  while [ "$directory" != "/" ] && [ "$directory" != "." ]
+  do
+    local helperFilename
+    for helperFilename in "${helperFilenames[@]}"
+    do
+      [ -f "$directory/$helperFilename" ] && SPEC_HELPER_FILES+=("$directory/$helperFilename")
+    done
+    directory="$( dirname "$directory" )"
+  done
 }
 
 spec.load.specFiles() { ___spec___.load.specFiles "$@"; }
@@ -173,6 +194,7 @@ ___spec___.load.specFiles() {
 
 spec.load.configFiles() { ___spec___.load.configFiles "$@"; }
 ___spec___.load.configFiles() {
+  declare -a SPEC_CONFIG_FILES=()
   if [ -n "$SPEC_CONFIG" ]
   then
     IFS=: read -ra configPaths <<<"$SPEC_CONFIG"
@@ -190,15 +212,14 @@ ___spec___.load.configFiles() {
   else
     IFS=: read -ra configFilenames <<<"$SPEC_CONFIG_FILENAMES"
     local directory="$( pwd )"
-    [ -f "$directory/$configFilename" ] && SPEC_CONFIG_FILES+=("$directory/$configFilename")
     while [ "$directory" != "/" ] && [ "$directory" != "." ]
     do
-      directory="$( dirname "$directory" )"
       local configFilename
       for configFilename in "${configFilenames[@]}"
       do
         [ -f "$directory/$configFilename" ] && SPEC_CONFIG_FILES+=("$directory/$configFilename")
       done
+      directory="$( dirname "$directory" )"
     done
   fi
 }
@@ -230,6 +251,18 @@ ___spec___.source.specFile() {
   spec.source.file "$@"
 }
 
+spec.source.helperFiles() { ___spec___.source.helperFiles "$@"; }
+___spec___.source.helperFiles() {
+  local ___spec___localHelperFile_index="$((${#SPEC_HELPER_FILES[@]}-1))"
+  local ___spec___localHelperFile="${SPEC_HELPER_FILES[$___spec___localHelperFile_index]}"
+  while [ $___spec___localHelperFile_index -gt -1 ]
+  do
+    spec.source.file "$___spec___localHelperFile"
+    : $((___spec___localHelperFile_index--))
+    ___spec___localHelperFile="${SPEC_HELPER_FILES[$___spec___localHelperFile_index]}"
+  done
+}
+
 spec.source.configFiles() { ___spec___.source.configFiles "$@"; }
 ___spec___.source.configFiles() {
   local ___spec___localConfigFile
@@ -255,10 +288,12 @@ ___spec___.run.function() {
 
 spec.run.specFile() { ___spec___.run.specFile "$@"; }
 ___spec___.run.specFile() {
+  declare -a SPEC_HELPER_FILES=()
+  spec.load.helperFiles "$1"
+  spec.source.helperFiles
   spec.source.specFile "$1"
   declare -a SPEC_FUNCTIONS=()
   declare -a SPEC_DISPLAY_NAMES=()
-  
   spec.load.specFunctions
   declare -a SPEC_PENDING_FUNCTIONS=()
   declare -a SPEC_PENDING_DISPLAY_NAMES=()
@@ -319,20 +354,31 @@ ___spec___.run.specFiles() {
     SPEC_CURRENT_FILEPATH="$specFile"
     SPEC_CURRENT_FILENAME="${specFile/*\/}"
     spec.display.before:run.specFile
-    spec.run.specFile "$specFile"
-    if [ $? -eq 0 ]
+    exec 4>&1
+    local ___spec___unusedOutput
+      ___spec___unusedOutput="$( spec.run.specFile "$specFile" >&4 )"
+    SPEC_FILE_CURRENT_EXITCODE=$?
+    exec 4>&-
+    if [ $SPEC_FILE_CURRENT_EXITCODE -eq 0 ]
     then
       SPEC_PASSED_FILES+=("$specFile")
     else
       SPEC_FAILED_FILES+=("$specFile")
     fi
+    spec.display.after:run.specFile
   done
 }
 
 spec.loadAndSource.configFiles() { ___spec___.loadAndSource.configFiles "$@"; }
 ___spec___.loadAndSource.configFiles() {
-  declare -a SPEC_CONFIG_FILES=()
   spec.load.configFiles && spec.source.configFiles
+}
+
+spec.formatters.documentation.display.after:run.specFile() {
+  ___spec___.formatters.documentation.display.after:run.specFile "$@"
+}
+___spec___.formatters.documentation.display.after:run.specFile() {
+  echo
 }
 
 spec.formatters.documentation.display.after:run.specFunction() {
@@ -408,7 +454,7 @@ ___spec___.formatters.documentation.display.before:run.specFile() {
   [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
   printf "["
   [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_FILE_COLOR}m" >&2
-  printf "$SPEC_CURRENT_FILENAME"
+  printf "$SPEC_CURRENT_FILEPATH"
   [ "$SPEC_COLOR" = "true" ] && printf "\033[${SPEC_THEME_SEPARATOR_COLOR}m" >&2
   printf "]\n"
   [ "$SPEC_COLOR" = "true" ] && printf "\033[0m" >&2

@@ -191,6 +191,11 @@ For example:
 - Calls: `spec.display.formatters.$SPEC_FORMATTER.after:run.specFunction`
 
 
+#### `spec.display.formatters.documentation.after:run.specFile()`
+
+- Displays the name of the file being run
+
+
 #### `spec.display.formatters.documentation.after:run.specFunction()`
 
 - Displays `[PASS]` or `[FAIL]` or `[PENDING]` with name of spec
@@ -213,6 +218,24 @@ For example:
 >
 > To update the output for a FORMATTER, see functions such as:
 > - `spec.display.after:run.specFunction`
+
+
+#### `spec.load.configFiles()`
+
+Responsible for loading `SPEC_CONFIG_FILES`
+
+- if SPEC_CONFIG= is set, use that instead
+- else use SPEC_CONFIG_FILENAMES to search up and up
+
+#### `spec.load.helperFiles()`
+
+Responsible for loading `SPEC_HELPER_FILES`
+
+- First argument is the full path to the spec file to find helper files for
+  - Unlike config files, spec helpers are loaded once per spec function
+    and they are searched for by starting with the system root and 
+    going up to the directory that the spec file is contained within
+- Uses `SPEC_HELPER_FILENAMES` (`:`-delimited) for names of files to look for
 
 
 #### `spec.load.pendingFunctions()`
@@ -261,7 +284,7 @@ Default behavior:
 #### `spec.run.specFile()`
 
 - `spec.runFile` is run in a subshell by `specs.sh`
-- It accepts one command-line argument: path to the file
+- It accepts one argument: path to the file
 
 
 #### `spec.run.specFunction()`
