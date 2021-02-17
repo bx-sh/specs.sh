@@ -3,6 +3,7 @@
 - [X] Rename to `specs`
 - [X] Fix colors / bold with resets
 - [X] Indent output
+- [ ] Show test run time and provide individual spec run times to formatters
 - [ ] Include total numbers when there are multiple spec files (p1)
 - [ ] Random order support (p3)
 - [ ] TAP formatter (p1)
