@@ -253,12 +253,14 @@ ___spec___.source.specFile() {
 
 spec.source.helperFiles() { ___spec___.source.helperFiles "$@"; }
 ___spec___.source.helperFiles() {
+  [ "${#SPEC_HELPER_FILES[@]}" -eq 0 ] && return
   local ___spec___localHelperFile_index="$((${#SPEC_HELPER_FILES[@]}-1))"
   local ___spec___localHelperFile="${SPEC_HELPER_FILES[$___spec___localHelperFile_index]}"
-  while [ $___spec___localHelperFile_index -gt -1 ]
+  while [ ! $___spec___localHelperFile_index -lt 0 ]
   do
     spec.source.file "$___spec___localHelperFile"
     : $((___spec___localHelperFile_index--))
+    [ $___spec___localHelperFile_index -lt 0 ] && break
     ___spec___localHelperFile="${SPEC_HELPER_FILES[$___spec___localHelperFile_index]}"
   done
 }
