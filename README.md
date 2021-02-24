@@ -10,6 +10,7 @@
 - [ ] TAP formatter (p1)
 - [ ] Progress formatter (p3)
 - [ ] JUnit XML formatter (p2)
+- [ ] VSCode runner (p3)
 
 ---
 
