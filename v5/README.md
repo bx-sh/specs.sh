@@ -14,6 +14,9 @@ If a test doens't work in parallel, it's not written properly, generally.
    by calling `set | grep XXX` which will return the `declare -a` lines which contain the results!!!
    i.e. we actually return a set of array structures which are valid and `eval`-able to load - this is how we do cross sub-shell comms.
 
+DATA DRIVEN
+support data driven tests OOTB
+
 ----
 
 # TODO
