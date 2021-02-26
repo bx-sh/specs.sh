@@ -1,4 +1,4 @@
-# `v6`
+# `v6` - VSCODE + ASYNC + SIMPLICITY
 
 START with VS CODE extension. As a STARTING point. ALWAYS use VS Code extension as THE WAY to run and manage Specs.sh tests.
 
@@ -7,6 +7,9 @@ START with VS CODE extension. As a STARTING point. ALWAYS use VS Code extension 
 Formatters: should be ONE FUNCTION, not a million.
 
 Adapters: should be ONE FUNCTION, not a million.
+
+ASYNC. Tests should be run in parallel by default. It should be WICKED FAST. `&`. Set some variable which is the # of concurrent.
+If a test doens't work in parallel, it's not written properly, generally.
 
 ----
 
