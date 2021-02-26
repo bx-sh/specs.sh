@@ -34,3 +34,15 @@ sourceGeneratedFile() { source "$outputFile"; }
   expect { myCommand foo doesntExist } toFail "Unknown 'myCommand foo' command: doesntExist"
   expect { myCommand foo bar doesntExist } toFail "Unknown 'myCommand foo bar' command: doesntExist"
 }
+
+@pending.caseEsacCompiler.individiual_files_can_be_working_functions_with_multiline_comment_headers() {
+  :
+}
+
+@pending.caseEsacCompiler.can_replace_argument_indexes_to_be_the_correct_depth() {
+  :
+}
+
+@pending.caseEsacCompiler.can_replace_parent_command_name_eg_in_docs_and_the_code() {
+  :
+}
