@@ -1,3 +1,21 @@
+# `v6` - VSCODE + ASYNC + SIMPLICITY + _source LOC_
+
+START with VS CODE extension. As a STARTING point. ALWAYS use VS Code extension as THE WAY to run and manage Specs.sh tests.
+
+^--- this is CRITICAL for having a ROCKIN SWEET AWESOMESAUCE developer experience.
+
+Formatters: should be ONE FUNCTION, not a million.
+
+Adapters: should be ONE FUNCTION, not a million.
+
+ASYNC. Tests should be run in parallel by default. It should be WICKED FAST. `&`. Set some variable which is the # of concurrent.
+If a test doens't work in parallel, it's not written properly, generally.
+ - Async processes `&` should be able to be polled for completion and when done they will RETURN THEIR RESULTS
+   by calling `set | grep XXX` which will return the `declare -a` lines which contain the results!!!
+   i.e. we actually return a set of array structures which are valid and `eval`-able to load - this is how we do cross sub-shell comms.
+
+----
+
 # TODO
 
 - [X] Rename to `specs`
