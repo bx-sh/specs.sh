@@ -10,6 +10,9 @@ Adapters: should be ONE FUNCTION, not a million.
 
 ASYNC. Tests should be run in parallel by default. It should be WICKED FAST. `&`. Set some variable which is the # of concurrent.
 If a test doens't work in parallel, it's not written properly, generally.
+ - Async processes `&` should be able to be polled for completion and when done they will RETURN THEIR RESULTS
+   by calling `set | grep XXX` which will return the `declare -a` lines which contain the results!!!
+   i.e. we actually return a set of array structures which are valid and `eval`-able to load - this is how we do cross sub-shell comms.
 
 ----
 
