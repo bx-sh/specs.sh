@@ -1,3 +1,15 @@
+# `v6`
+
+START with VS CODE extension. As a STARTING point. ALWAYS use VS Code extension as THE WAY to run and manage Specs.sh tests.
+
+^--- this is CRITICAL for having a ROCKIN SWEET AWESOMESAUCE developer experience.
+
+Formatters: should be ONE FUNCTION, not a million.
+
+Adapters: should be ONE FUNCTION, not a million.
+
+----
+
 # TODO
 
 - [X] Rename to `specs`
