@@ -1,1 +1,6 @@
 echo "Foo Bar Baz"
+echo "my first relevant argument is '$1' or with foo replacement: '${1//foo/FOO}'"
+echo "my full command name is CASE_FULL_COMMAND_ESAC"
+echo "my parent command name is CASE_PARENT_COMMAND_ESAC"
+echo "my function name is CASE_FUNCTION_ESAC"
+echo "my command name is CASE_COMMAND_ESAC"

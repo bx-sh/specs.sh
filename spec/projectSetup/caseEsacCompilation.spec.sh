@@ -18,7 +18,7 @@ source tools/caseEsacCompiler.sh
 outputFileContent() { cat "$outputFile"; }
 sourceGeneratedFile() { source "$outputFile"; }
 
-@spec.caseEsacCompiler.can_compile_top_level_index_with_small_tree_of_subcommands() {
+@spec.caseEsacCompiler() {
   expect { myCommand } toFail "myCommand: command not found"
 
   caseEsacCompiler myCommand "$outputFile" $commandsFolder/variousCommands/
@@ -28,21 +28,14 @@ sourceGeneratedFile() { source "$outputFile"; }
   expect { myCommand --version } toEqual "This is the version"
   expect { myCommand foo hello } toEqual "Foo Hello"
   expect { myCommand foo world } toEqual "Foo World"
-  expect { myCommand foo bar baz } toEqual "Foo Bar Baz"
+  expect { myCommand foo bar baz } toContain "Foo Bar Baz"
+  expect { myCommand foo bar baz } toContain "my full command name is myCommand foo bar baz"
+  expect { myCommand foo bar baz } toContain "my parent command name is myCommand foo bar"
+  expect { myCommand foo bar baz } toContain "my function name is myCommand"
+  expect { myCommand foo bar baz } toContain "my command name is baz"
+  expect { myCommand foo bar baz "hello foo world" } toContain "my first relevant argument is 'hello foo world' or with foo replacement: 'hello FOO world'"
 
   expect { myCommand doesntExist } toFail "Unknown 'myCommand' command: doesntExist"
   expect { myCommand foo doesntExist } toFail "Unknown 'myCommand foo' command: doesntExist"
   expect { myCommand foo bar doesntExist } toFail "Unknown 'myCommand foo bar' command: doesntExist"
-}
-
-@pending.caseEsacCompiler.individiual_files_can_be_working_functions_with_multiline_comment_headers() {
-  :
-}
-
-@pending.caseEsacCompiler.can_replace_argument_indexes_to_be_the_correct_depth() {
-  :
-}
-
-@pending.caseEsacCompiler.can_replace_parent_command_name_eg_in_docs_and_the_code() {
-  :
 }
