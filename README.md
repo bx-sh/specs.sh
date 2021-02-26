@@ -1,4 +1,4 @@
-# `v6` - VSCODE + ASYNC + SIMPLICITY
+# `v6` - VSCODE + ASYNC + SIMPLICITY + _source LOC_
 
 START with VS CODE extension. As a STARTING point. ALWAYS use VS Code extension as THE WAY to run and manage Specs.sh tests.
 
