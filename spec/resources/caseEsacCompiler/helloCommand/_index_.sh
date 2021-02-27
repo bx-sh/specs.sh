@@ -1,1 +1,0 @@
-echo "Hi from top-level 'helloCommand' command, arguments: 1: $1 2: $2"

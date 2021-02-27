@@ -14,7 +14,7 @@
 ##
 caseEsacCompiler() {
 
-  # Return the case/esac text for the given command
+  # Return the source code for the given source file (to put into this item's case/esac statement)
   if [ "$1" = "--" ] && [ "$2" = "loadSourceFile" ]
   then
     shift; shift;
@@ -23,13 +23,14 @@ caseEsacCompiler() {
     local parentCommandName="${fullCommandName% *}"
     local functionName="${fullCommandName# *}"
     local sourceFile="$2"
-    # Optional: replace this with string replacements instead, no shell out, will matter if we compile a ton of files, not doing any cat or sed etc would be nice, we can $(<file) and just do string replacements locally
+    # TODO Optional: replace this with string replacements instead, no shell out, will matter if we compile a ton of files, not doing any cat or sed etc would be nice, we can $(<file) and just do string replacements locally
     local sourceFileContent="$( cat "$sourceFile" | sed "s/CASE_COMMAND_ESAC/$commandName/g" | sed "s/CASE_FULL_COMMAND_ESAC/$fullCommandName/g" | sed "s/CASE_PARENT_COMMAND_ESAC/$parentCommandName/g" | sed "s/CASE_FUNCTION_ESAC/$functionName/g" )"
     if echo "$sourceFileContent" | head -1 | grep "() {" &>/dev/null
     then
       sourceFileContent="$( echo -e "$sourceFileContent" | tail -n +2 | head -n -1 )"
     fi
-    # update the argument numbers based on the number of parent commands
+
+    # Update the argument numbers based on the number of parent commands
     # $1 is expected to be the first argument
     # this will break with over 20 arguments
     # we increment the code's argument number by N where N = the parent command count (minus one - not counting the top level function which doesn't offset)
@@ -43,9 +44,12 @@ caseEsacCompiler() {
       sourceFileContent="${sourceFileContent//\${$argumentNumber/\${$replacement}"
       : $(( argumentNumber -- ))
     done
+
     echo -e "$sourceFileContent"
     return 0
-  elif [ "$1" = "--" ] && [ "$2" = "caseWhenForDir" ]
+
+  # Generate and output the text for the case/esac code for the given directory of files:
+  elif [ "$1" = "--" ] && [ "$2" = "caseEsacForDir" ]
   then
     shift; shift;
     local commandDepth="$1"
@@ -73,7 +77,7 @@ caseEsacCompiler() {
       echo "${indentation}  $commandName)"
       if [ -d "$commandFileOrSubcommandDirectory" ]
       then
-        caseEsacCompiler -- caseWhenForDir "$(( $commandDepth + 1 ))" "$commandFileOrSubcommandDirectory" "$rootCommandsDirectoryPath" "$topLevelFunctionName" | sed "s/^/$indentation/"
+        caseEsacCompiler -- caseEsacForDir "$(( $commandDepth + 1 ))" "$commandFileOrSubcommandDirectory" "$rootCommandsDirectoryPath" "$topLevelFunctionName" | sed "s/^/$indentation/"
       elif [ -f "$commandFileOrSubcommandDirectory" ]
       then
         caseEsacCompiler -- loadSourceFile "$fullCommandName" "$commandFileOrSubcommandDirectory" | sed "s/^/$indentation    /"
@@ -86,15 +90,28 @@ caseEsacCompiler() {
     subCommandName="${subCommandName//// }"
     if [ $commandDepth = 1 ]
     then
-      echo "    echo \"Unknown '$topLevelFunctionName' command: \$$commandDepth\" >&2"
+      if [ -f "$commandsDirectoryPath/.index.sh" ]
+      then
+        caseEsacCompiler -- loadSourceFile "$topLevelFunctionName" "$commandsDirectoryPath/.index.sh" | sed "s/^/$indentation    /"
+      else
+        echo "    echo \"Unknown '$topLevelFunctionName' command: \$$commandDepth\" >&2"
+      fi
     else
-      echo "    echo \"Unknown '$topLevelFunctionName $subCommandName' command: \$$commandDepth\" >&2"
+      local subCommandFolder="${commandFileOrSubcommandDirectory%/*}"
+      if [ -f "$subCommandFolder/.index.sh" ]
+      then
+        caseEsacCompiler -- loadSourceFile "$topLevelFunctionName $subCommandName" "$subCommandFolder/.index.sh" | sed "s/^/$indentation    /"
+      else
+        echo "    echo \"Unknown '$topLevelFunctionName $subCommandName' command: \$$commandDepth\" >&2"
+      fi
     fi
     echo "    return 1"
     echo "    ;;"
     echo "${indentation}esac"
     return 0
   fi
+
+  # main():
 
   local topLevelFunctionName="$1"
   shift
@@ -107,7 +124,7 @@ caseEsacCompiler() {
 
   # Go through the commands and, for each command, find its children and generate the text for them!
   local sourceFileContent="$topLevelFunctionName() {
-$( caseEsacCompiler -- caseWhenForDir 1 "$commandFilesRootPath" "$commandFilesRootPath" "$topLevelFunctionName" )
+$( caseEsacCompiler -- caseEsacForDir 1 "$commandFilesRootPath" "$commandFilesRootPath" "$topLevelFunctionName" )
 }
 "
 

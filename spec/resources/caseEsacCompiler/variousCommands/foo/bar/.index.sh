@@ -1,0 +1,1 @@
+echo "This is the catchall for foo bar, \$1 is $1 and my full command is CASE_FULL_COMMAND_ESAC"

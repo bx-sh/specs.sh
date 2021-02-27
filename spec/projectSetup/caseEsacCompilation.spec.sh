@@ -35,7 +35,10 @@ sourceGeneratedFile() { source "$outputFile"; }
   expect { myCommand foo bar baz } toContain "my command name is baz"
   expect { myCommand foo bar baz "hello foo world" } toContain "my first relevant argument is 'hello foo world' or with foo replacement: 'hello FOO world'"
 
-  expect { myCommand doesntExist } toFail "Unknown 'myCommand' command: doesntExist"
+  # Has no .index.sh for its catch-all block
   expect { myCommand foo doesntExist } toFail "Unknown 'myCommand foo' command: doesntExist"
-  expect { myCommand foo bar doesntExist } toFail "Unknown 'myCommand foo bar' command: doesntExist"
+
+  # These have .index.sh files for their *) catch-all blocks
+  expect { myCommand doesntExist } toEqual "Hello from some custom code that the top-level function has, \$1 is 'doesntExist'"
+  expect { myCommand foo bar doesntExist } toEqual "This is the catchall for foo bar, \$3 is doesntExist and my full command is myCommand foo bar"
 }
