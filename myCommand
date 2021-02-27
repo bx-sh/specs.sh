@@ -1,0 +1,12 @@
+compile() {
+  case "$1" in
+    *)
+
+        ;;
+  *)
+    echo "Unknown 'compile' command: $1" >&2
+    return 1
+    ;;
+  esac
+}
+
