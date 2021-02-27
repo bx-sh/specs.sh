@@ -12,6 +12,15 @@
 ## caseEsacCompiler compile myFunction output.sh my/dir/of/source/files/
 ## ```
 ##
+## If the source file contains this text anywhere, it will be replaced:
+##
+## | Text | Replacement |
+## |------|-------------|
+## | `CASE_COMMAND_ESAC` | This command name, e.g. for `myFunction foo bar` this will be `bar` |
+## | `CASE_FULL_COMMAND_ESAC` | The full command name, e.g. for `myFunction foo bar` this will be `myFunction foo bar` |
+## | `CASE_PARENT_COMMAND_ESAC` | The parent command name, e.g. for `myFunction foo bar` this will be `myFunction foo` |
+## | `CASE_FUNCTION_ESAC` | The top-level function name, e.g. for `myFunction foo bar` this will be `myFunction` |
+##
 caseEsacCompiler() {
   case "$1" in
 
@@ -56,9 +65,12 @@ $( caseEsacCompiler _caseEsacForDir 1 "$commandFilesRootPath" "$commandFilesRoot
       local functionName="${fullCommandName# *}"
       local sourceFile="$3"
 
-      # TODO Optional: replace this with string replacements instead, no shell out, will matter if we compile a ton of files, not doing any cat or sed etc would be nice, we can $(<file) and just do string replacements locally
-      local sourceFileContent="$( cat "$sourceFile" | sed "s/CASE_COMMAND_ESAC/$commandName/g" | sed "s/CASE_FULL_COMMAND_ESAC/$fullCommandName/g" | sed "s/CASE_PARENT_COMMAND_ESAC/$parentCommandName/g" | sed "s/CASE_FUNCTION_ESAC/$functionName/g" )"
-      
+      local sourceFileContent="$(<"$sourceFile")"
+      sourceFileContent="${sourceFileContent//CASE_COMMAND_ESAC/$commandName}"
+      sourceFileContent="${sourceFileContent//CASE_FULL_COMMAND_ESAC/$fullCommandName}"
+      sourceFileContent="${sourceFileContent//CASE_PARENT_COMMAND_ESAC/$parentCommandName}"
+      sourceFileContent="${sourceFileContent//CASE_FUNCTION_ESAC/$functionName}"
+
       if echo "$sourceFileContent" | head -1 | grep "() {" &>/dev/null
       then
         sourceFileContent="$( echo -e "$sourceFileContent" | tail -n +2 | head -n -1 )"
