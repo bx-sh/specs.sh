@@ -1,4 +1,4 @@
-## `caseEsacCompiler.sh`
+## # `caseEsacCompiler.sh`
 ##
 ## Compile multiple .sh files into a single file with a single top-level
 ## function and multiple commands and subcommands.
@@ -6,13 +6,62 @@
 ## - Every directory represents a `case`/`esac`
 ## - Every `.sh` file represents a `case` option
 ##
-## | | Parameters |
-## |-|------------|
-## | `$1` | The name of the top-level function to generate. All subcommands will be run through this top-level function. |
-## | `$2` | The name of the source file to output. Will contain one function with any number of commands and subcommands. |
-## | `$3` | The root path of command files. Used to determine the depth of subcommands to generate. |
+## ## Usage
+##
+## ```sh
+## caseEsacCompiler compile myFunction output.sh my/dir/of/source/files/
+## ```
+##
 ##
 caseEsacCompiler() {
+  case "$1" in
+
+    ## ## `caseEsacCompiler` `compile`
+    ##
+    ## | | Parameters |
+    ## |-|------------|
+    ## | `$1` | The name of the top-level function to generate. All subcommands will be run through this top-level function. |
+    ## | `$2` | The name of the source file to output. Will contain one function with any number of commands and subcommands. |
+    ## | `$3` | The root path of command files. Used to determine the depth of subcommands to generate. |
+    compile)
+
+      ;;
+
+    ## ## `caseEsacCompiler` `_loadSourceFile`
+    ##
+    ## > 🕵️ Private
+    ##
+    ## | | Parameters |
+    ## |-|------------|
+    ## | `$1` | |
+    ## | `$2` | |
+    ## | `$3` | |
+    _loadSourceFile)
+
+      ;;
+
+    ## ## `caseEsacCompiler` `_caseEsacForDir`
+    ##
+    ## > 🕵️ Private
+    ##
+    ## | | Parameters |
+    ## |-|------------|
+    ## | `$1` | |
+    ## | `$2` | |
+    ## | `$3` | |
+    _caseEsacForDir)
+
+      ;;
+
+    *)
+      echo "" >&2
+      return 1
+      ;;
+
+
+
+
+
 
   # Return the source code for the given source file (to put into this item's case/esac statement)
   if [ "$1" = "--" ] && [ "$2" = "loadSourceFile" ]
