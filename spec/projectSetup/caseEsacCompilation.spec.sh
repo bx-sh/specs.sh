@@ -21,7 +21,7 @@ sourceGeneratedFile() { source "$outputFile"; }
 @spec.caseEsacCompiler() {
   expect { myCommand } toFail "myCommand: command not found"
 
-  caseEsacCompiler myCommand "$outputFile" $commandsFolder/variousCommands/
+  caseEsacCompiler compile myCommand "$outputFile" $commandsFolder/variousCommands/
 
   sourceGeneratedFile
 
