@@ -1,5 +1,5 @@
 specs._.store.configVariables.getDefaultValue() {
-  ## `specs` `--` `store` `configVariables` `getDefaultValue
+  ## ### getDefaultValue
   ##
   ## | | Parameters |
   ## |-|------------|

@@ -1,0 +1,35 @@
+#! /usr/bin/env bash
+
+# Generates the https://specs.sh/extensions API reference documentation
+#
+# For every top-level API command (folder under `src/--/`) generate or update:
+#
+# - A page containing all of the markdown documentation from that folder
+#
+# - An item in the /extensions sidebar with all subfolders or commands as children
+#   where the children are linked via # to the section in the generated page
+#
+# - A new sidebar for just that page containing headers for each subfolder or command
+#   and child items for every subfolder or command in that folder
+#
+
+generateApiDocs() {
+  local apiCommandFolder
+  for apiCommandFolder in ./src/--/*
+  do
+    local commandName="${apiCommandFolder##*/}"
+    local markdownFile="docs/_pages/extensions/$commandName.md"
+    echo "---
+title: '$commandName : Extension Command Reference'
+permalink: /extensions/$commandName
+layout: single
+sidebar:
+  nav: 'extensions-$commandName'
+---
+" > "$markdownFile"
+    git grep -h "^[[:space:]]*##" "$apiCommandFolder" | sed 's/^[[:space:]]*//' | sed 's/^##[[:space:]]\?//' >> "$markdownFile"
+  done
+  ./scripts/generate-api-navigation
+}
+
+generateApiDocs

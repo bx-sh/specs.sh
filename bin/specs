@@ -7,41 +7,6 @@ specs() {
   case "$1" in
     --)
       case "$2" in
-        api)
-            case "$3" in
-              private)
-                    case "$4" in
-                      initialize)
-                          ## ### `api` `private` `initialize`
-                          ##
-                          ## The is the initial code that `specs` calls to initialize an environment.
-                          ##
-                          :
-            
-                          ;;
-                      *)
-                        echo "Unknown 'specs -- api private' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
-              public)
-                    case "$4" in
-                      *)
-                        echo "Unknown 'specs -- api public' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
-              *)
-                echo "Unknown 'specs -- api' command: $3" >&2
-                return 1
-                ;;
-            esac
-  
-            ;;
         cli)
             case "$3" in
               *)

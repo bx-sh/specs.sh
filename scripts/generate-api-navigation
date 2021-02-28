@@ -1,0 +1,87 @@
+#! /usr/bin/env ruby
+
+# Generates the https://specs.sh/extensions API reference documentation
+#
+# See scripts/generate-api-docs for main documentation
+#
+# This Ruby script takes the generated documentation and generates the
+# sections of the `_data/navigation.yml` file for the API reference.
+#
+
+require "yaml"
+
+def generate_api_navigation!
+  navigation_yml_path="docs/_data/navigation.yml"
+  navigation_data = YAML.load_file navigation_yml_path
+
+  # Remove the existing extensions-* navigation sections
+  # and every sub-section of the extensions navigation
+  # except the top-level "Writing Extensions" item
+  writing_extensions = navigation_data['extensions'].find {|item| item['title'] = "Writing Extensions" }.clone
+  navigation_data['extensions'].clear
+  navigation_data['extensions'].push writing_extensions
+  navigation_data.keys.select {|key| key.start_with?("extensions-") }.each {|key| navigation_data.delete key }
+
+  Dir["docs/_pages/extensions/*.md"].each do |command_file_md|
+    command_name = command_file_md.split("/").last.chomp(".md")
+
+    # Get all of the first and second level Markdown headers of
+    # existing documentation for this command. Each command
+    # and its immediate subcommands show up in the top-level
+    # navigation. The subcommands and _their_ subcommands
+    # show up in the command's navigation.
+    header_lines = `git grep -h "^#" docs/_pages/extensions/#{command_name}.md`.lines
+    first_level = header_lines.select {|line| line.start_with?("# ") }.map {|line| line[2..-1] }
+    second_level = header_lines.select {|line| line.start_with?("## ") }.map {|line| line[3..-1] }
+
+    first_level.each do |header_text|
+      navigation_data['extensions'].push({
+        'title' => header_text.strip,
+        'children' => second_level.map do |subcommand_header_text|
+          {
+            'title' => subcommand_header_text.strip,
+            'url' => "/extensions/#{command_name}##{ header_id subcommand_header_text }"
+          }
+        end
+      })
+    end
+
+    navigation_data["extensions-#{command_name}"] = second_level.map do |header_text|
+      {
+        'title' => header_text.strip,
+        'children' => (h3_headers_under header_lines, header_text).map do |subcommand_header_text|
+          {
+            'title' => subcommand_header_text.strip,
+            'url' => "/extensions/#{command_name}##{ header_id subcommand_header_text }"
+          }
+        end
+      }
+    end
+  end
+
+  File.write navigation_yml_path, navigation_data.to_yaml
+end
+
+def header_id text
+  text.gsub(/[^\w]+/, '-').sub(/^-/, '').chomp("-")
+end
+
+def h3_headers_under header_lines, header_text
+  in_section = false
+  lines = []
+  header_lines.each do |header_line|
+    if header_line.start_with?("## #{header_text}")
+      in_section = true
+      next
+    end
+    next unless in_section
+    if header_line.start_with?("### ")
+      lines << header_line[4..-1]
+    else
+      in_section = false
+    end
+  end
+  lines
+end
+
+generate_api_navigation!

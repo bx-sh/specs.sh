@@ -1,5 +1,7 @@
 specs._.store.configVariables.add() {
-  ## `specs` `--` `store` `configVariables` `add
+  ## ### add
+  ##
+  ## Yadda yadda yadda
   ##
   ## | | Parameters |
   ## |-|------------|
