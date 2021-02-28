@@ -1,7 +1,7 @@
 ---
-title: 'extensions : Extension Command Reference'
+title: 'extensions API Reference'
 permalink: /extensions/extensions
-layout: single
+layout: singleModified
 sidebar:
   nav: 'extensions-extensions'
 ---

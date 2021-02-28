@@ -20,9 +20,9 @@ generateApiDocs() {
     local commandName="${apiCommandFolder##*/}"
     local markdownFile="docs/_pages/extensions/$commandName.md"
     echo "---
-title: '$commandName : Extension Command Reference'
+title: '$commandName API Reference'
 permalink: /extensions/$commandName
-layout: single
+layout: singleModified
 sidebar:
   nav: 'extensions-$commandName'
 ---

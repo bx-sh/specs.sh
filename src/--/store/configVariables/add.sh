@@ -3,7 +3,14 @@ specs._.store.configVariables.add() {
   ##
   ## Yadda yadda yadda
   ##
-  ## Changed this and hello 
+  ## Changed this and hello
+  ##
+  ## #### Example
+  ##
+  ## ```sh
+  ## local foo
+  ## echo "just $testing"
+  ## ```
   ##
   ## | | Parameters |
   ## |-|------------|

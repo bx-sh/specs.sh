@@ -1,7 +1,7 @@
 ---
-title: 'loaders : Extension Command Reference'
+title: 'loaders API Reference'
 permalink: /extensions/loaders
-layout: single
+layout: singleModified
 sidebar:
   nav: 'extensions-loaders'
 ---

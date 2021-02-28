@@ -89,23 +89,45 @@ docs:
   - title: Extensions
     url: "/docs/stylesheets/"
 extensions-reporters:
+- title: reporters API
+  children:
+  - title: "◀️ Back to Extensions"
+    url: "/extensions"
 - title: xml
   children: []
 - title: TAP
   children: []
 - title: documentation
   children: []
-extensions-extensions: []
-extensions-runners: []
-extensions-private: []
-extensions-loaders: []
+extensions-extensions:
+- title: extensions API
+  children:
+  - title: "◀️ Back to Extensions"
+    url: "/extensions"
+extensions-runners:
+- title: runners API
+  children:
+  - title: "◀️ Back to Extensions"
+    url: "/extensions"
+extensions-private:
+- title: private API
+  children:
+  - title: "◀️ Back to Extensions"
+    url: "/extensions"
+extensions-loaders:
+- title: loaders API
+  children:
+  - title: "◀️ Back to Extensions"
+    url: "/extensions"
 extensions-store:
+- title: store API
+  children:
+  - title: "◀️ Back to Extensions"
+    url: "/extensions"
 - title: Config Files
   children:
   - title: add
     url: "/extensions/store#add"
-  - title: getDefaultValue
-    url: "/extensions/store#getDefaultValue"
 - title: Config Variables
   children:
   - title: listNames
@@ -116,4 +138,8 @@ extensions-store:
     url: "/extensions/store#add"
 - title: Spec Files
   children: []
-extensions-cli: []
+extensions-cli:
+- title: cli API
+  children:
+  - title: "◀️ Back to Extensions"
+    url: "/extensions"

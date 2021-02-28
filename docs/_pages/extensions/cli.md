@@ -1,7 +1,7 @@
 ---
-title: 'cli : Extension Command Reference'
+title: 'cli API Reference'
 permalink: /extensions/cli
-layout: single
+layout: singleModified
 sidebar:
   nav: 'extensions-cli'
 ---

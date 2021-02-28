@@ -57,6 +57,15 @@ def generate_api_navigation!
         end
       }
     end
+    navigation_data["extensions-#{command_name}"].unshift({
+      'title' => "#{command_name} API",
+      'children' => [
+        {
+          'title' => '◀️ Back to Extensions',
+          'url' => '/extensions'
+        }
+      ]
+    })
   end
 
   File.write navigation_yml_path, navigation_data.to_yaml

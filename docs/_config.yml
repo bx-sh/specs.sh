@@ -20,7 +20,7 @@ plugins:
 include: ['_pages']
 
 remote_theme: 'mmistakes/minimal-mistakes@4.22.0'
-minimal_mistakes_skin: dark
+minimal_mistakes_skin: air
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.

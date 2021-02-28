@@ -1,7 +1,7 @@
 ---
-title: 'reporters : Extension Command Reference'
+title: 'reporters API Reference'
 permalink: /extensions/reporters
-layout: single
+layout: singleModified
 sidebar:
   nav: 'extensions-reporters'
 ---

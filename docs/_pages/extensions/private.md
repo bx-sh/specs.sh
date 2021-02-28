@@ -1,7 +1,7 @@
 ---
-title: 'private : Extension Command Reference'
+title: 'private API Reference'
 permalink: /extensions/private
-layout: single
+layout: singleModified
 sidebar:
   nav: 'extensions-private'
 ---

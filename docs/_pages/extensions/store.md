@@ -1,10 +1,14 @@
 ---
-title: 'store : Extension Command Reference'
+title: 'store API Reference'
 permalink: /extensions/store
-layout: single
+layout: singleModified
 sidebar:
   nav: 'extensions-store'
 ---
+
+# store API
+
+Information about the store API 😄
 
 ## Config Files
 
@@ -14,7 +18,14 @@ Information about config variables ...
 
 Yadda yadda yadda
 
-Changed this and hello 
+Changed this and hello
+
+#### Example
+
+```sh
+local foo
+echo "just $testing"
+```
 
 | | Parameters |
 |-|------------|
@@ -40,10 +51,6 @@ Information about config variables ...
 | | Parameters |
 |-|------------|
 | | _None_ |
-
-# store API
-
-Information about the store API ...
 
 ## Spec Functions
 

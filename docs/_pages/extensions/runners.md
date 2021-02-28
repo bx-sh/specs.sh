@@ -1,7 +1,7 @@
 ---
-title: 'runners : Extension Command Reference'
+title: 'runners API Reference'
 permalink: /extensions/runners
-layout: single
+layout: singleModified
 sidebar:
   nav: 'extensions-runners'
 ---
