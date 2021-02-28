@@ -1,0 +1,1 @@
+[ "$1" != "--" ] && [ -z "$SPECS_INITIALIZED" ] && specs -- private initialize

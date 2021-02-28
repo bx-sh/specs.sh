@@ -1,5 +1,3 @@
-source tools/caseEsacCompiler.sh
-
 # Author `caseEsacCompiler` as a generic tool.
 #
 # Will be used with other projects.
@@ -21,7 +19,7 @@ sourceGeneratedFile() { source "$outputFile"; }
 @spec.caseEsacCompiler() {
   expect { myCommand } toFail "myCommand: command not found"
 
-  caseEsacCompiler compile myCommand "$outputFile" $commandsFolder/variousCommands/
+  ./tools/caseEsacCompiler compile myCommand "$outputFile" $commandsFolder/variousCommands/
 
   sourceGeneratedFile
 

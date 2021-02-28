@@ -1,0 +1,413 @@
+#! /usr/bin/env bash
+
+specs() {
+
+[ "$1" != "--" ] && [ -z "$SPECS_INITIALIZED" ] && specs -- private initialize
+
+  case "$1" in
+    --)
+      case "$2" in
+        api)
+            case "$3" in
+              private)
+                    case "$4" in
+                      initialize)
+                          ## ### `api` `private` `initialize`
+                          ##
+                          ## The is the initial code that `specs` calls to initialize an environment.
+                          ##
+                          :
+            
+                          ;;
+                      *)
+                        echo "Unknown 'specs -- api private' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              public)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- api public' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              *)
+                echo "Unknown 'specs -- api' command: $3" >&2
+                return 1
+                ;;
+            esac
+  
+            ;;
+        cli)
+            case "$3" in
+              *)
+                echo "Unknown 'specs -- cli' command: $3" >&2
+                return 1
+                ;;
+            esac
+  
+            ;;
+        extensions)
+            case "$3" in
+              deregister)
+                
+      
+                  ;;
+              invoke)
+                
+      
+                  ;;
+              register)
+                
+      
+                  ;;
+              *)
+                echo "Unknown 'specs -- extensions' command: $3" >&2
+                return 1
+                ;;
+            esac
+  
+            ;;
+        loaders)
+            case "$3" in
+              bdd)
+                    case "$4" in
+                      loadSpecFunctionsFromFile)
+                        
+            
+                          ;;
+                      *)
+                        echo "Unknown 'specs -- loaders bdd' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              common)
+                    case "$4" in
+                      loadSpecFunctionsFromFile)
+                        
+            
+                          ;;
+                      *)
+                        echo "Unknown 'specs -- loaders common' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              xunit)
+                    case "$4" in
+                      loadSpecFunctionsFromFile)
+                        
+            
+                          ;;
+                      *)
+                        echo "Unknown 'specs -- loaders xunit' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              *)
+                echo "Unknown 'specs -- loaders' command: $3" >&2
+                return 1
+                ;;
+            esac
+  
+            ;;
+        private)
+            case "$3" in
+              initialize)
+                specs -- private loadDefaultConfigVariables
+                # specs -- extensions initAll
+      
+                  ;;
+              loadDefaultConfigVariables)
+                SPECS_INITIALIZED="$(date +"%T.%3N")"
+                
+                SPECS_VERSION="0.6.0"
+      
+                  ;;
+              README.md)
+                # `specs` `--` `private`
+                
+                The `private` `specs` API functions are not called via `specs` `--` `invoke` and therefore
+                cannot be extended via **Specs Extensions**.
+                
+                This basically just contains the core `initialize` function which:
+                
+                - Loads the _default_ configuration variables
+                - Checks for provided _environment_ variables
+                - Kicks off an `init` call for each of the loaded extensions, if any
+                - Loads config files via `-- configFiles loadAll` which _is_ run via `invoke`
+                  and **Specs Extensions** can override or extend this function
+      
+                  ;;
+              *)
+                echo "Unknown 'specs -- private' command: $3" >&2
+                return 1
+                ;;
+            esac
+  
+            ;;
+        reporters)
+            case "$3" in
+              documentation)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- reporters documentation' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              TAP)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- reporters TAP' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              xml)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- reporters xml' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              *)
+                echo "Unknown 'specs -- reporters' command: $3" >&2
+                return 1
+                ;;
+            esac
+  
+            ;;
+        runners)
+            case "$3" in
+              async)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- runners async' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              sync)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- runners sync' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              *)
+                echo "Unknown 'specs -- runners' command: $3" >&2
+                return 1
+                ;;
+            esac
+  
+            ;;
+        store)
+            case "$3" in
+              configFiles)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- store configFiles' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              configVariables)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- store configVariables' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              extensions)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- store extensions' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              fixtureSetUpFunctions)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- store fixtureSetUpFunctions' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              fixturesGroups)
+                    case "$4" in
+                      getParentFixture)
+                        
+            
+                          ;;
+                      getSetup)
+                        
+            
+                          ;;
+                      getTeardown)
+                        
+            
+                          ;;
+                      *)
+                        echo "Unknown 'specs -- store fixturesGroups' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              fixtureTearDownFunctions)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- store fixtureTearDownFunctions' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              helperFiles)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- store helperFiles' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              pendingFunctions)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- store pendingFunctions' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              setUpFunctions)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- store setUpFunctions' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              specFiles)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- store specFiles' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              specFunctions)
+                    case "$4" in
+                      getFilePath)
+                        
+            
+                          ;;
+                      getFixture)
+                        
+            
+                          ;;
+                      getName)
+                        
+            
+                          ;;
+                      *)
+                        echo "Unknown 'specs -- store specFunctions' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              tearDownFunctions)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- store tearDownFunctions' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              *)
+                echo "Unknown 'specs -- store' command: $3" >&2
+                return 1
+                ;;
+            esac
+  
+            ;;
+        *)
+          echo "Unknown 'specs --' command: $2" >&2
+          return 1
+          ;;
+      esac
+
+        ;;
+    config)
+      case "$2" in
+        list)
+          echo "Hi from config list"
+  
+            ;;
+        *)
+          echo "Unknown 'specs config' command: $2" >&2
+          return 1
+          ;;
+      esac
+
+        ;;
+    extensions)
+      case "$2" in
+        *)
+          echo "Unknown 'specs extensions' command: $2" >&2
+          return 1
+          ;;
+      esac
+
+        ;;
+    styles)
+      case "$2" in
+        *)
+          echo "Unknown 'specs styles' command: $2" >&2
+          return 1
+          ;;
+      esac
+
+        ;;
+    --version)
+      echo "specs v0.6.0"
+
+        ;;
+    *)
+      echo "Unknown 'specs' command: $1" >&2
+      return 1
+      ;;
+  esac
+
+}
+
+[ "${BASH_SOURCE[0]}" = "$0" ] && "specs" "$@"
+
