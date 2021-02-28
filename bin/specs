@@ -125,12 +125,17 @@ specs() {
               initialize)
                 specs -- private loadDefaultConfigVariables
                 # specs -- extensions initAll
+                # ^--- NOTE extensions will get init called TWICE if they provided themselves as environment variables. After configFile loading, we init AGAIN
       
                   ;;
               loadDefaultConfigVariables)
+                ##
                 SPECS_INITIALIZED="$(date +"%T.%3N")"
                 
+                ##
                 SPECS_VERSION="0.6.0"
+                
+                SPECS_CONFIG_VARIABLES=()
       
                   ;;
               README.md)
@@ -231,6 +236,50 @@ specs() {
                   ;;
               configVariables)
                     case "$4" in
+                      add)
+                          ## `specs` `--` `store` `configVariables` `add
+                          ##
+                          ## | | Parameters |
+                          ## |-|------------|
+                          ## | `$5` | Name of configuration variable, e.g. `SPECS_FOO` |
+                          ## | `$6` | Type of configuration variable, e.g. `value` or `list` or `bool` |
+                          ## | `$7` | Helpful description of the variable for users of your variable |
+                          ## | `$8` | Space-separated list of CLI flags for configuring this variable, if any |
+                          ## | `$9` | Default value, if any. For `bool` values this should be `true` or empty string for false. |
+                          ##
+                          SPECS_CONFIG_VARIABLES+=("$5;$6|$8+$9[[DESCRIPTION]]$7")
+            
+                          ;;
+                      getDefaultValue)
+                          ## `specs` `--` `store` `configVariables` `getDefaultValue
+                          ##
+                          ## | | Parameters |
+                          ## |-|------------|
+                          ## | `$5` | Name of configuration variable, e.g. `SPECS_FOO` |
+                          ## | `$6` | (Optional) Name of BASH variable to store the output value. When provided, function does not print to STDOUT. |
+                          ##
+                          # SPECS_CONFIG_VARIABLES+=("$5;$6|$8+$9[[DESCRIPTION]]$7")
+                          echo foo
+            
+                          ;;
+                      listNames)
+                          ## `specs` `--` `store` `configVariables` `listNames`
+                          ##
+                          ## | | Parameters |
+                          ## |-|------------|
+                          ## | | _None_ |
+                          ##
+                          local __specs__configVariables
+                          for __specs__configVariables in "${SPECS_CONFIG_VARIABLES[@]}"
+                          do
+                            echo "$__specs__configVariables"
+                          done
+            
+                          ;;
+                      README.md)
+                        # Configuration Variables
+            
+                          ;;
                       *)
                         echo "Unknown 'specs -- store configVariables' command: $4" >&2
                         return 1
