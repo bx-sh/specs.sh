@@ -6,21 +6,15 @@ sidebar:
   nav: 'extensions-store'
 ---
 
-# store API
-
-Information about the store API ...
-
 ## Config Files
-
-Information about config variables ...
-
-## Config Variables
 
 Information about config variables ...
 
 ### add
 
 Yadda yadda yadda
+
+Changed this and hello 
 
 | | Parameters |
 |-|------------|
@@ -37,13 +31,21 @@ Yadda yadda yadda
 | `$1` | Name of configuration variable, e.g. `SPECS_FOO` |
 | `$2` | (Optional) Name of BASH variable to store the output value. When provided, function does not print to STDOUT. |
 
+## Config Variables
+
+Information about config variables ...
+
 ### listNames
 
 | | Parameters |
 |-|------------|
 | | _None_ |
 
-## Spec Files
+# store API
+
+Information about the store API ...
+
+## Spec Functions
 
 Information about config variables ...
 
@@ -54,7 +56,7 @@ Yadda yadda yadda
 | | Parameters |
 |-|------------|
 | `$1` | ...|
-## Spec Functions
+## Spec Files
 
 Information about config variables ...
 

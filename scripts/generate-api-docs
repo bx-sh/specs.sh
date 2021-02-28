@@ -27,7 +27,7 @@ sidebar:
   nav: 'extensions-$commandName'
 ---
 " > "$markdownFile"
-    git grep -h "^[[:space:]]*##" "$apiCommandFolder" | sed 's/^[[:space:]]*//' | sed 's/^##[[:space:]]\?//' >> "$markdownFile"
+    grep -r -h "^[[:space:]]*##" "$apiCommandFolder" | sed 's/^[[:space:]]*//' | sed 's/^##[[:space:]]\?//' >> "$markdownFile"
   done
   ./scripts/generate-api-navigation
 }

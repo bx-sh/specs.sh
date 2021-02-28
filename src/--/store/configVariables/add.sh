@@ -3,6 +3,8 @@ specs._.store.configVariables.add() {
   ##
   ## Yadda yadda yadda
   ##
+  ## Changed this and hello 
+  ##
   ## | | Parameters |
   ## |-|------------|
   ## | `$1` | Name of configuration variable, e.g. `SPECS_FOO` |

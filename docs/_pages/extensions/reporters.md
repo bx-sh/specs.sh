@@ -6,6 +6,10 @@ sidebar:
   nav: 'extensions-reporters'
 ---
 
+## xml
+
+Information about the ...
+
 # reporters API
 
 Information about the ...
@@ -15,10 +19,6 @@ Information about the ...
 Information about the ...
 
 ## documentation
-
-Information about the ...
-
-## xml
 
 Information about the ...
 
