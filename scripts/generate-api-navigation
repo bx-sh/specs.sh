@@ -9,6 +9,7 @@
 #
 
 require "yaml"
+require "json"
 
 def generate_api_navigation!
   navigation_yml_path="docs/_data/navigation.yml"
@@ -17,9 +18,12 @@ def generate_api_navigation!
   # Remove the existing extensions-* navigation sections
   # and every sub-section of the extensions navigation
   # except the top-level "Writing Extensions" item
-  developer_docs = navigation_data['extensions'].find {|item| item['title'] = "⚗️ Documentation" }.clone
-  writing_extensions = navigation_data['extensions'].find {|item| item['title'] = "📝 Writing Extensions" }.clone
+  developer_docs     = navigation_data['extensions'].find {|item| item['title'] == "⚗️ Documentation" }.dup
+  custom_assertions  = navigation_data['extensions'].find {|item| item['title'] == "🧐 Custom Assertions" }.dup
+  writing_extensions = navigation_data['extensions'].find {|item| item['title'] == "📝 Writing Extensions" }.dup
   navigation_data['extensions'].clear
+  navigation_data['extensions'].push developer_docs
+  navigation_data['extensions'].push custom_assertions
   navigation_data['extensions'].push writing_extensions
   navigation_data.keys.select {|key| key.start_with?("extensions-") }.each {|key| navigation_data.delete key }
 

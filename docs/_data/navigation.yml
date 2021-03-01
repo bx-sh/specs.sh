@@ -3,14 +3,41 @@ main:
 - title: Top Navigation Here
   url: "/docs/quick-start-guide/"
 extensions:
-- title: "\U0001F4DD Writing Extensions"
+- title: "⚗️ Documentation"
+  url: developer
   children:
-  - title: Getting Started
-    url: "/something"
-  - title: Getting Started
-    url: "/something"
-  - title: Getting Started
-    url: "/something"
+  - title: Custom Assertions
+    url: "#custom-assertions"
+  - title: Custom Reporters
+    url: "#custom-reporters"
+  - title: Custom DSL Styles
+    url: "#custom-dsl-styles"
+- title: "\U0001F9D0 Custom Assertions"
+  url: extensions/extensions
+  children:
+  - title: Matcher Functions
+    url: "#matcher-functions"
+  - title: Simple Example
+    url: "#simple-example"
+  - title: Full Tutorial
+    url: "#full-tutorial"
+- title: "\U0001F4DD Writing Extensions"
+  url: extensions/configuration
+  children:
+  - title: Types of Extensions
+    url: "#types-of-extensions"
+  - title: Working with the API
+    url: "#working-with-the-api"
+  - title: Create an Extension
+    url: "#create-an-extension"
+  - title: Register Extension
+    url: "#register-an-extension"
+  - title: Testing Extensions
+    url: "#testing-extensions"
+  - title: Formatter Tutorial
+    url: "#formatter-tutorial"
+  - title: DSL Styles Tutorial
+    url: "#dsl-tutorial"
 - title: "⚙️ Configuration API"
   url: extensions/configuration
   children:
