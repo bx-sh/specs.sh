@@ -1,10 +1,9 @@
 ---
-title: '🔬 User Documentation'
+title: '🔬 Specs User Documentation'
 permalink: /docs
 layout: single
 sidebar:
   nav: 'docs'
-toc: true
 ---
 
 Text text text
