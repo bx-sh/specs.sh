@@ -1,4 +1,4 @@
-@spec.can_list_config_variables_including_descriptions_and_cli_flags_to_set() {
+@pending.can_list_config_variables_including_descriptions_and_cli_flags_to_set() {
   expect { binSpecs config list } toContain SPECS_EXTENSIONS
   expect { binSpecs config list } toContain "List of 'specs' extensions to activate, see 'specs extensions' for info"
   expect { binSpecs config list } toContain "-x" "--extension"

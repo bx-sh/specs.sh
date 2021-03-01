@@ -1,5 +1,5 @@
 specs._.store.configVariables.listNames() {
-  ## ### listNames
+  ## ## listNames
   ##
   ## | | Parameters |
   ## |-|------------|

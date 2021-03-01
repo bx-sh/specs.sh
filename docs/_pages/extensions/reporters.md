@@ -6,19 +6,7 @@ sidebar:
   nav: 'extensions-reporters'
 ---
 
-# reporters API
-
-Information about the ...
-
-## TAP
-
-Information about the ...
-
-## documentation
-
-Information about the ...
-
-## xml
+# 🖨️ Reporters API
 
 Information about the ...
 

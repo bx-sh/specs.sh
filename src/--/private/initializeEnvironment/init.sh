@@ -1,7 +1,7 @@
-specs._.private.init.initializeSpecs() {
-  ## ### initializeSpecs
+specs._.private.initialize.init() {
+  ## ### init
   ##
-  ## 🕵️ `store private init initializeSpecs`
+  ## 🕵️ `store private initialize init`
   ##
   ## This is the very first block of code which runs the first time the `specs`
   ## function is executed (immediately when running `specs` as a binary).
@@ -24,9 +24,22 @@ specs._.private.init.initializeSpecs() {
   ## |-|------------|
   ## | `$?` | _No explicit return_ |
   ##
+  
+  # TODO update to...
+  # ...
+  # -- private onLoad init
+  # -- private onLoad setupConfigurationVariables
+  # -- private onLoad loadEnvironmentVariables
+  # -- private onLoad initializeExtensions
+  #
+
   SPECS_INITIALIZED="$(date +"%T.%3N")"
   SPECS_VERSION="0.6.0"
-  specs -- private init loadDefaultConfigVariables
+
+  # TODO MOVE THIS TO THE FUNCTION
+  specs -- private initializeEnvironment loadDefaultConfigVariables
+  specs -- private initializeEnvironment loadEnvironmentVariables
+
   # specs -- extensions initAll
   # ^--- NOTE extensions will get init called TWICE if they provided themselves as environment variables. After configFile loading, we init AGAIN
 }

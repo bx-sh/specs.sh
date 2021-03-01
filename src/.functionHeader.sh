@@ -1,1 +1,1 @@
-[ "$1" != "--" ] && [ -z "$SPECS_INITIALIZED" ] && specs -- private init initializeSpecs
+[ "$1" != "--" ] && [ -z "$SPECS_INITIALIZED" ] && specs -- private initializeEnvironment init

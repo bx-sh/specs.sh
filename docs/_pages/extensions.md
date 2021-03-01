@@ -1,5 +1,5 @@
 ---
-title: 'Extensions API'
+title: '⚗️ Extensions API'
 permalink: /extensions
 layout: single
 sidebar:

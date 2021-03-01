@@ -1,4 +1,4 @@
-## # extensions API
+## # ⚗️ Extensions API
 ##
 ## Information about the ...
 ##

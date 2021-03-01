@@ -2,7 +2,7 @@
 
 specs() {
 
-[ "$1" != "--" ] && [ -z "$SPECS_INITIALIZED" ] && specs -- private init initializeSpecs
+[ "$1" != "--" ] && [ -z "$SPECS_INITIALIZED" ] && specs -- private initializeEnvironment init
 
   case "$1" in
     --)
@@ -11,6 +11,146 @@ specs() {
             case "$3" in
               *)
                 echo "Unknown 'specs -- cli' command: $3" >&2
+                return 1
+                ;;
+            esac
+  
+            ;;
+        configVariables)
+            case "$3" in
+              add)
+                  ## ## add
+                  ##
+                  ## `store configVariables add`
+                  ##
+                  ## Add a configuration file and accompanying meta information, e.g.
+                  ##
+                  ## - The CLI flag(s) used to set the variable, if any
+                  ## - A friendly description
+                  ## - Default value
+                  ## - The type of variable, e.g. a `list`, a `bool`, or a single `value`
+                  ##
+                  ## | | Parameter description |
+                  ## |-|------------|
+                  ## | `$4` | Name of configuration variable, e.g. `SPECS_FOO` |
+                  ## | `$5` | Type of configuration variable, e.g. `value` or `list` or `bool` |
+                  ## | `$6` | Helpful description of the variable for users of your variable |
+                  ## | `$7` | Space-separated list of CLI flags for configuring this variable, if any |
+                  ## | `$8` | Default value, if any. For `bool` values this should be `true` or empty string for false. |
+                  ##
+                  ## | | Return value | |
+                  ## |-|------------|
+                  ## | `0` | OK |
+                  ## | `1` | TODO: Variable with this name has already been configured. Consider using [`remove`](#remove) and then add again. |
+                  ##
+                  SPECS_CONFIG_VARIABLES[0]="${SPECS_CONFIG_VARIABLES[0]};$4:${#SPECS_CONFIG_VARIABLES[@]}"
+                  SPECS_CONFIG_VARIABLES+=("$4;$5|$7+$8[[DESCRIPTION]]$6")
+      
+                  ;;
+              exists)
+                
+      
+                  ;;
+              getDefaultValue)
+                  ## ## getDefaultValue
+                  ##
+                  ## Get the default value of the configuration variable.
+                  ##
+                  ## | | Parameters |
+                  ## |-|------------|
+                  ## | `$4` | Name of configuration variable, e.g. `SPECS_FOO` |
+                  ## | `$5` | (Optional) Name of BASH variable to store the output value. When provided, function does not print to STDOUT. |
+                  ##
+                  ## | | Return value | |
+                  ## |-|------------|
+                  ## | `0` | OK |
+                  ## | `1` | Configuration variable with the provided name does not exist. |
+                  ##
+                
+                  # TODO return 1 if there is no var
+                  # [[ = "" ]] && return 1
+                
+                  # Get the index of the configuration variable definition
+                  local __specs__configVariableIndex="${SPECS_CONFIG_VARIABLES[0]##*;$4:}"
+                  __specs__configVariableIndex="${__specs__configVariableIndex%%;*}"
+                
+                  local __specs__configVariableDefaultValue="${SPECS_CONFIG_VARIABLES[$__specs__configVariableIndex]#*+}"
+                  echo "${__specs__configVariableDefaultValue%\[\[DESCRIPTION\]\]*}"
+      
+                  ;;
+              getDescription)
+                  ## ## getDescription
+                  ##
+                  ## Get the description of the configuration variable.
+                  ##
+                  ## | | Parameters |
+                  ## |-|------------|
+                  ## | `$4` | Name of configuration variable, e.g. `SPECS_FOO` |
+                  ## | `$5` | (Optional) Name of BASH variable to store the output value. When provided, function does not print to STDOUT. |
+                  ##
+                  ## | | Return value | |
+                  ## |-|------------|
+                  ## | `0` | OK |
+                  ## | `1` | Configuration variable with the provided name does not exist. |
+                  ##
+                
+                  # TODO return 1 if there is no var
+                  # [[ = "" ]] && return 1
+                
+                  # Get the index of the configuration variable definition
+                  local __specs__configVariableIndex="${SPECS_CONFIG_VARIABLES[0]##*;$4:}"
+                  __specs__configVariableIndex="${__specs__configVariableIndex%%;*}"
+                
+                  echo "${SPECS_CONFIG_VARIABLES[$__specs__configVariableIndex]#*\[\[DESCRIPTION\]\]}"
+      
+                  ;;
+              getFlags)
+                  ## ## getFlags
+                  ##
+                  ## Get space-delimited CLI flags for setting the configuration variable via the CLI.
+                  ##
+                  ## | | Parameters |
+                  ## |-|------------|
+                  ## | `$4` | Name of configuration variable, e.g. `SPECS_FOO` |
+                  ## | `$5` | (Optional) Name of BASH variable to store the output value. When provided, function does not print to STDOUT. |
+                  ##
+                  ## | | Return value | |
+                  ## |-|------------|
+                  ## | `0` | OK |
+                  ## | `1` | Configuration variable with the provided name does not exist. |
+                  ##
+                
+                  # TODO return 1 if there is no var
+                  # [[ = "" ]] && return 1
+                
+                  # Get the index of the configuration variable definition
+                  local __specs__configVariableIndex="${SPECS_CONFIG_VARIABLES[0]##*;$4:}"
+                  __specs__configVariableIndex="${__specs__configVariableIndex%%;*}"
+                
+                  local __specs__configVariableFlags="${SPECS_CONFIG_VARIABLES[$__specs__configVariableIndex]#*|}"
+                  echo "${__specs__configVariableFlags%%+*}"
+      
+                  ;;
+              listNames)
+                  ## ## listNames
+                  ##
+                  ## | | Parameters |
+                  ## |-|------------|
+                  ## | | _None_ |
+                  ##
+                  local __specs__configVariables
+                  for __specs__configVariables in "${SPECS_CONFIG_VARIABLES[@]}"
+                  do
+                    echo "$__specs__configVariables"
+                  done
+      
+                  ;;
+              README.md)
+                # Configuration Variables
+      
+                  ;;
+              *)
+                echo "Unknown 'specs -- configVariables' command: $3" >&2
                 return 1
                 ;;
             esac
@@ -87,12 +227,12 @@ specs() {
             ;;
         private)
             case "$3" in
-              init)
+              initializeEnvironment)
                     case "$4" in
-                      initializeSpecs)
-                          ## ### initializeSpecs
+                      init)
+                          ## ### init
                           ##
-                          ## 🕵️ `store private init initializeSpecs`
+                          ## 🕵️ `store private initialize init`
                           ##
                           ## This is the very first block of code which runs the first time the `specs`
                           ## function is executed (immediately when running `specs` as a binary).
@@ -115,9 +255,22 @@ specs() {
                           ## |-|------------|
                           ## | `$?` | _No explicit return_ |
                           ##
+                          
+                          # TODO update to...
+                          # ...
+                          # -- private onLoad init
+                          # -- private onLoad setupConfigurationVariables
+                          # -- private onLoad loadEnvironmentVariables
+                          # -- private onLoad initializeExtensions
+                          #
+                        
                           SPECS_INITIALIZED="$(date +"%T.%3N")"
                           SPECS_VERSION="0.6.0"
-                          specs -- private init loadDefaultConfigVariables
+                        
+                          # TODO MOVE THIS TO THE FUNCTION
+                          specs -- private initializeEnvironment loadDefaultConfigVariables
+                          specs -- private initializeEnvironment loadEnvironmentVariables
+                        
                           # specs -- extensions initAll
                           # ^--- NOTE extensions will get init called TWICE if they provided themselves as environment variables. After configFile loading, we init AGAIN
             
@@ -139,17 +292,41 @@ specs() {
                           # Initialize with no variables
                           SPECS_CONFIG_VARIABLES=("")
                         
-                          # specs -- store configVariables add 
+                          # Initialize each configuration variable:
+                          # ...
+            
+                          ;;
+                      loadEnvironmentVariables)
+                          ## ### loadEnvironmentVariables
+                          ##
+                          ## 🕵️ `store private init loadEnvironmentVariables`
+                          ##
+                          ## | | Parameter description |
+                          ## |-|------------|
+                          ## | `SPECS_STYLE` | ... |
+                          ## | `SPECS_REPORTER` | ... |
+                          ## | `SPECS_THEME` | ... |
+                          ## | `SPECS_RANDOM` | ... |
+                          ## | `SPECS_RANDOM_SEED` | ... |
+                          ## | `SPECS_EXTENSIONS` | ... |
+                          ##
+                          ## | | Return value | |
+                          ## |-|------------|
+                          ## | `$?` | _No explicit return_ |
+                          ##
                         
-                          ## | `$5` | Name of configuration variable, e.g. `SPECS_FOO` |
-                          ## | `$6` | Type of configuration variable, e.g. `value` or `list` or `bool` |
-                          ## | `$7` | Helpful description of the variable for users of your variable |
-                          ## | `$8` | Space-separated list of CLI flags for configuring this variable, if any |
-                          ## | `$9` | Default value, if any. For `bool` values this should be `true` or empty string for false. |
+                          # TODO MOVE OUT OF 'store' and just have a top-level `configVariables`
+                          [ -n "$SPECS_STYLE" ] && specs -- store configVariables setValueFromEnvironmentVariable SPECS_STYLE "$SPECS_STYLE"
+                          [ -n "$SPECS_REPORTER" ] && specs -- store configVariables setValueFromEnvironmentVariable SPECS_REPORTER "$SPECS_REPORTER"
+                          [ -n "$SPECS_THEME" ] && specs -- store configVariables setValueFromEnvironmentVariable SPECS_THEME "$SPECS_THEME"
+                          [ -n "$SPECS_RANDOM" ] && specs -- store configVariables setValueFromEnvironmentVariable SPECS_RANDOM "$SPECS_RANDOM"
+                          [ -n "$SPECS_RANDOM_SEED" ] && specs -- store configVariables setValueFromEnvironmentVariable SPECS_RANDOM_SEED "$SPECS_RANDOM_SEED"
+                          [ -n "$SPECS_PARALLEL" ] && specs -- store configVariables setValueFromEnvironmentVariable SPECS_PARALLEL "$SPECS_PARALLEL"
+                          [ -n "$SPECS_EXTENSIONS" ] && specs -- store configVariables setValueFromEnvironmentVariable SPECS_EXTENSIONS "$SPECS_EXTENSIONS"
             
                           ;;
                       *)
-                        echo "Unknown 'specs -- private init' command: $4" >&2
+                        echo "Unknown 'specs -- private initializeEnvironment' command: $4" >&2
                         return 1
                         ;;
                     esac
@@ -179,33 +356,6 @@ specs() {
             ;;
         reporters)
             case "$3" in
-              documentation)
-                    case "$4" in
-                      *)
-                        echo "Unknown 'specs -- reporters documentation' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
-              TAP)
-                    case "$4" in
-                      *)
-                        echo "Unknown 'specs -- reporters TAP' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
-              xml)
-                    case "$4" in
-                      *)
-                        echo "Unknown 'specs -- reporters xml' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
               *)
                 echo "Unknown 'specs -- reporters' command: $3" >&2
                 return 1
@@ -246,146 +396,6 @@ specs() {
                     case "$4" in
                       *)
                         echo "Unknown 'specs -- store configFiles' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
-              configVariables)
-                    case "$4" in
-                      add)
-                          ## ### add
-                          ##
-                          ## `store configVariables add`
-                          ##
-                          ## Add a configuration file and accompanying meta information, e.g.
-                          ##
-                          ## - The CLI flag(s) used to set the variable, if any
-                          ## - A friendly description
-                          ## - Default value
-                          ## - The type of variable, e.g. a `list`, a `bool`, or a single `value`
-                          ##
-                          ## | | Parameter description |
-                          ## |-|------------|
-                          ## | `$5` | Name of configuration variable, e.g. `SPECS_FOO` |
-                          ## | `$6` | Type of configuration variable, e.g. `value` or `list` or `bool` |
-                          ## | `$7` | Helpful description of the variable for users of your variable |
-                          ## | `$8` | Space-separated list of CLI flags for configuring this variable, if any |
-                          ## | `$9` | Default value, if any. For `bool` values this should be `true` or empty string for false. |
-                          ##
-                          ## | | Return value | |
-                          ## |-|------------|
-                          ## | `0` | OK |
-                          ## | `1` | TODO: Variable with this name has already been configured. Consider using [`remove`](#remove) and then add again. |
-                          ##
-                          SPECS_CONFIG_VARIABLES[0]="${SPECS_CONFIG_VARIABLES[0]};$5:${#SPECS_CONFIG_VARIABLES[@]}"
-                          SPECS_CONFIG_VARIABLES+=("$5;$6|$8+$9[[DESCRIPTION]]$7")
-            
-                          ;;
-                      exists)
-                        
-            
-                          ;;
-                      getDefaultValue)
-                          ## ### getDefaultValue
-                          ##
-                          ## Get the default value of the configuration variable.
-                          ##
-                          ## | | Parameters |
-                          ## |-|------------|
-                          ## | `$5` | Name of configuration variable, e.g. `SPECS_FOO` |
-                          ## | `$6` | (Optional) Name of BASH variable to store the output value. When provided, function does not print to STDOUT. |
-                          ##
-                          ## | | Return value | |
-                          ## |-|------------|
-                          ## | `0` | OK |
-                          ## | `1` | Configuration variable with the provided name does not exist. |
-                          ##
-                        
-                          # TODO return 1 if there is no var
-                          # [[ = "" ]] && return 1
-                        
-                          # Get the index of the configuration variable definition
-                          local __specs__configVariableIndex="${SPECS_CONFIG_VARIABLES[0]##*;$5:}"
-                          __specs__configVariableIndex="${__specs__configVariableIndex%%;*}"
-                        
-                          local __specs__configVariableDefaultValue="${SPECS_CONFIG_VARIABLES[$__specs__configVariableIndex]#*+}"
-                          echo "${__specs__configVariableDefaultValue%\[\[DESCRIPTION\]\]*}"
-            
-                          ;;
-                      getDescription)
-                          ## ### getDescription
-                          ##
-                          ## Get the description of the configuration variable.
-                          ##
-                          ## | | Parameters |
-                          ## |-|------------|
-                          ## | `$5` | Name of configuration variable, e.g. `SPECS_FOO` |
-                          ## | `$6` | (Optional) Name of BASH variable to store the output value. When provided, function does not print to STDOUT. |
-                          ##
-                          ## | | Return value | |
-                          ## |-|------------|
-                          ## | `0` | OK |
-                          ## | `1` | Configuration variable with the provided name does not exist. |
-                          ##
-                        
-                          # TODO return 1 if there is no var
-                          # [[ = "" ]] && return 1
-                        
-                          # Get the index of the configuration variable definition
-                          local __specs__configVariableIndex="${SPECS_CONFIG_VARIABLES[0]##*;$5:}"
-                          __specs__configVariableIndex="${__specs__configVariableIndex%%;*}"
-                        
-                          echo "${SPECS_CONFIG_VARIABLES[$__specs__configVariableIndex]#*\[\[DESCRIPTION\]\]}"
-            
-                          ;;
-                      getFlags)
-                          ## ### getFlags
-                          ##
-                          ## Get space-delimited CLI flags for setting the configuration variable via the CLI.
-                          ##
-                          ## | | Parameters |
-                          ## |-|------------|
-                          ## | `$5` | Name of configuration variable, e.g. `SPECS_FOO` |
-                          ## | `$6` | (Optional) Name of BASH variable to store the output value. When provided, function does not print to STDOUT. |
-                          ##
-                          ## | | Return value | |
-                          ## |-|------------|
-                          ## | `0` | OK |
-                          ## | `1` | Configuration variable with the provided name does not exist. |
-                          ##
-                        
-                          # TODO return 1 if there is no var
-                          # [[ = "" ]] && return 1
-                        
-                          # Get the index of the configuration variable definition
-                          local __specs__configVariableIndex="${SPECS_CONFIG_VARIABLES[0]##*;$5:}"
-                          __specs__configVariableIndex="${__specs__configVariableIndex%%;*}"
-                        
-                          local __specs__configVariableFlags="${SPECS_CONFIG_VARIABLES[$__specs__configVariableIndex]#*|}"
-                          echo "${__specs__configVariableFlags%%+*}"
-            
-                          ;;
-                      listNames)
-                          ## ### listNames
-                          ##
-                          ## | | Parameters |
-                          ## |-|------------|
-                          ## | | _None_ |
-                          ##
-                          local __specs__configVariables
-                          for __specs__configVariables in "${SPECS_CONFIG_VARIABLES[@]}"
-                          do
-                            echo "$__specs__configVariables"
-                          done
-            
-                          ;;
-                      README.md)
-                        # Configuration Variables
-            
-                          ;;
-                      *)
-                        echo "Unknown 'specs -- store configVariables' command: $4" >&2
                         return 1
                         ;;
                     esac

@@ -1,4 +1,4 @@
-## ## Config Variables
+## # ⚙️ Configuration API
 ##
 ## Information about config variables ...
 ##

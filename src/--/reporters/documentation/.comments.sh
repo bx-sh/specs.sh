@@ -1,4 +1,0 @@
-## ## documentation
-##
-## Information about the ...
-##

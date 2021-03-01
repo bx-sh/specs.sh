@@ -1,6 +1,6 @@
 # TODO update to use mocks.sh instead of picking random known config variables - although that works great for now!
 
-@spec.initialize.is_not_called_when_specs_is_sourced() {
+@spec.initializeSpecs.is_not_called_when_specs_is_sourced() {
   expect SPECS_VERSION not toBeDefined
 
   source bin/specs
@@ -8,7 +8,7 @@
   expect SPECS_VERSION not toBeDefined
 }
 
-@spec.initialize.is_called_the_first_time_specs_function_is_called() {
+@spec.initializeSpecs.is_called_the_first_time_specs_function_is_called() {
   expect SPECS_VERSION not toBeDefined
 
   source bin/specs
@@ -18,7 +18,7 @@
   expect SPECS_VERSION toBeDefined
 }
 
-@spec.initialize.is_not_called_when_the_specs_function_is_called_again() {
+@spec.initializeSpecs.is_not_called_when_the_specs_function_is_called_again() {
   expect SPECS_VERSION not toBeDefined
 
   source bin/specs

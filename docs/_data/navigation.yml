@@ -3,32 +3,41 @@ main:
 - title: Top Navigation Here
   url: "/docs/quick-start-guide/"
 extensions:
-- title: Writing Extensions
+- title: "\U0001F4DD Writing Extensions"
   children:
   - title: Installation
     url: "/docs/installation/"
   - title: Hello, World!
     url: "/docs/installation/"
-- title: reporters API
-  children:
-  - title: TAP
-    url: "/extensions/reporters#TAP"
-  - title: documentation
-    url: "/extensions/reporters#documentation"
-  - title: xml
-    url: "/extensions/reporters#xml"
-- title: extensions API
+- title: "\U0001F5A8️ Reporters API"
+  url: extensions/reporters
   children: []
-- title: Private API
+- title: "⚗️ Extensions API"
+  url: extensions/extensions
+  children: []
+- title: "\U0001F575️ Private API"
+  url: extensions/private
   children:
-  - title: init
-    url: "/extensions/private#init"
-- title: store API
+  - title: initializeEnvironment
+    url: "/extensions/private#initializeEnvironment"
+- title: "⚙️ Configuration API"
+  url: extensions/configVariables
+  children:
+  - title: add
+    url: "/extensions/configVariables#add"
+  - title: getDefaultValue
+    url: "/extensions/configVariables#getDefaultValue"
+  - title: getDescription
+    url: "/extensions/configVariables#getDescription"
+  - title: getFlags
+    url: "/extensions/configVariables#getFlags"
+  - title: listNames
+    url: "/extensions/configVariables#listNames"
+- title: Store API (deprecated)
+  url: extensions/store
   children:
   - title: Config Files
     url: "/extensions/store#Config-Files"
-  - title: Config Variables
-    url: "/extensions/store#Config-Variables"
   - title: Spec Files
     url: "/extensions/store#Spec-Files"
   - title: Spec Functions
@@ -97,12 +106,6 @@ extensions-reporters:
   children:
   - title: "◀️ Back to Extensions"
     url: "/extensions"
-- title: TAP
-  children: []
-- title: documentation
-  children: []
-- title: xml
-  children: []
 extensions-extensions:
 - title: extensions API
   children:
@@ -118,10 +121,29 @@ extensions-private:
   children:
   - title: "◀️ Back to Extensions"
     url: "/extensions"
-- title: init
+- title: initializeEnvironment
   children:
-  - title: initializeSpecs
-    url: "/extensions/private#initializeSpecs"
+  - title: init
+    url: "/extensions/private#init"
+  - title: loadDefaultConfigVariables
+    url: "/extensions/private#loadDefaultConfigVariables"
+  - title: loadEnvironmentVariables
+    url: "/extensions/private#loadEnvironmentVariables"
+extensions-configVariables:
+- title: configVariables API
+  children:
+  - title: "◀️ Back to Extensions"
+    url: "/extensions"
+- title: add
+  children: []
+- title: getDefaultValue
+  children: []
+- title: getDescription
+  children: []
+- title: getFlags
+  children: []
+- title: listNames
+  children: []
 extensions-loaders:
 - title: loaders API
   children:
@@ -134,18 +156,6 @@ extensions-store:
     url: "/extensions"
 - title: Config Files
   children: []
-- title: Config Variables
-  children:
-  - title: add
-    url: "/extensions/store#add"
-  - title: getDefaultValue
-    url: "/extensions/store#getDefaultValue"
-  - title: getDescription
-    url: "/extensions/store#getDescription"
-  - title: getFlags
-    url: "/extensions/store#getFlags"
-  - title: listNames
-    url: "/extensions/store#listNames"
 - title: Spec Files
   children: []
 - title: Spec Functions

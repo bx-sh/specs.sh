@@ -6,7 +6,7 @@ sidebar:
   nav: 'extensions-extensions'
 ---
 
-# extensions API
+# ⚗️ Extensions API
 
 Information about the ...
 

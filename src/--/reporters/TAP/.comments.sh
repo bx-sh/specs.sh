@@ -1,4 +1,0 @@
-## ## TAP
-##
-## Information about the ...
-##

@@ -1,7 +1,7 @@
-specs._.store.configVariables.getDefaultValue() {
-  ## ### getDefaultValue
+specs._.store.configVariables.getFlags() {
+  ## ## getFlags
   ##
-  ## Get the default value of the configuration variable.
+  ## Get space-delimited CLI flags for setting the configuration variable via the CLI.
   ##
   ## | | Parameters |
   ## |-|------------|
@@ -21,6 +21,6 @@ specs._.store.configVariables.getDefaultValue() {
   local __specs__configVariableIndex="${SPECS_CONFIG_VARIABLES[0]##*;$1:}"
   __specs__configVariableIndex="${__specs__configVariableIndex%%;*}"
 
-  local __specs__configVariableDefaultValue="${SPECS_CONFIG_VARIABLES[$__specs__configVariableIndex]#*+}"
-  echo "${__specs__configVariableDefaultValue%\[\[DESCRIPTION\]\]*}"
+  local __specs__configVariableFlags="${SPECS_CONFIG_VARIABLES[$__specs__configVariableIndex]#*|}"
+  echo "${__specs__configVariableFlags%%+*}"
 }

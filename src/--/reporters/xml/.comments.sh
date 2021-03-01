@@ -1,4 +1,0 @@
-## ## xml
-##
-## Information about the ...
-##

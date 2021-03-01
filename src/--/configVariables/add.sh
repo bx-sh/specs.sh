@@ -1,5 +1,5 @@
 specs._.store.configVariables.add() {
-  ## ### add
+  ## ## add
   ##
   ## `store configVariables add`
   ##

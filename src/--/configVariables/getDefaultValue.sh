@@ -1,7 +1,7 @@
-specs._.store.configVariables.getDescription() {
-  ## ### getDescription
+specs._.store.configVariables.getDefaultValue() {
+  ## ## getDefaultValue
   ##
-  ## Get the description of the configuration variable.
+  ## Get the default value of the configuration variable.
   ##
   ## | | Parameters |
   ## |-|------------|
@@ -21,5 +21,6 @@ specs._.store.configVariables.getDescription() {
   local __specs__configVariableIndex="${SPECS_CONFIG_VARIABLES[0]##*;$1:}"
   __specs__configVariableIndex="${__specs__configVariableIndex%%;*}"
 
-  echo "${SPECS_CONFIG_VARIABLES[$__specs__configVariableIndex]#*\[\[DESCRIPTION\]\]}"
+  local __specs__configVariableDefaultValue="${SPECS_CONFIG_VARIABLES[$__specs__configVariableIndex]#*+}"
+  echo "${__specs__configVariableDefaultValue%\[\[DESCRIPTION\]\]*}"
 }
