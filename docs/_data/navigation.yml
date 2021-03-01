@@ -104,64 +104,70 @@ extensions:
   - title: "\U0001F4D1 XML formatter"
     url: "/extensions/x#XML-formatter"
 docs:
-- title: Getting Started
+- title: "\U0001F697 Getting Started"
   children:
   - title: Installation
-    url: "/docs/installation/"
+    url: "#installation"
   - title: Hello, World!
-    url: "/docs/installation/"
-- title: Test Styles
+    url: "#hello-world"
+- title: "\U0001F914 Choose Syntax Style"
   children:
-  - title: Configuration
-    url: "/docs/configuration/"
-  - title: Navigation
-    url: "/docs/navigation/"
-- title: Writing Tests
+  - title: BDD Syntax
+    url: "#bdd"
+  - title: xUnit Syntax
+    url: "#xUnit"
+- title: "⚗️ Basics"
+  url: "#basics"
   children:
-  - title: Something
-    url: "/docs/configuration/"
-  - title: Setup + Teardown
-    url: "/docs/navigation/"
-- title: Reporters
+  - title: Spec Syntax (<code>testFn</code>)
+    url: "#"
+  - title: Spec Grouping (<code>describe</code>)
+    url: "#"
+  - title: Setup & Teardown (<code>setUp()</code>)
+    url: "#"
+  - title: Pending Specs (<code>@pending</code>)
+    url: "#"
+  - title: Helper Functions (<code>myFunction()</code>)
+    url: "#"
+  - title: Shared Code (<code>specHelper.sh</code>)
+    url: "#"
+- title: "✅ Assertions"
   children:
-  - title: Working with Posts
-    url: "/docs/posts/"
-  - title: Working with Pages
-    url: "/docs/pages/"
-- title: Assertions
+  - title: "<code>assert</code> + <code>refute</code>"
+    url: "#assert-refute"
+  - title: "<code>expect { ... }</code>"
+    url: "#"
+  - title: "<code>run { ... }</code>"
+    url: "#"
+- title: "▶️ Command-Line <code>specs</code>"
+  url: "#command-line-specs"
   children:
-  - title: Writing Assertions
-    url: "/docs/foo"
-  - title: run [command]
-    url: "/docs/stylesheets/"
-  - title: assert + refute
-    url: "/docs/stylesheets/"
-  - title: expect { ... }
-    url: "/docs/javascript/"
-- title: Mocking
+  - title: Run specs (<code>specs</code>)
+    url: "#"
+  - title: Filter specs (<code>specs -e</code>)
+    url: "#"
+  - title: Print specs (<code>specs -p</code>)
+    url: "#"
+  - title: Config files (<code>specs -c</code>)
+    url: "#"
+  - title: Fail fast (<code>specs -f</code>)
+    url: "#"
+  - title: Random order (<code>specs -r</code>)
+    url: "#"
+- title: "⚙️ Customization"
   children:
-  - title: assert + refute
-    url: "/docs/stylesheets/"
-- title: Customization
+  - title: Custom Assertions
+    url: "#"
+  - title: Custom Reporters
+    url: "#"
+  - title: Custom Style DSLs
+    url: "#"
+- title: "\U0001F469‍\U0001F4BB Developer Documentation"
   children:
-  - title: Writing Extensions
-    url: "/docs/stylesheets/"
-- title: Extensions API
-  children:
-  - title: Extensions
-    url: "/docs/stylesheets/"
-  - title: Extensions
-    url: "/docs/stylesheets/"
-  - title: Extensions
-    url: "/docs/stylesheets/"
-  - title: Extensions
-    url: "/docs/stylesheets/"
-  - title: Extensions
-    url: "/docs/stylesheets/"
-  - title: Extensions
-    url: "/docs/stylesheets/"
-  - title: Extensions
-    url: "/docs/stylesheets/"
+  - title: Documentation
+    url: "#"
+  - title: API Reference
+    url: "#"
 extensions-configuration:
 - title: Configuration API
   children:
