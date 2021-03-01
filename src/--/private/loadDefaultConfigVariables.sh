@@ -1,7 +1,0 @@
-##
-SPECS_INITIALIZED="$(date +"%T.%3N")"
-
-##
-SPECS_VERSION="0.6.0"
-
-SPECS_CONFIG_VARIABLES=()

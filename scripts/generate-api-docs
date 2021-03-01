@@ -27,7 +27,7 @@ sidebar:
   nav: 'extensions-$commandName'
 ---
 " > "$markdownFile"
-    grep -r -h "^[[:space:]]*##" "$apiCommandFolder" | sed 's/^[[:space:]]*//' | sed 's/^##[[:space:]]\?//' >> "$markdownFile"
+    grep -rl "^[[:space:]]*##" "$apiCommandFolder" | sort --version-sort | xargs -n1 grep -h "^[[:space:]]*##" | sed 's/^[[:space:]]*//' | sed 's/^##[[:space:]]\?//' >> "$markdownFile"
   done
   ./scripts/generate-api-navigation
 }

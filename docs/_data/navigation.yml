@@ -11,24 +11,28 @@ extensions:
     url: "/docs/installation/"
 - title: reporters API
   children:
-  - title: xml
-    url: "/extensions/reporters#xml"
   - title: TAP
     url: "/extensions/reporters#TAP"
   - title: documentation
     url: "/extensions/reporters#documentation"
+  - title: xml
+    url: "/extensions/reporters#xml"
 - title: extensions API
   children: []
+- title: Private API
+  children:
+  - title: init
+    url: "/extensions/private#init"
 - title: store API
   children:
   - title: Config Files
     url: "/extensions/store#Config-Files"
   - title: Config Variables
     url: "/extensions/store#Config-Variables"
-  - title: Spec Functions
-    url: "/extensions/store#Spec-Functions"
   - title: Spec Files
     url: "/extensions/store#Spec-Files"
+  - title: Spec Functions
+    url: "/extensions/store#Spec-Functions"
 docs:
 - title: Getting Started
   children:
@@ -93,11 +97,11 @@ extensions-reporters:
   children:
   - title: "◀️ Back to Extensions"
     url: "/extensions"
-- title: xml
-  children: []
 - title: TAP
   children: []
 - title: documentation
+  children: []
+- title: xml
   children: []
 extensions-extensions:
 - title: extensions API
@@ -114,6 +118,10 @@ extensions-private:
   children:
   - title: "◀️ Back to Extensions"
     url: "/extensions"
+- title: init
+  children:
+  - title: initializeSpecs
+    url: "/extensions/private#initializeSpecs"
 extensions-loaders:
 - title: loaders API
   children:
@@ -125,18 +133,22 @@ extensions-store:
   - title: "◀️ Back to Extensions"
     url: "/extensions"
 - title: Config Files
-  children:
-  - title: add
-    url: "/extensions/store#add"
+  children: []
 - title: Config Variables
   children:
-  - title: listNames
-    url: "/extensions/store#listNames"
-- title: Spec Functions
-  children:
   - title: add
     url: "/extensions/store#add"
+  - title: getDefaultValue
+    url: "/extensions/store#getDefaultValue"
+  - title: getDescription
+    url: "/extensions/store#getDescription"
+  - title: getFlags
+    url: "/extensions/store#getFlags"
+  - title: listNames
+    url: "/extensions/store#listNames"
 - title: Spec Files
+  children: []
+- title: Spec Functions
   children: []
 extensions-cli:
 - title: cli API

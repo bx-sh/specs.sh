@@ -79,14 +79,18 @@ def h3_headers_under header_lines, header_text
   in_section = false
   lines = []
   header_lines.each do |header_line|
+    puts header_line
     if header_line.start_with?("## #{header_text}")
       in_section = true
+      puts "In #{header_text}"
       next
     end
     next unless in_section
     if header_line.start_with?("### ")
+      puts "ADD"
       lines << header_line[4..-1]
     else
+      puts "EXIT"
       in_section = false
     end
   end
