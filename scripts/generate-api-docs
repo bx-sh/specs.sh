@@ -25,11 +25,18 @@ permalink: /extensions/$commandName
 layout: singleModified
 sidebar:
   nav: 'extensions-$commandName'
+toc: true
 ---
 " > "$markdownFile"
     grep -rl "^[[:space:]]*##" "$apiCommandFolder" | sort --version-sort | xargs -n1 grep -h "^[[:space:]]*##" | sed 's/^[[:space:]]*//' | sed 's/^##[[:space:]]\?//' >> "$markdownFile"
   done
   ./scripts/generate-api-navigation
+
+  # Finally, generate the /developer [developer.md] page using the docSnippets/developer.md
+  # snippet and then adding all of the .docs.sh files which act as small descriptive headers
+  # for APIs and Extensions etc.
+  cat scripts/docSnippets/developer.md > docs/_pages/developer.md
+  find src/ -name .docs.sh | sort --version-sort | xargs -n1 grep -h "^[[:space:]]*##" | sed 's/^[[:space:]]*//' | sed 's/^##[[:space:]]\?//' >> docs/_pages/developer.md
 }
 
 generateApiDocs

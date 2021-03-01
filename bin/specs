@@ -7,15 +7,6 @@ specs() {
   case "$1" in
     --)
       case "$2" in
-        cli)
-            case "$3" in
-              *)
-                echo "Unknown 'specs -- cli' command: $3" >&2
-                return 1
-                ;;
-            esac
-  
-            ;;
         configVariables)
             case "$3" in
               add)
@@ -172,54 +163,6 @@ specs() {
                   ;;
               *)
                 echo "Unknown 'specs -- extensions' command: $3" >&2
-                return 1
-                ;;
-            esac
-  
-            ;;
-        loaders)
-            case "$3" in
-              bdd)
-                    case "$4" in
-                      loadSpecFunctionsFromFile)
-                        
-            
-                          ;;
-                      *)
-                        echo "Unknown 'specs -- loaders bdd' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
-              common)
-                    case "$4" in
-                      loadSpecFunctionsFromFile)
-                        
-            
-                          ;;
-                      *)
-                        echo "Unknown 'specs -- loaders common' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
-              xunit)
-                    case "$4" in
-                      loadSpecFunctionsFromFile)
-                        
-            
-                          ;;
-                      *)
-                        echo "Unknown 'specs -- loaders xunit' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
-              *)
-                echo "Unknown 'specs -- loaders' command: $3" >&2
                 return 1
                 ;;
             esac
@@ -537,24 +480,6 @@ specs() {
             ;;
         *)
           echo "Unknown 'specs config' command: $2" >&2
-          return 1
-          ;;
-      esac
-
-        ;;
-    extensions)
-      case "$2" in
-        *)
-          echo "Unknown 'specs extensions' command: $2" >&2
-          return 1
-          ;;
-      esac
-
-        ;;
-    styles)
-      case "$2" in
-        *)
-          echo "Unknown 'specs styles' command: $2" >&2
           return 1
           ;;
       esac
