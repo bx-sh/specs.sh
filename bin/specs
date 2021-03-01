@@ -7,141 +7,41 @@ specs() {
   case "$1" in
     --)
       case "$2" in
-        configVariables)
+        configuration)
             case "$3" in
-              add)
-                  ## ## add
-                  ##
-                  ## `store configVariables add`
-                  ##
-                  ## Add a configuration file and accompanying meta information, e.g.
-                  ##
-                  ## - The CLI flag(s) used to set the variable, if any
-                  ## - A friendly description
-                  ## - Default value
-                  ## - The type of variable, e.g. a `list`, a `bool`, or a single `value`
-                  ##
-                  ## | | Parameter description |
-                  ## |-|------------|
-                  ## | `$4` | Name of configuration variable, e.g. `SPECS_FOO` |
-                  ## | `$5` | Type of configuration variable, e.g. `value` or `list` or `bool` |
-                  ## | `$6` | Helpful description of the variable for users of your variable |
-                  ## | `$7` | Space-separated list of CLI flags for configuring this variable, if any |
-                  ## | `$8` | Default value, if any. For `bool` values this should be `true` or empty string for false. |
-                  ##
-                  ## | | Return value | |
-                  ## |-|------------|
-                  ## | `0` | OK |
-                  ## | `1` | TODO: Variable with this name has already been configured. Consider using [`remove`](#remove) and then add again. |
-                  ##
-                  SPECS_CONFIG_VARIABLES[0]="${SPECS_CONFIG_VARIABLES[0]};$4:${#SPECS_CONFIG_VARIABLES[@]}"
-                  SPECS_CONFIG_VARIABLES+=("$4;$5|$7+$8[[DESCRIPTION]]$6")
+              configurationFiles)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- configuration configurationFiles' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
       
                   ;;
-              exists)
-                
+              configurationVariables)
+                    case "$4" in
+                      doSomething)
+                        ## ### doSomething
+            
+                          ;;
+                      *)
+                        echo "Unknown 'specs -- configuration configurationVariables' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
       
                   ;;
-              getDefaultValue)
-                  ## ## getDefaultValue
-                  ##
-                  ## Get the default value of the configuration variable.
-                  ##
-                  ## | | Parameters |
-                  ## |-|------------|
-                  ## | `$4` | Name of configuration variable, e.g. `SPECS_FOO` |
-                  ## | `$5` | (Optional) Name of BASH variable to store the output value. When provided, function does not print to STDOUT. |
-                  ##
-                  ## | | Return value | |
-                  ## |-|------------|
-                  ## | `0` | OK |
-                  ## | `1` | Configuration variable with the provided name does not exist. |
-                  ##
-                
-                  # TODO return 1 if there is no var
-                  # [[ = "" ]] && return 1
-                
-                  # Get the index of the configuration variable definition
-                  local __specs__configVariableIndex="${SPECS_CONFIG_VARIABLES[0]##*;$4:}"
-                  __specs__configVariableIndex="${__specs__configVariableIndex%%;*}"
-                
-                  local __specs__configVariableDefaultValue="${SPECS_CONFIG_VARIABLES[$__specs__configVariableIndex]#*+}"
-                  echo "${__specs__configVariableDefaultValue%\[\[DESCRIPTION\]\]*}"
-      
-                  ;;
-              getDescription)
-                  ## ## getDescription
-                  ##
-                  ## Get the description of the configuration variable.
-                  ##
-                  ## | | Parameters |
-                  ## |-|------------|
-                  ## | `$4` | Name of configuration variable, e.g. `SPECS_FOO` |
-                  ## | `$5` | (Optional) Name of BASH variable to store the output value. When provided, function does not print to STDOUT. |
-                  ##
-                  ## | | Return value | |
-                  ## |-|------------|
-                  ## | `0` | OK |
-                  ## | `1` | Configuration variable with the provided name does not exist. |
-                  ##
-                
-                  # TODO return 1 if there is no var
-                  # [[ = "" ]] && return 1
-                
-                  # Get the index of the configuration variable definition
-                  local __specs__configVariableIndex="${SPECS_CONFIG_VARIABLES[0]##*;$4:}"
-                  __specs__configVariableIndex="${__specs__configVariableIndex%%;*}"
-                
-                  echo "${SPECS_CONFIG_VARIABLES[$__specs__configVariableIndex]#*\[\[DESCRIPTION\]\]}"
-      
-                  ;;
-              getFlags)
-                  ## ## getFlags
-                  ##
-                  ## Get space-delimited CLI flags for setting the configuration variable via the CLI.
-                  ##
-                  ## | | Parameters |
-                  ## |-|------------|
-                  ## | `$4` | Name of configuration variable, e.g. `SPECS_FOO` |
-                  ## | `$5` | (Optional) Name of BASH variable to store the output value. When provided, function does not print to STDOUT. |
-                  ##
-                  ## | | Return value | |
-                  ## |-|------------|
-                  ## | `0` | OK |
-                  ## | `1` | Configuration variable with the provided name does not exist. |
-                  ##
-                
-                  # TODO return 1 if there is no var
-                  # [[ = "" ]] && return 1
-                
-                  # Get the index of the configuration variable definition
-                  local __specs__configVariableIndex="${SPECS_CONFIG_VARIABLES[0]##*;$4:}"
-                  __specs__configVariableIndex="${__specs__configVariableIndex%%;*}"
-                
-                  local __specs__configVariableFlags="${SPECS_CONFIG_VARIABLES[$__specs__configVariableIndex]#*|}"
-                  echo "${__specs__configVariableFlags%%+*}"
-      
-                  ;;
-              listNames)
-                  ## ## listNames
-                  ##
-                  ## | | Parameters |
-                  ## |-|------------|
-                  ## | | _None_ |
-                  ##
-                  local __specs__configVariables
-                  for __specs__configVariables in "${SPECS_CONFIG_VARIABLES[@]}"
-                  do
-                    echo "$__specs__configVariables"
-                  done
-      
-                  ;;
-              README.md)
-                # Configuration Variables
+              environmentVariables)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- configuration environmentVariables' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
       
                   ;;
               *)
-                echo "Unknown 'specs -- configVariables' command: $3" >&2
+                echo "Unknown 'specs -- configuration' command: $3" >&2
                 return 1
                 ;;
             esac
@@ -149,16 +49,22 @@ specs() {
             ;;
         extensions)
             case "$3" in
-              deregister)
-                
+              invocation)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- extensions invocation' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
       
                   ;;
-              invoke)
-                
-      
-                  ;;
-              register)
-                
+              registration)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- extensions registration' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
       
                   ;;
               *)
@@ -168,130 +74,37 @@ specs() {
             esac
   
             ;;
-        private)
+        parallel)
             case "$3" in
-              initializeEnvironment)
+              manage)
                     case "$4" in
-                      init)
-                          ## ### init
-                          ##
-                          ## 🕵️ `store private initialize init`
-                          ##
-                          ## This is the very first block of code which runs the first time the `specs`
-                          ## function is executed (immediately when running `specs` as a binary).
-                          ##
-                          ## - Configures default configation variables with default values (via [`loadDefaultConfigVariables`](#loadDefaultConfigVariables))
-                          ##   - This loads any configuration values which were provided via environment variables, including registered Extensions
-                          ## - Initializes all Extensions registered via environment variables.
-                          ## - Invokes configuration file loading (_this can be extended or overriden_)
-                          ##
-                          ## #### 👩‍💻 Implementation Details
-                          ##
-                          ## - Sets the `SPECS_INITIALIZED` variable equal to the current time when the `specs` function was first initialized.
-                          ## - Sets the `SPECS_VERSION` variable to the current version of `specs`
-                          ##
-                          ## | | Parameter description |
-                          ## |-|------------|
-                          ## | `$@` | _No parameters_ |
-                          ##
-                          ## | | Return value | |
-                          ## |-|------------|
-                          ## | `$?` | _No explicit return_ |
-                          ##
-                          
-                          # TODO update to...
-                          # ...
-                          # -- private onLoad init
-                          # -- private onLoad setupConfigurationVariables
-                          # -- private onLoad loadEnvironmentVariables
-                          # -- private onLoad initializeExtensions
-                          #
-                        
-                          SPECS_INITIALIZED="$(date +"%T.%3N")"
-                          SPECS_VERSION="0.6.0"
-                        
-                          # TODO MOVE THIS TO THE FUNCTION
-                          specs -- private initializeEnvironment loadDefaultConfigVariables
-                          specs -- private initializeEnvironment loadEnvironmentVariables
-                        
-                          # specs -- extensions initAll
-                          # ^--- NOTE extensions will get init called TWICE if they provided themselves as environment variables. After configFile loading, we init AGAIN
-            
-                          ;;
-                      loadDefaultConfigVariables)
-                          ## ### loadDefaultConfigVariables
-                          ##
-                          ## 🕵️ `store private init loadDefaultConfigVariables`
-                          ##
-                          ## | | Parameter description |
-                          ## |-|------------|
-                          ## | `$@` | _No parameters_ |
-                          ##
-                          ## | | Return value | |
-                          ## |-|------------|
-                          ## | `$?` | _No explicit return_ |
-                          ##
-                        
-                          # Initialize with no variables
-                          SPECS_CONFIG_VARIABLES=("")
-                        
-                          # Initialize each configuration variable:
-                          # ...
-            
-                          ;;
-                      loadEnvironmentVariables)
-                          ## ### loadEnvironmentVariables
-                          ##
-                          ## 🕵️ `store private init loadEnvironmentVariables`
-                          ##
-                          ## | | Parameter description |
-                          ## |-|------------|
-                          ## | `SPECS_STYLE` | ... |
-                          ## | `SPECS_REPORTER` | ... |
-                          ## | `SPECS_THEME` | ... |
-                          ## | `SPECS_RANDOM` | ... |
-                          ## | `SPECS_RANDOM_SEED` | ... |
-                          ## | `SPECS_EXTENSIONS` | ... |
-                          ##
-                          ## | | Return value | |
-                          ## |-|------------|
-                          ## | `$?` | _No explicit return_ |
-                          ##
-                        
-                          # TODO MOVE OUT OF 'store' and just have a top-level `configVariables`
-                          [ -n "$SPECS_STYLE" ] && specs -- store configVariables setValueFromEnvironmentVariable SPECS_STYLE "$SPECS_STYLE"
-                          [ -n "$SPECS_REPORTER" ] && specs -- store configVariables setValueFromEnvironmentVariable SPECS_REPORTER "$SPECS_REPORTER"
-                          [ -n "$SPECS_THEME" ] && specs -- store configVariables setValueFromEnvironmentVariable SPECS_THEME "$SPECS_THEME"
-                          [ -n "$SPECS_RANDOM" ] && specs -- store configVariables setValueFromEnvironmentVariable SPECS_RANDOM "$SPECS_RANDOM"
-                          [ -n "$SPECS_RANDOM_SEED" ] && specs -- store configVariables setValueFromEnvironmentVariable SPECS_RANDOM_SEED "$SPECS_RANDOM_SEED"
-                          [ -n "$SPECS_PARALLEL" ] && specs -- store configVariables setValueFromEnvironmentVariable SPECS_PARALLEL "$SPECS_PARALLEL"
-                          [ -n "$SPECS_EXTENSIONS" ] && specs -- store configVariables setValueFromEnvironmentVariable SPECS_EXTENSIONS "$SPECS_EXTENSIONS"
-            
-                          ;;
                       *)
-                        echo "Unknown 'specs -- private initializeEnvironment' command: $4" >&2
+                        echo "Unknown 'specs -- parallel manage' command: $4" >&2
                         return 1
                         ;;
                     esac
       
                   ;;
-              README.md)
-                # `specs` `--` `private`
-                
-                The `private` `specs` API functions are not called via `specs` `--` `invoke` and therefore
-                cannot be extended via **Specs Extensions**.
-                
-                This basically just contains the core `initialize` function which:
-                
-                - Loads the _default_ configuration variables
-                - Checks for provided _environment_ variables
-                - Kicks off an `init` call for each of the loaded extensions, if any
-                - Loads config files via `-- configFiles loadAll` which _is_ run via `invoke`
-                  and **Specs Extensions** can override or extend this function
+              queue)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- parallel queue' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              state)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- parallel state' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
       
                   ;;
               *)
-                echo "Unknown 'specs -- private' command: $3" >&2
+                echo "Unknown 'specs -- parallel' command: $3" >&2
                 return 1
                 ;;
             esac
@@ -299,6 +112,24 @@ specs() {
             ;;
         reporters)
             case "$3" in
+              finalResult)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- reporters finalResult' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              status)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- reporters status' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
               *)
                 echo "Unknown 'specs -- reporters' command: $3" >&2
                 return 1
@@ -308,19 +139,19 @@ specs() {
             ;;
         runners)
             case "$3" in
-              async)
+              begin)
                     case "$4" in
                       *)
-                        echo "Unknown 'specs -- runners async' command: $4" >&2
+                        echo "Unknown 'specs -- runners begin' command: $4" >&2
                         return 1
                         ;;
                     esac
       
                   ;;
-              sync)
+              execute)
                     case "$4" in
                       *)
-                        echo "Unknown 'specs -- runners sync' command: $4" >&2
+                        echo "Unknown 'specs -- runners execute' command: $4" >&2
                         return 1
                         ;;
                     esac
@@ -333,96 +164,21 @@ specs() {
             esac
   
             ;;
-        store)
+        specs)
             case "$3" in
-              configFiles)
-                    case "$4" in
-                      *)
-                        echo "Unknown 'specs -- store configFiles' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
-              extensions)
-                    case "$4" in
-                      *)
-                        echo "Unknown 'specs -- store extensions' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
-              fixtureSetUpFunctions)
-                    case "$4" in
-                      *)
-                        echo "Unknown 'specs -- store fixtureSetUpFunctions' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
-              fixturesGroups)
-                    case "$4" in
-                      getParentFixture)
-                        
-            
-                          ;;
-                      getSetup)
-                        
-            
-                          ;;
-                      getTeardown)
-                        
-            
-                          ;;
-                      *)
-                        echo "Unknown 'specs -- store fixturesGroups' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
-              fixtureTearDownFunctions)
-                    case "$4" in
-                      *)
-                        echo "Unknown 'specs -- store fixtureTearDownFunctions' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
-              helperFiles)
-                    case "$4" in
-                      *)
-                        echo "Unknown 'specs -- store helperFiles' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
-              pendingFunctions)
-                    case "$4" in
-                      *)
-                        echo "Unknown 'specs -- store pendingFunctions' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
-              setUpFunctions)
-                    case "$4" in
-                      *)
-                        echo "Unknown 'specs -- store setUpFunctions' command: $4" >&2
-                        return 1
-                        ;;
-                    esac
-      
-                  ;;
               specFiles)
                     case "$4" in
                       *)
-                        echo "Unknown 'specs -- store specFiles' command: $4" >&2
+                        echo "Unknown 'specs -- specs specFiles' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              specFixtures)
+                    case "$4" in
+                      *)
+                        echo "Unknown 'specs -- specs specFixtures' command: $4" >&2
                         return 1
                         ;;
                     esac
@@ -430,36 +186,105 @@ specs() {
                   ;;
               specFunctions)
                     case "$4" in
-                      getFilePath)
-                        
-            
-                          ;;
-                      getFixture)
-                        
-            
-                          ;;
-                      getName)
-                        
-            
-                          ;;
                       *)
-                        echo "Unknown 'specs -- store specFunctions' command: $4" >&2
+                        echo "Unknown 'specs -- specs specFunctions' command: $4" >&2
                         return 1
                         ;;
                     esac
       
                   ;;
-              tearDownFunctions)
+              specHelperFiles)
                     case "$4" in
                       *)
-                        echo "Unknown 'specs -- store tearDownFunctions' command: $4" >&2
+                        echo "Unknown 'specs -- specs specHelperFiles' command: $4" >&2
                         return 1
                         ;;
                     esac
       
                   ;;
               *)
-                echo "Unknown 'specs -- store' command: $3" >&2
+                echo "Unknown 'specs -- specs' command: $3" >&2
+                return 1
+                ;;
+            esac
+  
+            ;;
+        x)
+            case "$3" in
+              dsls)
+                    case "$4" in
+                      bdd)
+                              case "$5" in
+                                *)
+                                  echo "Unknown 'specs -- x dsls bdd' command: $5" >&2
+                                  return 1
+                                  ;;
+                              esac
+            
+                          ;;
+                      common)
+                              case "$5" in
+                                *)
+                                  echo "Unknown 'specs -- x dsls common' command: $5" >&2
+                                  return 1
+                                  ;;
+                              esac
+            
+                          ;;
+                      xunit)
+                              case "$5" in
+                                *)
+                                  echo "Unknown 'specs -- x dsls xunit' command: $5" >&2
+                                  return 1
+                                  ;;
+                              esac
+            
+                          ;;
+                      *)
+                        echo "Unknown 'specs -- x dsls' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              formatters)
+                    case "$4" in
+                      specs)
+                              case "$5" in
+                                *)
+                                  echo "Unknown 'specs -- x formatters specs' command: $5" >&2
+                                  return 1
+                                  ;;
+                              esac
+            
+                          ;;
+                      TAP)
+                              case "$5" in
+                                *)
+                                  echo "Unknown 'specs -- x formatters TAP' command: $5" >&2
+                                  return 1
+                                  ;;
+                              esac
+            
+                          ;;
+                      xml)
+                              case "$5" in
+                                *)
+                                  echo "Unknown 'specs -- x formatters xml' command: $5" >&2
+                                  return 1
+                                  ;;
+                              esac
+            
+                          ;;
+                      *)
+                        echo "Unknown 'specs -- x formatters' command: $4" >&2
+                        return 1
+                        ;;
+                    esac
+      
+                  ;;
+              *)
+                echo "Unknown 'specs -- x' command: $3" >&2
                 return 1
                 ;;
             esac

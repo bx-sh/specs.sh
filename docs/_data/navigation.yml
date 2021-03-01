@@ -1,7 +1,11 @@
 ---
 main:
-- title: Top Navigation Here
-  url: "/docs/quick-start-guide/"
+- title: User Guide
+  url: "/docs"
+- title: Developer Documentation
+  url: "/developer"
+- title: GitHub
+  url: https://github.com/shells-sh/specs.sh
 extensions:
 - title: "⚗️ Documentation"
   url: developer
